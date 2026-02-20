@@ -24,7 +24,7 @@ const Menu = () => {
             <NavLink className="nav-link px-3" to="/">
               Inicio
             </NavLink>
-            <NavLink className="nav-link px-3" to="/canchas">
+            <NavLink className="nav-link px-3" to="/reservas">
               Reservar canchas
             </NavLink>
             <NavLink className="nav-link px-3" to="/productos">
