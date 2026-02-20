@@ -1,0 +1,30 @@
+:root {
+  --verde-cancha: #1F8A3B;
+  --negro-carbon: #121212;
+  --blanco: #FFFFFF;
+  --amarillo-precio: #F4B400;
+}
+
+/* Fondo personalizado para el Navbar */
+.bg-negro-brand {
+  background-color: var(--negro-carbon) !important;
+}
+
+/* Estilo para los links activos */
+.nav-link.active {
+  color: var(--verde-cancha) !important;
+  font-weight: 600;
+}
+
+/* Botón principal estilo 'Cancha' */
+.btn-verde-cancha {
+  background-color: var(--verde-cancha);
+  border: none;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.btn-verde-cancha:hover {
+  background-color: #166e2f;
+  transform: translateY(-1px);
+}
