@@ -1,6 +1,25 @@
 import { Table, Button } from "react-bootstrap";
+import { listarReservaApi } from "../../helpers/queries";
 
 const Administrador = () => {
+   const [reservas, setReservas] = useState([]);
+ useEffect(() => {
+    cargarReservas();
+  }, []);
+  const cargarReservas = async() => {
+
+   const respuestaReservas = await listarReservaApi();
+    
+    if(respuestaReservas && respuestaReservas.status === 200){
+      const datos = await respuestaReservas.json();
+      setReservas(datos)
+    }else{
+      alert('Ocurrio un error no se puede mostrar las reservas en este momento')
+    }
+  };
+
+
+
   return (
     <main className="container my-4">
       <div className="d-flex justify-content-between align-items-center">
