@@ -6,16 +6,18 @@ const Footer = () => {
     <footer className="bg-negro-brand text-white p-3 mt-auto">
       <Container>
         <Row className="gy-3 justify-content-between">
-          
+
           {/* Columna 1: Logo y Eslogan */}
           <Col md={4} className="d-flex flex-column align-items-center">
-            <img
-              src="../img/logo2.png"
-              alt="Logo"
-              width="70"
-              height="70"
-              className="bg-white rounded-circle logo-footer"
-            />
+            <Link to="/" >
+              <img
+                src="../img/logo2.png"
+                alt="Logo"
+                width="70"
+                height="70"
+                className="bg-white rounded-circle logo-footer"
+              />
+            </Link>
             <p className="small text-white text-center text-md-start my-3 ">
               Donde nace la pasión de cada partido.
             </p>
@@ -25,6 +27,7 @@ const Footer = () => {
           <Col md={4} className="text-center">
             <h6 className="fw-bold mb-2 text-uppercase">Enlaces</h6>
             <ul className="list-unstyled small mb-0 d-flex flex-column gap-1">
+
               <li><Link to="/nosotros" className="text-white-50 text-decoration-none footer-link">Sobre Nosotros</Link></li>
               <li><Link to="/contacto" className="text-white-50 text-decoration-none footer-link">Contacto</Link></li>
               <li><Link to="/reserva" className="text-white-50 text-decoration-none footer-link">Reservas</Link></li>
