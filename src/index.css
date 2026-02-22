@@ -33,3 +33,13 @@ body, #root {
   flex-direction: column;
   min-height: 100vh;
 }
+
+.logo-footer {
+  transition: transform 0.3s ease; 
+  cursor: pointer;
+}
+
+
+.logo-footer:hover {
+  transform: scale(1.2);
+}
