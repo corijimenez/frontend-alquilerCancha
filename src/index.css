@@ -92,3 +92,69 @@ body {
   .carousel-caption h3 { font-size: 1.1rem; }
   .carousel-caption p { font-size: 0.9rem; }
 }
+
+/*card*/
+/* 1. Estilo base para todas las Cards (Canchas y Productos) */
+.card, 
+.producto-card {
+  background-color: #212529; /* Fondo oscuro unificado */
+  border: 1px solid rgba(25, 135, 84, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+/* 2. Imágenes (Unificamos altura para que se vean parejas) */
+.cancha-img, 
+.producto-img {
+  width: 100%;
+  height: 250px; /* Altura estándar para ambas */
+  object-fit: cover;
+  transition: transform 0.5s ease;
+  
+
+}
+
+/* 3. EFECTO HOVER PARA AMBAS CARDS */
+.card:hover, 
+.producto-card:hover {
+  transform: translateY(-10px) scale(1.02);
+  border-color: #198754; 
+  box-shadow: 0 0 20px rgba(25, 135, 84, 0.5), 
+              0 10px 20px rgba(0, 0, 0, 0.5); 
+}
+
+/* Zoom de imagen al pasar el mouse por la card */
+.card:hover .cancha-img,
+.producto-card:hover .producto-img {
+  transform: scale(1.1);
+}
+
+/* 4. Títulos (Modo oscuro inicial y efecto neón) */
+/* Usamos descendientes para asegurar especificidad sin !important */
+.card .card-body .card-title,
+.producto-card .card-body .card-title {
+  color: #fff;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.card:hover .card-body .card-title,
+.producto-card:hover .card-body .card-title {
+  color: #24ca7d; 
+  text-shadow: 0 0 8px rgba(36, 202, 125, 0.4);
+}
+
+/* 5. Botones (General para todos los botones success) */
+.btn-success {
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-success:hover {
+  background-color: #24ca7d;
+  box-shadow: 0 0 15px #198754;
+  transform: scale(1.05);
+}
