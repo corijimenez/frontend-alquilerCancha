@@ -25,14 +25,14 @@ const cargarDatos = async () => {
 
  const onSubmit = async (data) => {
 
-     const servicioForm = {
+     const reservaForm = {
       ...data,
       imagen: data.imagen[0], // File
     };
     if (titulo === "Crear reserva") {
       //agrego la logica de crear
-      const respuestaServicioCreado = await crearReservaApi(servicioForm);
-      if (respuestaServicioCreado && respuestaServicioCreado.status === 201) {
+      const respuestaReservaCreada = await crearReservaApi(ReservaForm);
+      if (respuestaReservaCreada && respuestaReservaCreada.status === 201) {
         Swal.fire({
           title: "Reserva creada",
           text: `La reserva '${data.reserva}' fue creada correctamente`,
