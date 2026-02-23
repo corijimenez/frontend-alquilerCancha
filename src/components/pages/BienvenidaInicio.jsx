@@ -9,7 +9,11 @@ export default function BienvenidaInicio() {
         <h2 className="display-5 fw-bold text-success">
           Bienvenidos a FutbolProgramado
         </h2>
-        
+        <p className="lead text-white">
+          Unite al club donde la pasión por la redonda no tiene límites. Reservá
+          tu lugar, compartí con amigos y formá parte de la comunidad futbolera
+          más grande.
+        </p>
       </Col>
     </Row>
   );
