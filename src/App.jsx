@@ -7,7 +7,9 @@ import FormularioProducto from "./components/pages/FormularioProducto";
 import Error404 from "./components/pages/Error404";
 import Menu from "./components/shared/Menu";
 import Footer from "./components/shared/Footer";
-
+import Contacto from "./components/pages/Contacto";
+import QuienesSomos from "./components/pages/QuienesSomos";
+import ReservarCancha from "./components/pages/ReservarCancha";
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +30,9 @@ function App() {
           path="/administrador/editar"
           element={<FormularioProducto></FormularioProducto>}
         />
+        <Route path="/contacto" element={<Contacto />} />
+          <Route path="/nosotros" element={<QuienesSomos />} />
+          <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="*" element={<Error404></Error404>} />
       </Routes>
       <Footer></Footer>
