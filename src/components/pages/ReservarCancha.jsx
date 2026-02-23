@@ -1,4 +1,4 @@
-import { crearReservaApi } from "../../helpers/queries";
+import { crearReservaApi, editarReservaApi } from "../../helpers/queries";
 
 const onSubmit = async (data) => {
 
@@ -27,7 +27,24 @@ const onSubmit = async (data) => {
           icon: "error",
         });
       }
-    } }; 
+    } else {
+      const respuestaEditarReserva = await editarReservaApi(data, id)
+      if(respuestaEditarReserva && respuestaEditarReserva.status === 200){
+        Swal.fire({
+          title: "Reserva editada",
+          text: `La Reserva '${data.reserva}' fue editada correctamente`,
+          icon: "success",
+        });
+        navegacion("/administrador");
+      }else{
+         Swal.fire({
+          title: "Ocurrio un error",
+          text: `La reserva '${data.reserva}' no pudo ser editada. Intenta nuevamente en unos minutos`,
+          icon: "error",
+        });
+      }
+    }
+  }; 
 
 const FormularioReserva = () => {
 

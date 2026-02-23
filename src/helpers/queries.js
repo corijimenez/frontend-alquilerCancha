@@ -33,3 +33,19 @@ export const borrarReservaApi = async(id) =>{
         console.error(error)
     }
 }
+// agregar esto en el componente del item tabla de la reserva!
+
+export const editarReservaApi = async(reserva, id) =>{
+    try {
+        const respuesta = await fetch(urlReserva + `/${id}`,{
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(reserva)
+        })
+        return respuesta
+    } catch (error) {
+        console.error(error)
+    }
+}
