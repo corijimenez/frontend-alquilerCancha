@@ -7,19 +7,19 @@ export default function ProductosInicio() {
       nombre: "Pelota de Fútbol",
       descripcion: "Pelota oficial para partidos de fútbol 5 y 7.",
       img: "/pelotafutbol2.jpg",
-      link: "/productos",
+      link: "/tienda",
     },
     {
       nombre: "Kits de entrenamiento", // Corregido: Mayúscula inicial
       descripcion: "Conos, petos y más para mejorar tu juego.",
       img: "/kitentrenamiento1.jpg",
-      link: "/productos",
+      link: "/tienda",
     },
     {
       nombre: "Camisetas de fútbol",
       descripcion: "Llevá los colores de tu equipo en cada partido.",
       img: "/argentina.jpg",
-      link: "/productos",
+      link: "/tienda",
     },
   ];
 
