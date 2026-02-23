@@ -26,7 +26,9 @@ const CanchasSeccion = () => {
 
   return (
     <>
-     
+      <h1 className="display-4 text-center my-4 fw-bold text-white">
+        Nuestras Canchas
+      </h1>
     </>
   );
 };
