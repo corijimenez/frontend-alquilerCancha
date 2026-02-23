@@ -49,3 +49,12 @@ export const editarReservaApi = async(reserva, id) =>{
         console.error(error)
     }
 }
+
+export const buscarReservaApi = async(id) =>{
+    try {
+        const respuesta = await fetch(urlReserva+ `/${id}`)
+        return respuesta
+    } catch (error) {
+        console.error(error)
+    }
+}

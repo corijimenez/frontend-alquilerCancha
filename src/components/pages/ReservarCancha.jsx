@@ -1,6 +1,29 @@
-import { crearReservaApi, editarReservaApi } from "../../helpers/queries";
+import { crearReservaApi, editarReservaApi, buscarReservaApi } from "../../helpers/queries";
 
-const onSubmit = async (data) => {
+const FormularioReserva = () => {
+
+useEffect(() => {
+    cargarDatos();
+  }, []);
+
+const cargarDatos = async () => {
+  if (titulo === "Editar reserva") {
+      const respuestaReserva = await buscarReservaApi(id);
+      if (respuestaReserva && respuestaReserva.status === 200) {
+        const reservaBuscada = await respuestaReserva.json();
+
+        setValue("usuario", reservaBuscada.usuario);
+        setValue("cancha", reservaBuscada.cancha);
+        setValue("fecha", reservaBuscada.fecha);
+        setValue("hora", reservaBuscada.hora);
+        setValue("estado", reservaBuscada.estado);
+        setValue("precio", reservaBuscada.precio);
+       
+      }
+    }
+  };
+
+ const onSubmit = async (data) => {
 
      const servicioForm = {
       ...data,
@@ -45,10 +68,6 @@ const onSubmit = async (data) => {
       }
     }
   }; 
-
-const FormularioReserva = () => {
-
-
     return (
         <div>
             este es el formulario de reserva
