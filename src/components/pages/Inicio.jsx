@@ -1,8 +1,8 @@
-
+import CarrouselInicio from "./CarrouselInicio";
 const Inicio = () => {
     return (
         <main className="container my-4">
-            <h1>Pagina home</h1>
+          <CarrouselInicio />
             
         </main>
     );
