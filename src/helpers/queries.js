@@ -22,3 +22,14 @@ export const crearReservaApi = async(reserva) =>{
         console.error(error)
     }
 }
+
+export const borrarReservaApi = async(id) =>{
+    try {
+        const respuesta = await fetch(urlReserva+`/${id}`,{
+            method: 'DELETE',        
+        })
+        return respuesta
+    } catch (error) {
+        console.error(error)
+    }
+}
