@@ -16,9 +16,13 @@ const Administrador = () => {
             <th>Acciones</th>
           </tr>
         </thead>
-        <tbody>
-          <p>item tabla de productos</p>
-        </tbody>
+       <tbody>
+  <tr>
+    <td colSpan="4" className="text-center">
+      item tabla de productos
+    </td>
+  </tr>
+</tbody>
       </Table>
     </main>
   );
