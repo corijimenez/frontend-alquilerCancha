@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -16,7 +19,7 @@ const Login = () => {
   const [enviando, setEnviando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     // limpiamos errores antes de validar
@@ -42,19 +45,40 @@ const Login = () => {
     const hayErrores = nuevosErrores.email || nuevosErrores.password;
     if (hayErrores) return;
 
-    // simulación de envío
+    // ✅ envío real al backend
     setEnviando(true);
     setErrorGeneral("");
 
-    setTimeout(() => {
-      console.log("Email:", email);
-      console.log("Password:", password);
+    try {
+      const respuesta = await fetch("http://localhost:3000/api/usuarios/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-      // Ejemplo si querés simular error general:
-      // setErrorGeneral("Credenciales incorrectas");
+      const data = await respuesta.json();
+
+      if (!respuesta.ok) {
+        setErrorGeneral(data?.mensaje || "Error al iniciar sesión");
+        setEnviando(false);
+        return;
+      }
+
+      // Guardamos sesión (según tu backend)
+      const usuario = {
+        nombre: data.nombre,
+        role: data.role,
+        token: data.token,
+      };
+
+      sessionStorage.setItem("usuarioKey", JSON.stringify(usuario));
 
       setEnviando(false);
-    }, 600);
+      navigate("/administrador");
+    } catch (error) {
+      setErrorGeneral("No se pudo conectar con el servidor");
+      setEnviando(false);
+    }
   };
 
   return (
