@@ -1,8 +1,16 @@
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
 import { NavLink } from "react-router";
+import { useNavigate } from "react-router-dom";
 import "../../index.css";
 
 const Menu = () => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("usuarioKey");
+    navigate("/login");
+  };
+
   return (
     <Navbar
       expand="lg"
@@ -37,7 +45,6 @@ const Menu = () => {
             <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
               <NavLink className="nav-link me-3" to="/carrito">
                 <i className="bi bi-cart3 fs-5 position-relative">
-                  {/* prueba de carrito */}
                   <span
                     className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     style={{ fontSize: "0.6rem" }}
@@ -54,7 +61,10 @@ const Menu = () => {
                 Login
               </NavLink>
 
-              <Button className="btn btn-verde-cancha rounded-pill px-4 shadow-sm">
+              <Button
+                className="btn btn-verde-cancha rounded-pill px-4 shadow-sm"
+                onClick={handleLogout}
+              >
                 Logout
               </Button>
             </div>
