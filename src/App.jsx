@@ -10,32 +10,30 @@ import Footer from "./components/shared/Footer";
 import Contacto from "./components/pages/Contacto";
 import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
+import ProtectorRutas from "./components/routes/ProtectorRutas";
+
 function App() {
   return (
     <BrowserRouter>
-      <Menu></Menu>
+      <Menu />
       <Routes>
-        <Route path="/" element={<Inicio></Inicio>} />
-        <Route path="/login" element={<Login></Login>} />
-        <Route path="/detalle" element={<DetalleProducto></DetalleProducto>} />
-        <Route
-          path="/administrador"
-          element={<Administrador></Administrador>}
-        />
-        <Route
-          path="/administrador/crear"
-          element={<FormularioProducto></FormularioProducto>}
-        />
-        <Route
-          path="/administrador/editar"
-          element={<FormularioProducto></FormularioProducto>}
-        />
+        <Route path="/" element={<Inicio />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
-          <Route path="/nosotros" element={<QuienesSomos />} />
-          <Route path="/reserva" element={<ReservarCancha />} />
-        <Route path="*" element={<Error404></Error404>} />
+        <Route path="/nosotros" element={<QuienesSomos />} />
+        <Route path="/reserva" element={<ReservarCancha />} />
+
+        {/* 🔒 Rutas protegidas */}
+        <Route element={<ProtectorRutas />}>
+          <Route path="/administrador" element={<Administrador />} />
+          <Route path="/administrador/crear" element={<FormularioProducto />} />
+          <Route path="/administrador/editar" element={<FormularioProducto />} />
+        </Route>
+
+        <Route path="*" element={<Error404 />} />
       </Routes>
-      <Footer></Footer>
+      <Footer />
     </BrowserRouter>
   );
 }
