@@ -55,17 +55,53 @@ const AdminReservas = () => {
     }
   };
 
+  const cambiarEstado = async (reserva) => {
+    const nuevoEstado =
+      reserva.estado === "pendiente" ? "confirmada" : "pendiente";
+
+    try {
+      const respuesta = await fetch(
+        `http://localhost:3000/api/canchas/${reserva._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...reserva,
+            estado: nuevoEstado,
+          }),
+        }
+      );
+
+      const data = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(data?.mensaje || "No se pudo actualizar el estado");
+        return;
+      }
+
+      // ✅ refresca tabla
+      await obtenerReservas();
+    } catch (error) {
+      alert("Error al conectar con el servidor");
+    }
+  };
+
   return (
     <main className="container my-4">
       <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
         <div>
           <h1 className="text-white fw-bold mb-1">Administrar Reservas</h1>
           <p className="text-white-50 mb-0">
-            Endpoint actual del backend: <span className="text-white">/api/canchas</span>
+            Endpoint actual del backend:{" "}
+            <span className="text-white">/api/canchas</span>
           </p>
         </div>
 
-        <Button variant="outline-light" onClick={obtenerReservas} disabled={cargando}>
+        <Button
+          variant="outline-light"
+          onClick={obtenerReservas}
+          disabled={cargando}
+        >
           {cargando ? "Actualizando..." : "Actualizar"}
         </Button>
       </div>
@@ -103,11 +139,27 @@ const AdminReservas = () => {
                 <td>{reserva.cancha}</td>
                 <td>{new Date(reserva.fecha).toLocaleDateString()}</td>
                 <td>{reserva.hora}</td>
-                <td className={reserva.estado === "confirmada" ? "text-success" : "text-warning"}>
+                <td
+                  className={
+                    reserva.estado === "confirmada"
+                      ? "text-success fw-semibold"
+                      : "text-warning fw-semibold"
+                  }
+                >
                   {reserva.estado}
                 </td>
                 <td>${reserva.precio}</td>
-                <td>
+                <td className="d-flex gap-2">
+                  <Button
+                    variant={reserva.estado === "pendiente" ? "success" : "warning"}
+                    size="sm"
+                    onClick={() => cambiarEstado(reserva)}
+                  >
+                    {reserva.estado === "pendiente"
+                      ? "Confirmar"
+                      : "Marcar pendiente"}
+                  </Button>
+
                   <Button
                     variant="danger"
                     size="sm"
