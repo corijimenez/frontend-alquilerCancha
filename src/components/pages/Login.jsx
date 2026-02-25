@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Container from "react-bootstrap/Container";
+import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -8,31 +10,23 @@ const Login = () => {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
 
-  // Errores por campo
-  const [errores, setErrores] = useState({
-    email: "",
-    password: "",
-  });
-
-  // UX
+  const [errores, setErrores] = useState({ email: "", password: "" });
   const [enviando, setEnviando] = useState(false);
   const [errorGeneral, setErrorGeneral] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // limpiamos errores antes de validar
     const nuevosErrores = { email: "", password: "" };
 
-    // validación email
     if (!email.trim()) {
       nuevosErrores.email = "El email es obligatorio";
     } else if (!/^\S+@\S+\.\S+$/.test(email)) {
       nuevosErrores.email = "Debe ser un email válido";
     }
 
-    // validación password
     if (!password.trim()) {
       nuevosErrores.password = "La contraseña es obligatoria";
     } else if (password.length < 8) {
@@ -40,12 +34,9 @@ const Login = () => {
     }
 
     setErrores(nuevosErrores);
-
-    // si hay errores, frenamos
     const hayErrores = nuevosErrores.email || nuevosErrores.password;
     if (hayErrores) return;
 
-    // ✅ envío real al backend
     setEnviando(true);
     setErrorGeneral("");
 
@@ -64,13 +55,7 @@ const Login = () => {
         return;
       }
 
-      // Guardamos sesión (según tu backend)
-      const usuario = {
-        nombre: data.nombre,
-        role: data.role,
-        token: data.token,
-      };
-
+      const usuario = { nombre: data.nombre, role: data.role, token: data.token };
       sessionStorage.setItem("usuarioKey", JSON.stringify(usuario));
 
       setEnviando(false);
@@ -82,53 +67,88 @@ const Login = () => {
   };
 
   return (
-    <main className="container my-4">
-      <h1>Login</h1>
+    <Container className="my-5 login-wrap">
+      <Card className="login-card border-0 shadow-lg">
+        <Card.Body className="p-4 p-md-5">
+          <div className="text-center mb-4">
+            <div className="login-badge mx-auto mb-3">
+              <i className="bi bi-trophy-fill"></i>
+            </div>
+            <h1 className="h3 mb-1 text-white">Iniciar sesión</h1>
+            <p className="text-white-50 mb-0">
+              Accedé para administrar productos y gestionar la tienda.
+            </p>
+          </div>
 
-      <Form onSubmit={handleSubmit}>
-        {errorGeneral && <p className="text-danger">{errorGeneral}</p>}
-
-        {/* EMAIL */}
-        <Form.Group className="mb-3" controlId="email">
-          <Form.Label>Email</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Ingresá tu email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setErrores({ ...errores, email: "" });
-              setErrorGeneral("");
-            }}
-          />
-          {errores.email && (
-            <Form.Text className="text-danger">{errores.email}</Form.Text>
+          {errorGeneral && (
+            <div className="alert alert-danger py-2 mb-3" role="alert">
+              {errorGeneral}
+            </div>
           )}
-        </Form.Group>
 
-        {/* PASSWORD */}
-        <Form.Group className="mb-3" controlId="password">
-          <Form.Label>Contraseña</Form.Label>
-          <Form.Control
-            type="password"
-            placeholder="Ingresá tu contraseña"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setErrores({ ...errores, password: "" });
-              setErrorGeneral("");
-            }}
-          />
-          {errores.password && (
-            <Form.Text className="text-danger">{errores.password}</Form.Text>
-          )}
-        </Form.Group>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-3" controlId="email">
+              <Form.Label className="text-white-50">Email</Form.Label>
+              <Form.Control
+                type="email"
+                placeholder="Ingresá tu email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setErrores({ ...errores, email: "" });
+                  setErrorGeneral("");
+                }}
+              />
+              {errores.email && (
+                <Form.Text className="text-danger">{errores.email}</Form.Text>
+              )}
+            </Form.Group>
 
-        <Button variant="primary" type="submit" disabled={enviando}>
-          {enviando ? "Enviando..." : "Enviar"}
-        </Button>
-      </Form>
-    </main>
+            <Form.Group className="mb-3 position-relative" controlId="password">
+              <Form.Label className="text-white-50">Contraseña</Form.Label>
+
+              <Form.Control
+                type={mostrarPassword ? "text" : "password"}
+                placeholder="Ingresá tu contraseña"
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setErrores({ ...errores, password: "" });
+                  setErrorGeneral("");
+                }}
+                style={{ paddingRight: "44px" }}
+              />
+
+              <button
+                type="button"
+                onClick={() => setMostrarPassword(!mostrarPassword)}
+                aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                className="btn btn-link p-0"
+                style={{
+                  position: "absolute",
+                  right: "12px",
+                  top: "38px",
+                  color: "#1F8A3B",
+                  textDecoration: "none",
+                }}
+              >
+                <i className={`bi ${mostrarPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+              </button>
+
+              {errores.password && (
+                <Form.Text className="text-danger">{errores.password}</Form.Text>
+              )}
+            </Form.Group>
+
+            <div className="d-grid mt-4">
+              <Button className="btn-verde-cancha py-2" type="submit" disabled={enviando}>
+                {enviando ? "Enviando..." : "Entrar"}
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
+    </Container>
   );
 };
 
