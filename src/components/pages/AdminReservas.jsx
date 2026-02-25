@@ -8,24 +8,27 @@ const AdminReservas = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    const obtenerReservas = async () => {
-      try {
-        const respuesta = await fetch("http://localhost:3000/api/canchas");
-        const data = await respuesta.json();
+  const obtenerReservas = async () => {
+    try {
+      setError("");
+      setCargando(true);
 
-        if (!respuesta.ok) {
-          throw new Error("Error al obtener reservas");
-        }
+      const respuesta = await fetch("http://localhost:3000/api/canchas");
+      const data = await respuesta.json();
 
-        setReservas(data);
-      } catch (err) {
-        setError("No se pudieron cargar las reservas");
-      } finally {
-        setCargando(false);
+      if (!respuesta.ok) {
+        throw new Error("Error al obtener reservas");
       }
-    };
 
+      setReservas(data);
+    } catch (err) {
+      setError("No se pudieron cargar las reservas");
+    } finally {
+      setCargando(false);
+    }
+  };
+
+  useEffect(() => {
     obtenerReservas();
   }, []);
 
@@ -45,8 +48,8 @@ const AdminReservas = () => {
         return;
       }
 
-      // ✅ actualizar tabla sin recargar
-      setReservas((prev) => prev.filter((r) => r._id !== id));
+      // ✅ vuelve a pedir GET para sincronizar con la DB real
+      await obtenerReservas();
     } catch (error) {
       alert("Error de conexión con el servidor");
     }
@@ -54,10 +57,21 @@ const AdminReservas = () => {
 
   return (
     <main className="container my-4">
-      <h1 className="text-white fw-bold mb-4">Administrar Reservas</h1>
+      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
+        <div>
+          <h1 className="text-white fw-bold mb-1">Administrar Reservas</h1>
+          <p className="text-white-50 mb-0">
+            Endpoint actual del backend: <span className="text-white">/api/canchas</span>
+          </p>
+        </div>
+
+        <Button variant="outline-light" onClick={obtenerReservas} disabled={cargando}>
+          {cargando ? "Actualizando..." : "Actualizar"}
+        </Button>
+      </div>
 
       {cargando && (
-        <div className="text-center">
+        <div className="text-center my-4">
           <Spinner animation="border" variant="light" />
         </div>
       )}
@@ -89,7 +103,9 @@ const AdminReservas = () => {
                 <td>{reserva.cancha}</td>
                 <td>{new Date(reserva.fecha).toLocaleDateString()}</td>
                 <td>{reserva.hora}</td>
-                <td>{reserva.estado}</td>
+                <td className={reserva.estado === "confirmada" ? "text-success" : "text-warning"}>
+                  {reserva.estado}
+                </td>
                 <td>${reserva.precio}</td>
                 <td>
                   <Button
