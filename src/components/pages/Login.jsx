@@ -41,11 +41,14 @@ const Login = () => {
     setErrorGeneral("");
 
     try {
-      const respuesta = await fetch("http://localhost:3000/api/usuarios/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const respuesta = await fetch(
+        "http://localhost:3000/api/usuarios/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        },
+      );
 
       const data = await respuesta.json();
 
@@ -55,7 +58,11 @@ const Login = () => {
         return;
       }
 
-      const usuario = { nombre: data.nombre, role: data.role, token: data.token };
+      const usuario = {
+        nombre: data.nombre,
+        role: data.role,
+        token: data.token,
+      };
       sessionStorage.setItem("usuarioKey", JSON.stringify(usuario));
 
       setEnviando(false);
@@ -122,7 +129,9 @@ const Login = () => {
               <button
                 type="button"
                 onClick={() => setMostrarPassword(!mostrarPassword)}
-                aria-label={mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+                aria-label={
+                  mostrarPassword ? "Ocultar contraseña" : "Mostrar contraseña"
+                }
                 className="btn btn-link p-0"
                 style={{
                   position: "absolute",
@@ -132,17 +141,34 @@ const Login = () => {
                   textDecoration: "none",
                 }}
               >
-                <i className={`bi ${mostrarPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                <i
+                  className={`bi ${mostrarPassword ? "bi-eye-slash" : "bi-eye"}`}
+                ></i>
               </button>
 
               {errores.password && (
-                <Form.Text className="text-danger">{errores.password}</Form.Text>
+                <Form.Text className="text-danger">
+                  {errores.password}
+                </Form.Text>
               )}
             </Form.Group>
 
             <div className="d-grid mt-4">
-              <Button className="btn-verde-cancha py-2" type="submit" disabled={enviando}>
+              <Button
+                className="btn-verde-cancha py-2"
+                type="submit"
+                disabled={enviando}
+              >
                 {enviando ? "Enviando..." : "Entrar"}
+              </Button>
+            </div>
+            <div className="text-center mt-3">
+              <Button
+                variant="outline-light"
+                size="sm"
+                onClick={() => navigate("/")}
+              >
+                Volver al inicio
               </Button>
             </div>
           </Form>
