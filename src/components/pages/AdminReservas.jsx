@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Spinner from "react-bootstrap/Spinner";
+import Button from "react-bootstrap/Button";
 
 const AdminReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -28,6 +29,29 @@ const AdminReservas = () => {
     obtenerReservas();
   }, []);
 
+  const borrarReserva = async (id) => {
+    const confirmar = confirm("¿Seguro que querés eliminar esta reserva?");
+    if (!confirmar) return;
+
+    try {
+      const respuesta = await fetch(`http://localhost:3000/api/canchas/${id}`, {
+        method: "DELETE",
+      });
+
+      const data = await respuesta.json();
+
+      if (!respuesta.ok) {
+        alert(data?.mensaje || "No se pudo eliminar la reserva");
+        return;
+      }
+
+      // ✅ actualizar tabla sin recargar
+      setReservas((prev) => prev.filter((r) => r._id !== id));
+    } catch (error) {
+      alert("Error de conexión con el servidor");
+    }
+  };
+
   return (
     <main className="container my-4">
       <h1 className="text-white fw-bold mb-4">Administrar Reservas</h1>
@@ -41,9 +65,7 @@ const AdminReservas = () => {
       {error && <div className="alert alert-danger">{error}</div>}
 
       {!cargando && reservas.length === 0 && (
-        <div className="alert alert-info">
-          No hay reservas registradas.
-        </div>
+        <div className="alert alert-info">No hay reservas registradas.</div>
       )}
 
       {!cargando && reservas.length > 0 && (
@@ -56,8 +78,10 @@ const AdminReservas = () => {
               <th>Hora</th>
               <th>Estado</th>
               <th>Precio</th>
+              <th>Acciones</th>
             </tr>
           </thead>
+
           <tbody>
             {reservas.map((reserva, index) => (
               <tr key={reserva._id}>
@@ -67,6 +91,15 @@ const AdminReservas = () => {
                 <td>{reserva.hora}</td>
                 <td>{reserva.estado}</td>
                 <td>${reserva.precio}</td>
+                <td>
+                  <Button
+                    variant="danger"
+                    size="sm"
+                    onClick={() => borrarReserva(reserva._id)}
+                  >
+                    Eliminar
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
