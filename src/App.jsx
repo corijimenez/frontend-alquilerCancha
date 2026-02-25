@@ -10,6 +10,7 @@ import Footer from "./components/shared/Footer";
 import Contacto from "./components/pages/Contacto";
 import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
+import AdminReservas from "./components/pages/AdminReservas";
 function App() {
   return (
     <BrowserRouter>
@@ -34,6 +35,7 @@ function App() {
           <Route path="/nosotros" element={<QuienesSomos />} />
           <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="*" element={<Error404></Error404>} />
+        <Route path="/admin/reservas" element={<AdminReservas />} />
       </Routes>
       <Footer></Footer>
     </BrowserRouter>
