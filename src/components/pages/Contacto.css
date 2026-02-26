@@ -80,9 +80,12 @@
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease;
   height: 100%;
+  text-decoration: none;
 }
 
+
 .info-card:hover {
+  text-decoration: none;
   transform: translateY(-5px);
   border-color: var(--verde-cancha);
 }

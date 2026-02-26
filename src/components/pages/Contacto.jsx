@@ -1,4 +1,3 @@
-import React from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import "./Contacto.css";
@@ -41,18 +40,18 @@ const Contacto = () => {
         <div className="container">
           <div className="row g-4 justify-content-center">
             <div className="col-md-4">
-              <div className="info-card">
+              <a className="info-card" href="/reservas">
                 <div className="info-icon-container">
                   <i className="bi bi-calendar-check"></i>
                 </div>
-                <div className="info-text">
+                <div className="info-text" >
                   <h5>Reservas</h5>
                   <p>Disponibilidad inmediata 24/7.</p>
                 </div>
-              </div>
+              </a>
             </div>
             <div className="col-md-4">
-              <div className="info-card">
+              <a className="info-card" href="/tienda">
                 <div className="info-icon-container">
                   <i className="bi bi-trophy"></i>
                 </div>
@@ -60,7 +59,7 @@ const Contacto = () => {
                   <h5>Productos exclusivos</h5>
                   <p>No te pierdas de nuestros productos personalizados.</p>
                 </div>
-              </div>
+              </a>
             </div>
             <div className="col-md-4">
               <div className="info-card">
