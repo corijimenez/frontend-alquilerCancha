@@ -36,6 +36,46 @@ const Contacto = () => {
         </div>
       </section>
 
+      {/* 2. INFO CARDS (Debajo del banner) */}
+      <section className="info-section py-5">
+        <div className="container">
+          <div className="row g-4 justify-content-center">
+            <div className="col-md-4">
+              <div className="info-card">
+                <div className="info-icon-container">
+                  <i className="bi bi-calendar-check"></i>
+                </div>
+                <div className="info-text">
+                  <h5>Reservas</h5>
+                  <p>Disponibilidad inmediata 24/7.</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="info-card">
+                <div className="info-icon-container">
+                  <i className="bi bi-trophy"></i>
+                </div>
+                <div className="info-text">
+                  <h5>Productos exclusivos</h5>
+                  <p>No te pierdas de nuestros productos personalizados.</p>
+                </div>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="info-card">
+                <div className="info-icon-container">
+                  <i className="bi bi-geo-alt"></i>
+                </div>
+                <div className="info-text">
+                  <h5>Ubicación</h5>
+                  <p>Gral. Paz 576, SMT.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* 3. FORMULARIO Y MAPA */}
       <section className="main-contact-area container pb-5 mb-5">
