@@ -158,3 +158,35 @@ body {
   box-shadow: 0 0 15px #198754;
   transform: scale(1.05);
 }
+
+/*====ESTILO LOGIN====*/
+.login-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+.login-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/public/login-bg.jpeg");
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  filter: brightness(0.8) saturate(1.1);
+  z-index: 0;
+}
+
+.login-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(18, 18, 18, 0.75);
+  z-index: 0;
+}
+
+.login-card .card-body {
+  position: relative;
+  z-index: 1;
+}
