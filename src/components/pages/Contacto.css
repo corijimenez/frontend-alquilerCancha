@@ -1,10 +1,10 @@
 /* --- PALETA DE COLORES --- */
 :root {
-  --verde-cancha: #1F8A3B;
+  --verde-cancha: #1f8a3b;
   --negro-carbon: #121212;
-  --blanco: #FFFFFF;
-  --gris-fuerte: #2E2E2E;
-  --gris-claro: #E5E5E5;
+  --blanco: #ffffff;
+  --gris-fuerte: #2e2e2e;
+  --gris-claro: #e5e5e5;
 }
 
 /* --- BANNER --- */
@@ -31,7 +31,7 @@
 .banner-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(rgba(18,18,18, 0.6), rgba(18,18,18, 0.8));
+  background: linear-gradient(rgba(18, 18, 18, 0.6), rgba(18, 18, 18, 0.8));
   z-index: 2;
 }
 
@@ -41,16 +41,11 @@
   color: var(--blanco);
 }
 
-/* .banner-content h1 {
-  letter-spacing: 4px;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-} */
-
 .banner-content h1 {
   text-align: center;
   font-size: clamp(1.8rem, 5vw, 3rem);
   letter-spacing: 4px;
-  text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
   opacity: 0;
   transform: translateY(40px);
   animation: fadeSlideUp 1s ease-out 0.4s forwards;
@@ -70,24 +65,22 @@
 /* --- INFO CARDS --- */
 .info-section {
   background-color: var(--negro-carbon);
-  margin-top: -50px; /* Eleva las cards sobre el banner */
+  margin-top: -50px;
   position: relative;
   z-index: 10;
 }
-
 
 .info-card {
   display: flex;
   align-items: center;
   padding: 20px;
-  background:  #1c1c1c;
-   border: 1px solid #2a2a2a;
+  background: #1c1c1c;
+  border: 1px solid #2a2a2a;
   border-radius: 12px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
   transition: transform 0.3s ease;
   height: 100%;
 }
-
 
 .info-card:hover {
   transform: translateY(-5px);
@@ -115,7 +108,7 @@
 }
 
 .info-text p {
-    color: #cfcfcf;
+  color: #cfcfcf;
   margin-bottom: 0;
 }
 
@@ -132,7 +125,7 @@
 }
 
 .section-title::after {
-  content: '';
+  content: "";
   display: block;
   width: 40px;
   height: 3px;
@@ -187,7 +180,6 @@
 
 /* --- RESPONSIVE --- */
 @media (max-width: 576px) {
-
   /* Banner */
   .banner-hero {
     height: 180px;
@@ -253,9 +245,7 @@
   }
 }
 
-
 @media (min-width: 577px) and (max-width: 991px) {
-
   .banner-hero {
     height: 250px;
   }
