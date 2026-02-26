@@ -23,6 +23,85 @@ const Contacto = () => {
 
   return (
     <div className="contacto-container">
+      {/* 1. BANNER HERO */}
+      {/* 1. BANNER HERO */}
+      <div className="banner-hero">
+        {/* La imagen ahora es un elemento real */}
+        <img
+          src="./cancha11.jpg"
+          alt="Cancha de fútbol"
+          className="banner-img"
+        />
+
+        {/* El overlay oscuro para que se lea el texto */}
+        <div className="banner-overlay"></div>
+
+        <div className="container text-center banner-content">
+          <h1 className="display-4">Contáctanos</h1>
+        </div>
+      </div>
+
+      {/* 2. SECCIÓN DE INFORMACIÓN MEJORADA */}
+      <div className="info-bar py-5 border-bottom">
+        <div className="container">
+          <div className="row justify-content-center text-center mb-5">
+            <div className="col-lg-8">
+              <h2 className="display-6 fw-bold mb-3">¿Listo para jugar?</h2>
+              <p className="text-muted lead">
+                Nos encantaría saber de ti. Estamos disponibles para ayudarte a
+                organizar tu próximo partido.
+              </p>
+            </div>
+          </div>
+
+          <div className="row g-4">
+            {/* Reserva */}
+            <div className="col-md-4">
+              <div className="info-item shadow-sm rounded bg-white h-100">
+                <div className="info-icon">
+                  <i className="bi bi-calendar-check"></i>
+                </div>
+                <div>
+                  <h5 className="fw-bold mb-1">Reservas</h5>
+                  <p className="small text-muted mb-0">
+                    Disponibilidad inmediata 24/7.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Torneos */}
+            <div className="col-md-4">
+              <div className="info-item shadow-sm rounded bg-white h-100">
+                <div className="info-icon">
+                  <i className="bi bi-trophy"></i>
+                </div>
+                <div>
+                  <h5 className="fw-bold mb-1">Torneos</h5>
+                  <p className="small text-muted mb-0">
+                    Organizamos tu competencia ideal.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Ubicación */}
+            <div className="col-md-4">
+              <div className="info-item shadow-sm rounded bg-white h-100">
+                <div className="info-icon">
+                  <i className="bi bi-geo-alt"></i>
+                </div>
+                <div>
+                  <h5 className="fw-bold mb-1">Ubicación</h5>
+                  <p className="small text-muted mb-0">
+                    Gral. Paz 576, San Miguel de Tucumán.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* SECCIÓN PRINCIPAL: FORMULARIO (Izquierda) + MAPA (Derecha) */}
       <div className="container py-5 my-4">
         <div className="row g-4 align-items-stretch">
