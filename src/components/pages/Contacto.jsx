@@ -44,7 +44,7 @@ const Contacto = () => {
                 <div className="info-icon-container">
                   <i className="bi bi-calendar-check"></i>
                 </div>
-                <div className="info-text" >
+                <div className="info-text">
                   <h5>Reservas</h5>
                   <p>Disponibilidad inmediata 24/7.</p>
                 </div>
