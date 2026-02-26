@@ -16,7 +16,7 @@ const Contacto = () => {
       title: "¡Mensaje enviado!",
       text: "Nos pondremos en contacto pronto.",
       icon: "success",
-      confirmButtonColor: "#0d6efd",
+      confirmButtonColor: "#1F8A3B",
     });
     reset();
   };
@@ -24,145 +24,148 @@ const Contacto = () => {
   return (
     <div className="contacto-container">
       {/* 1. BANNER HERO */}
-      {/* 1. BANNER HERO */}
-      <div className="banner-hero">
-        {/* La imagen ahora es un elemento real */}
+      <section className="banner-hero">
         <img
-          src="./cancha11.jpg"
+          src="/cancha11.jpg"
           alt="Cancha de fútbol"
           className="banner-img"
-        />
-
-        {/* El overlay oscuro para que se lea el texto */}
+        />{" "}
         <div className="banner-overlay"></div>
-
-        <div className="container text-center banner-content">
-          <h1 className="display-4">Contáctanos</h1>
+        <div className="container banner-content">
+          <h1 className="display-3 fw-bold">Contáctanos</h1>
         </div>
-      </div>
+      </section>
 
-      {/* 2. SECCIÓN DE INFORMACIÓN MEJORADA */}
-      <div className="info-bar py-5 border-bottom">
-        <div className="container">
-          <div className="row justify-content-center text-center mb-5">
-            <div className="col-lg-8">
-              <h2 className="display-6 fw-bold mb-3">¿Listo para jugar?</h2>
-              <p className="text-muted lead">
-                Nos encantaría saber de ti. Estamos disponibles para ayudarte a
-                organizar tu próximo partido.
-              </p>
-            </div>
-          </div>
 
-          <div className="row g-4">
-            {/* Reserva */}
-            <div className="col-md-4">
-              <div className="info-item shadow-sm rounded bg-white h-100">
-                <div className="info-icon">
-                  <i className="bi bi-calendar-check"></i>
-                </div>
-                <div>
-                  <h5 className="fw-bold mb-1">Reservas</h5>
-                  <p className="small text-muted mb-0">
-                    Disponibilidad inmediata 24/7.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Torneos */}
-            <div className="col-md-4">
-              <div className="info-item shadow-sm rounded bg-white h-100">
-                <div className="info-icon">
-                  <i className="bi bi-trophy"></i>
-                </div>
-                <div>
-                  <h5 className="fw-bold mb-1">Torneos</h5>
-                  <p className="small text-muted mb-0">
-                    Organizamos tu competencia ideal.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Ubicación */}
-            <div className="col-md-4">
-              <div className="info-item shadow-sm rounded bg-white h-100">
-                <div className="info-icon">
-                  <i className="bi bi-geo-alt"></i>
-                </div>
-                <div>
-                  <h5 className="fw-bold mb-1">Ubicación</h5>
-                  <p className="small text-muted mb-0">
-                    Gral. Paz 576, San Miguel de Tucumán.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* SECCIÓN PRINCIPAL: FORMULARIO (Izquierda) + MAPA (Derecha) */}
-      <div className="container py-5 my-4">
-        <div className="row g-4 align-items-stretch">
-          {/* Formulario a la izquierda */}
+      {/* 3. FORMULARIO Y MAPA */}
+      <section className="main-contact-area container pb-5 mb-5">
+        <div className="row g-5 align-items-stretch my-3">
+          {/* Formulario */}
           <div className="col-lg-6">
-            <div className="card contacto-card p-4 p-md-5 h-100">
-              <h3 className="fw-bold mb-4">Envíanos un mensaje</h3>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="row">
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label fw-bold small">NOMBRE</label>
-                    <input
-                      type="text"
-                      className={`form-control bg-light border-0 py-2 ${errors.nombre ? "is-invalid" : ""}`}
-                      {...register("nombre", { required: true })}
-                    />
+            <div className="card contacto-card h-100">
+              <div className="card-body p-4 p-md-5">
+                <h3 className="fw-bold mb-4 section-title">
+                  Envíanos un mensaje
+                </h3>
+                <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                  <div className="row">
+                    {/* NOMBRE */}
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label fw-bold small">NOMBRE</label>
+                      <input
+                        type="text"
+                        className={`form-control custom-input ${errors.nombre ? "is-invalid" : ""}`}
+                        {...register("nombre", {
+                          required: "El nombre es obligatorio",
+                          minLength: {
+                            value: 3,
+                            message: "Debe tener al menos 3 caracteres",
+                          },
+                          maxLength: {
+                            value: 40,
+                            message: "Máximo 40 caracteres",
+                          },
+                          pattern: {
+                            value: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/,
+                            message: "Solo se permiten letras",
+                          },
+                        })}
+                      />
+                      {errors.nombre && (
+                        <small className="text-danger">
+                          {errors.nombre.message}
+                        </small>
+                      )}
+                    </div>
+
+                    {/* TELÉFONO */}
+                    <div className="col-md-6 mb-3">
+                      <label className="form-label fw-bold small">
+                        TELÉFONO
+                      </label>
+                      <input
+                        type="tel"
+                        className={`form-control custom-input ${errors.telefono ? "is-invalid" : ""}`}
+                        {...register("telefono", {
+                          required: "El teléfono es obligatorio",
+                          pattern: {
+                            value: /^[0-9]{8,15}$/,
+                            message: "Debe contener entre 8 y 15 números",
+                          },
+                        })}
+                      />
+                      {errors.telefono && (
+                        <small className="text-danger">
+                          {errors.telefono.message}
+                        </small>
+                      )}
+                    </div>
                   </div>
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label fw-bold small">TELÉFONO</label>
+
+                  {/* EMAIL */}
+                  <div className="mb-3">
+                    <label className="form-label fw-bold small">EMAIL</label>
                     <input
-                      type="tel"
-                      className={`form-control bg-light border-0 py-2 ${errors.telefono ? "is-invalid" : ""}`}
-                      {...register("telefono", { required: true })}
+                      type="email"
+                      className={`form-control custom-input ${errors.email ? "is-invalid" : ""}`}
+                      {...register("email", {
+                        required: "El email es obligatorio",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Ingrese un email válido",
+                        },
+                      })}
                     />
+                    {errors.email && (
+                      <small className="text-danger">
+                        {errors.email.message}
+                      </small>
+                    )}
                   </div>
-                </div>
 
-                <div className="mb-3">
-                  <label className="form-label fw-bold small">EMAIL</label>
-                  <input
-                    type="email"
-                    className={`form-control bg-light border-0 py-2 ${errors.email ? "is-invalid" : ""}`}
-                    {...register("email", { required: true })}
-                  />
-                </div>
+                  {/* MENSAJE */}
+                  <div className="mb-4">
+                    <label className="form-label fw-bold small">MENSAJE</label>
+                    <textarea
+                      className={`form-control custom-input ${errors.mensaje ? "is-invalid" : ""}`}
+                      rows="5"
+                      placeholder="¿En qué podemos ayudarte?"
+                      {...register("mensaje", {
+                        required: "El mensaje es obligatorio",
+                        minLength: {
+                          value: 10,
+                          message:
+                            "El mensaje debe tener al menos 10 caracteres",
+                        },
+                        maxLength: {
+                          value: 300,
+                          message: "Máximo 300 caracteres",
+                        },
+                      })}
+                    ></textarea>
+                    {errors.mensaje && (
+                      <small className="text-danger">
+                        {errors.mensaje.message}
+                      </small>
+                    )}
+                  </div>
 
-                <div className="mb-4">
-                  <label className="form-label fw-bold small">MENSAJE</label>
-                  <textarea
-                    className="form-control bg-light border-0 py-2"
-                    rows="5"
-                    placeholder="¿En qué podemos ayudarte?"
-                    {...register("mensaje")}
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="btn btn-primary w-100 py-3 fw-bold text-uppercase"
-                >
-                  Enviar Mensaje
-                </button>
-              </form>
+                  <button
+                    type="submit"
+                    className="btn btn-verde-cancha w-100 py-3 fw-bold text-uppercase"
+                  >
+                    Enviar Mensaje
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
 
-          {/* Mapa a la derecha */}
+          {/* Mapa */}
           <div className="col-lg-6">
-            <div className="map-container shadow-sm h-100">
+            <div className="map-wrapper shadow-sm h-100">
               <iframe
-                class="map-iframe"
+                className="map-iframe"
                 src="https://www.google.com/maps?q=General%20Paz%20576%2C%20Piso%209%2C%20Oficina%202%2C%20San%20Miguel%20de%20Tucum%C3%A1n%2C%20Tucum%C3%A1n%2C%20Argentina&output=embed"
                 allowfullscreen
                 loading="lazy"
@@ -172,7 +175,7 @@ const Contacto = () => {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 };
