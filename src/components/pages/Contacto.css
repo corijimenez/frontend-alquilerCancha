@@ -185,3 +185,70 @@
   border: 0;
 }
 
+/* --- RESPONSIVE --- */
+@media (max-width: 576px) {
+
+  /* Banner */
+  .banner-hero {
+    height: 180px;
+    text-align: center;
+  }
+
+  .banner-content h1 {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+
+  /* Info cards */
+  .info-section {
+    margin-top: 20px;
+    padding: 20px 10px;
+  }
+
+  .info-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .info-icon-container {
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+
+  .info-text h5 {
+    font-size: 1rem;
+  }
+
+  .info-text p {
+    font-size: 0.9rem;
+  }
+
+  /* Formulario */
+  .contacto-card {
+    padding: 10px;
+  }
+
+  .section-title {
+    font-size: 1.3rem;
+  }
+
+  .custom-input {
+    font-size: 0.9rem;
+  }
+
+  .btn-verde-cancha {
+    font-size: 0.9rem;
+    padding: 12px;
+  }
+
+  /* Mapa */
+  .map-wrapper {
+    min-height: 250px;
+    margin-top: 20px;
+  }
+
+  .map-iframe {
+    min-height: 250px;
+  }
+}
