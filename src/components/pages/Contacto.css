@@ -252,3 +252,28 @@
     min-height: 250px;
   }
 }
+
+
+@media (min-width: 577px) and (max-width: 991px) {
+
+  .banner-hero {
+    height: 250px;
+  }
+
+  .banner-content h1 {
+    font-size: 2.2rem;
+  }
+
+  .info-section {
+    margin-top: 10px;
+  }
+
+  .info-card {
+    padding: 18px;
+  }
+
+  .map-wrapper {
+    min-height: 300px;
+    margin-top: 20px;
+  }
+}
