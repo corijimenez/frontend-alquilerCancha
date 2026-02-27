@@ -16,7 +16,8 @@ const Administrador = () => {
           <Card className="border-0 shadow-lg bg-dark text-white h-100">
             <Card.Body className="p-4">
               <div className="d-flex align-items-center gap-3 mb-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center"
+                <div
+                  className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{ width: "44px", height: "44px", background: "#1F8A3B" }}
                 >
                   <i className="bi bi-bag-fill"></i>
@@ -32,10 +33,18 @@ const Administrador = () => {
               </p>
 
               <div className="d-flex gap-2 flex-wrap">
-                <Button as={Link} to="/admin/productos" className="btn-verde-cancha">
+                <Button
+                  as={Link}
+                  to="/admin/productos"
+                  className="btn-verde-cancha"
+                >
                   Administrar
                 </Button>
-                <Button as={Link} to="/administrador/crear" variant="outline-light">
+                <Button
+                  as={Link}
+                  to="/administrador/crear"
+                  variant="outline-light"
+                >
                   Crear nuevo
                 </Button>
               </div>
@@ -47,7 +56,8 @@ const Administrador = () => {
           <Card className="border-0 shadow-lg bg-dark text-white h-100">
             <Card.Body className="p-4">
               <div className="d-flex align-items-center gap-3 mb-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center"
+                <div
+                  className="rounded-circle d-flex align-items-center justify-content-center"
                   style={{ width: "44px", height: "44px", background: "#1A73E8" }}
                 >
                   <i className="bi bi-people-fill"></i>
@@ -73,8 +83,14 @@ const Administrador = () => {
           <Card className="border-0 shadow-lg bg-dark text-white">
             <Card.Body className="p-4 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
               <div className="d-flex align-items-center gap-3">
-                <div className="rounded-circle d-flex align-items-center justify-content-center"
-                  style={{ width: "44px", height: "44px", background: "#F4B400", color: "#121212" }}
+                <div
+                  className="rounded-circle d-flex align-items-center justify-content-center"
+                  style={{
+                    width: "44px",
+                    height: "44px",
+                    background: "#F4B400",
+                    color: "#121212",
+                  }}
                 >
                   <i className="bi bi-calendar-check-fill"></i>
                 </div>
