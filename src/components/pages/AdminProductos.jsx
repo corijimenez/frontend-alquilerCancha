@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { listarProductosApi, borrarProductoApi } from "../../helpers/queries";
+import "./AdminProductos.css";
 
 const AdminProductos = () => {
   const [productos, setProductos] = useState([]);
@@ -28,7 +29,6 @@ const AdminProductos = () => {
 
   const eliminarProducto = async (id) => {
     const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-
     const respuesta = await borrarProductoApi(id, usuario.token);
 
     if (respuesta.ok) {
@@ -39,24 +39,24 @@ const AdminProductos = () => {
   };
 
   return (
-    <main className="container my-4">
+    <main className="container my-4 admin-productos">
 
-      {/* 🔹 Encabezado + botón crear */}
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1 className="text-white fw-bold mb-0">
+      <div className="admin-header">
+        <h1 className="admin-title">
           Administrar Productos
         </h1>
 
         <Button
           as={Link}
           to="/administrador/crear"
-          className="btn-verde-cancha"
+          className="btn-crear-producto"
         >
+          <i className="bi bi-plus-circle me-2"></i>
           Crear producto
         </Button>
       </div>
 
-      <Table striped bordered hover variant="dark">
+      <Table striped bordered hover variant="dark" className="admin-table">
         <thead>
           <tr>
             <th>#</th>
@@ -87,19 +87,18 @@ const AdminProductos = () => {
                 <td>${producto.precio}</td>
                 <td>
                   <Button
-                    variant="warning"
-                    size="sm"
-                    className="me-2"
                     as={Link}
                     to={`/administrador/editar/${producto._id}`}
+                    className="btn-editar"
+                    size="sm"
                   >
                     Editar
                   </Button>
 
                   <Button
-                    variant="danger"
-                    size="sm"
                     onClick={() => eliminarProducto(producto._id)}
+                    className="btn-eliminar ms-2"
+                    size="sm"
                   >
                     Eliminar
                   </Button>
