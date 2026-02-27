@@ -12,6 +12,7 @@ import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
+import AdminProductos from "./components/pages/AdminProductos";
 
 function App() {
   return (
@@ -29,10 +30,13 @@ function App() {
         <Route element={<ProtectorRutas />}>
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
-          <Route path="/administrador/editar" element={<FormularioProducto />} />
+          <Route
+            path="/administrador/editar"
+            element={<FormularioProducto />}
+          />
           <Route path="/admin/reservas" element={<AdminReservas />} />
         </Route>
-
+        <Route path="/admin/productos" element={<AdminProductos />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
       <Footer />
