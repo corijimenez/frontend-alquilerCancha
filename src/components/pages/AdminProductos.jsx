@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Table, Button, Badge } from "react-bootstrap";
+import { useEffect, useMemo, useState } from "react";
+import { Table, Button, Form, InputGroup, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { listarProductosApi, borrarProductoApi } from "../../helpers/queries";
@@ -8,6 +8,9 @@ import "./AdminProductos.css";
 const AdminProductos = () => {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
+
+  // ✅ NUEVO: buscador
+  const [busqueda, setBusqueda] = useState("");
 
   useEffect(() => {
     obtenerProductos();
@@ -27,6 +30,16 @@ const AdminProductos = () => {
 
     setCargando(false);
   };
+
+  // ✅ NUEVO: lista filtrada por nombre
+  const productosFiltrados = useMemo(() => {
+    const texto = busqueda.trim().toLowerCase();
+    if (!texto) return productos;
+
+    return productos.filter((p) =>
+      (p.nombre || "").toLowerCase().includes(texto),
+    );
+  }, [busqueda, productos]);
 
   const eliminarProducto = async (producto) => {
     const confirmacion = await Swal.fire({
@@ -73,6 +86,37 @@ const AdminProductos = () => {
         </Button>
       </div>
 
+      {/* ✅ NUEVO: buscador */}
+      <div className="admin-search">
+        <InputGroup>
+          <InputGroup.Text>
+            <i className="bi bi-search"></i>
+          </InputGroup.Text>
+
+          <Form.Control
+            placeholder="Buscar por nombre..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+
+          <Button
+            variant="outline-light"
+            onClick={() => setBusqueda("")}
+            disabled={!busqueda}
+          >
+            Limpiar
+          </Button>
+        </InputGroup>
+
+        {/* mini feedback */}
+        {!cargando && (
+          <small className="admin-search-info">
+            Mostrando <b>{productosFiltrados.length}</b> de{" "}
+            <b>{productos.length}</b>
+          </small>
+        )}
+      </div>
+
       <div className="table-responsive admin-table">
         <Table striped bordered hover variant="dark" className="mb-0">
           <thead>
@@ -91,14 +135,16 @@ const AdminProductos = () => {
                   Cargando productos...
                 </td>
               </tr>
-            ) : productos.length === 0 ? (
+            ) : productosFiltrados.length === 0 ? (
               <tr>
                 <td colSpan="4" className="text-center">
-                  No hay productos disponibles
+                  {busqueda.trim()
+                    ? "No se encontraron productos con esa búsqueda"
+                    : "No hay productos disponibles"}
                 </td>
               </tr>
             ) : (
-              productos.map((producto, index) => (
+              productosFiltrados.map((producto, index) => (
                 <tr key={producto._id}>
                   <td className="col-num">{index + 1}</td>
 
@@ -106,14 +152,9 @@ const AdminProductos = () => {
                     <div className="d-flex flex-column">
                       <span className="fw-semibold">{producto.nombre}</span>
 
-                      {/* ✅ Solo stock (sin “Activo”) */}
-                      <div className="mt-2">
-                        <Badge
-                          bg={Number(producto.stock) === 0 ? "danger" : "info"}
-                          className="badge-stock"
-                        >
-                          Stock: {producto.stock ?? 0}
-                        </Badge>
+                      {/* ✅ Stock (solo stock, sin “activo”) */}
+                      <div className="d-flex gap-2 mt-2 flex-wrap">
+                        <Badge bg="info">Stock: {producto.stock ?? 0}</Badge>
                       </div>
                     </div>
                   </td>
@@ -129,6 +170,7 @@ const AdminProductos = () => {
                         as={Link}
                         to={`/administrador/editar/${producto._id}`}
                       >
+                        <i className="bi bi-pencil-square me-2"></i>
                         Editar
                       </Button>
 
@@ -138,6 +180,7 @@ const AdminProductos = () => {
                         className="btn-accion btn-eliminar"
                         onClick={() => eliminarProducto(producto)}
                       >
+                        <i className="bi bi-trash3 me-2"></i>
                         Eliminar
                       </Button>
                     </div>

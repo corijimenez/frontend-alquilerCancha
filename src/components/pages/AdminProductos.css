@@ -81,7 +81,7 @@
   filter: brightness(1.03);
 }
 
-/* ✅ Mobile: NO comprimas columnas, y si se apila, que NO se salga */
+/* ✅ Mobile: NO comprima columnas, y si se apila, que NO se salgan */
 @media (max-width: 576px) {
   .admin-header {
     align-items: flex-start;
@@ -125,4 +125,21 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+
+/* Buscador */
+.admin-search {
+  margin-bottom: 14px;
+}
+
+.admin-search .input-group-text,
+.admin-search .form-control,
+.admin-search .btn {
+  border-radius: 10px;
+}
+
+.admin-search-info {
+  display: inline-block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.75);
 }
