@@ -1,47 +1,41 @@
 import { useEffect, useState } from "react";
 import { Table, Button } from "react-bootstrap";
+import { listarProductosApi, borrarProductoApi } from "../../helpers/queries";
 
 const AdminProductos = () => {
   const [productos, setProductos] = useState([]);
+  const [cargando, setCargando] = useState(true);
 
   useEffect(() => {
     obtenerProductos();
   }, []);
 
   const obtenerProductos = async () => {
-    try {
-      const respuesta = await fetch("http://localhost:3000/api/productos");
-      const data = await respuesta.json();
-      setProductos(data);
-    } catch (error) {
-      console.error("Error al obtener productos:", error);
+    setCargando(true);
+
+    const respuesta = await listarProductosApi();
+
+    if (respuesta.ok) {
+      setProductos(respuesta.data); // ✅ ahora sí guardás el array
+    } else {
+      setProductos([]);
+      console.log("Error al listar productos:", respuesta.data);
     }
+
+    setCargando(false);
   };
 
-const eliminarProducto = async (id) => {
-  try {
-    const usuarioLogueado =
-      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+  const eliminarProducto = async (id) => {
+    const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
 
-    const respuesta = await fetch(`http://localhost:3000/api/productos/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${usuarioLogueado.token}`,
-      },
-    });
+    const respuesta = await borrarProductoApi(id, usuario.token);
 
-    const data = await respuesta.json().catch(() => null);
-
-    if (!respuesta.ok) {
-      console.log("Error al borrar:", data);
-      return;
+    if (respuesta.ok) {
+      obtenerProductos();
+    } else {
+      console.log("Error al borrar:", respuesta.data);
     }
-
-    obtenerProductos(); // refresca lista
-  } catch (error) {
-    console.error("Error al eliminar producto:", error);
-  }
-};
+  };
 
   return (
     <main className="container my-4">
@@ -56,8 +50,15 @@ const eliminarProducto = async (id) => {
             <th>Acciones</th>
           </tr>
         </thead>
+
         <tbody>
-          {productos.length === 0 ? (
+          {cargando ? (
+            <tr>
+              <td colSpan="4" className="text-center">
+                Cargando productos...
+              </td>
+            </tr>
+          ) : productos.length === 0 ? (
             <tr>
               <td colSpan="4" className="text-center">
                 No hay productos disponibles

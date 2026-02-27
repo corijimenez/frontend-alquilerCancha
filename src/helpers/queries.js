@@ -3,15 +3,24 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ✅ PRODUCTOS
 export const listarProductosApi = async () => {
   try {
-    const respuesta = await fetch(`${API_URL}/productos`, { cache: "no-store" });
+    const respuesta = await fetch(`${API_URL}/productos`, {
+      cache: "no-store",
+    });
+
     const data = await respuesta.json();
-    return data;
+
+    return {
+      ok: respuesta.ok,
+      data: data,
+    };
   } catch (error) {
     console.error(error);
-    return [];
+    return {
+      ok: false,
+      data: [],
+    };
   }
 };
-
 export const borrarProductoApi = async (id, token) => {
   try {
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
