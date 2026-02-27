@@ -18,18 +18,30 @@ const AdminProductos = () => {
     }
   };
 
-  const eliminarProducto = async (id) => {
-    try {
-      await fetch(`http://localhost:3000/api/productos/${id}`, {
-        method: "DELETE",
-      });
+const eliminarProducto = async (id) => {
+  try {
+    const usuarioLogueado =
+      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
 
-      // refresca lista
-      obtenerProductos();
-    } catch (error) {
-      console.error("Error al eliminar producto:", error);
+    const respuesta = await fetch(`http://localhost:3000/api/productos/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${usuarioLogueado.token}`,
+      },
+    });
+
+    const data = await respuesta.json().catch(() => null);
+
+    if (!respuesta.ok) {
+      console.log("Error al borrar:", data);
+      return;
     }
-  };
+
+    obtenerProductos(); // refresca lista
+  } catch (error) {
+    console.error("Error al eliminar producto:", error);
+  }
+};
 
   return (
     <main className="container my-4">
