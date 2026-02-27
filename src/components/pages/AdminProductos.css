@@ -1,79 +1,111 @@
-/* CONTENEDOR GENERAL */
-.admin-productos {
-  animation: fadeInAdmin 0.4s ease-in-out;
+/* Contenedor */
+.admin-wrap {
+  padding-bottom: 1rem;
 }
 
-/* HEADER */
 .admin-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
 }
 
 .admin-title {
-  color: #ffffff;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-}
-
-/* BOTÓN CREAR */
-.btn-crear-producto {
-  background-color: #ffffff;
-  color: #1b5e20;
-  border: none;
-  font-weight: 600;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-crear-producto:hover {
-  background-color: #e8f5e9;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-}
-
-/* BOTÓN EDITAR */
-.btn-editar {
-  background-color: #fbc02d;
-  color: #000;
-  border: none;
-  font-weight: 600;
-  transition: all 0.2s ease-in-out;
-}
-
-.btn-editar:hover {
-  background-color: #f9a825;
-  transform: scale(1.05);
-}
-
-/* BOTÓN ELIMINAR */
-.btn-eliminar {
-  background-color: #e53935;
   color: #fff;
-  border: none;
-  font-weight: 600;
-  transition: all 0.2s ease-in-out;
+  font-weight: 800;
+  margin: 0;
 }
 
-.btn-eliminar:hover {
-  background-color: #c62828;
-  transform: scale(1.05);
+/* Botón crear */
+.btn-admin-crear {
+  background: rgba(255, 255, 255, 0.92);
+  color: #1f5f2d;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
 }
 
-/* TABLA */
+.btn-admin-crear:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+  filter: brightness(1.02);
+}
+
+/* Tabla */
 .admin-table {
-  border-radius: 8px;
-  overflow: hidden;
+  border-radius: 14px;
+  overflow: hidden; /* para que no “rompa” bordes con hover */
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
 }
 
-/* ANIMACIÓN */
-@keyframes fadeInAdmin {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
+/* Columnas */
+.col-num {
+  width: 56px;
+  white-space: nowrap;
+}
+
+.col-precio {
+  width: 140px;
+  white-space: nowrap;
+}
+
+.col-acciones {
+  width: 220px;
+  white-space: nowrap;
+}
+
+/* Botones acciones */
+.acciones-botones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center; /* 👈 centrados */
+  width: 100%;
+}
+
+.btn-accion {
+  border-radius: 8px;
+  font-weight: 800;
+  padding: 6px 12px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.btn-accion:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* ✅ Mobile: NO comprimas columnas, y si se apila, que NO se salga */
+@media (max-width: 576px) {
+  .admin-header {
+    align-items: flex-start;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .btn-admin-crear {
+    padding: 10px 12px;
+  }
+
+  /* si la tabla se hace scroll, está perfecto */
+  .col-acciones {
+    width: 170px;
+    white-space: normal;
+  }
+
+  .acciones-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .btn-accion {
+    width: 100%;
+    max-width: 100%;
   }
 }

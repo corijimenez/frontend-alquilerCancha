@@ -39,75 +39,79 @@ const AdminProductos = () => {
   };
 
   return (
-    <main className="container my-4 admin-productos">
-
+    <main className="container my-4 admin-wrap">
       <div className="admin-header">
-        <h1 className="admin-title">
-          Administrar Productos
-        </h1>
+        <h1 className="admin-title">Administrar Productos</h1>
 
         <Button
           as={Link}
           to="/administrador/crear"
-          className="btn-crear-producto"
+          className="btn-admin-crear"
         >
           <i className="bi bi-plus-circle me-2"></i>
           Crear producto
         </Button>
       </div>
 
-      <Table striped bordered hover variant="dark" className="admin-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Producto</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          {cargando ? (
+      {/* ✅ clave: en mobile NO se comprime, si no entra hace scroll */}
+      <div className="table-responsive admin-table">
+        <Table striped bordered hover variant="dark" className="mb-0">
+          <thead>
             <tr>
-              <td colSpan="4" className="text-center">
-                Cargando productos...
-              </td>
+              <th className="col-num">#</th>
+              <th>Producto</th>
+              <th className="col-precio">Precio</th>
+              <th className="col-acciones">Acciones</th>
             </tr>
-          ) : productos.length === 0 ? (
-            <tr>
-              <td colSpan="4" className="text-center">
-                No hay productos disponibles
-              </td>
-            </tr>
-          ) : (
-            productos.map((producto, index) => (
-              <tr key={producto._id}>
-                <td>{index + 1}</td>
-                <td>{producto.nombre}</td>
-                <td>${producto.precio}</td>
-                <td>
-                  <Button
-                    as={Link}
-                    to={`/administrador/editar/${producto._id}`}
-                    className="btn-editar"
-                    size="sm"
-                  >
-                    Editar
-                  </Button>
+          </thead>
 
-                  <Button
-                    onClick={() => eliminarProducto(producto._id)}
-                    className="btn-eliminar ms-2"
-                    size="sm"
-                  >
-                    Eliminar
-                  </Button>
+          <tbody>
+            {cargando ? (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  Cargando productos...
                 </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </Table>
+            ) : productos.length === 0 ? (
+              <tr>
+                <td colSpan="4" className="text-center">
+                  No hay productos disponibles
+                </td>
+              </tr>
+            ) : (
+              productos.map((producto, index) => (
+                <tr key={producto._id}>
+                  <td className="col-num">{index + 1}</td>
+                  <td className="col-producto">{producto.nombre}</td>
+                  <td className="col-precio">${producto.precio}</td>
+                  <td className="col-acciones">
+                    <div className="acciones-botones">
+                      <Button
+                        variant="warning"
+                        size="sm"
+                        className="btn-accion btn-editar"
+                        as={Link}
+                        to={`/administrador/editar/${producto._id}`}
+                      >
+                        Editar
+                      </Button>
+
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="btn-accion btn-eliminar"
+                        onClick={() => eliminarProducto(producto._id)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </Table>
+      </div>
     </main>
   );
 };
