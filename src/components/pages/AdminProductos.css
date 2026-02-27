@@ -143,3 +143,68 @@
   margin-top: 6px;
   color: rgba(255, 255, 255, 0.75);
 }
+
+/* =========================
+   BUSCADOR (AdminProductos)
+========================= */
+.admin-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.admin-search .input-group {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+/* Icono lupa */
+.admin-search .input-group-text {
+  background: rgba(20, 20, 20, 0.78) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+/* Input */
+.admin-search .form-control {
+  background: rgba(20, 20, 20, 0.78) !important;
+  color: #fff !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-left: none !important;
+  border-right: none !important;
+}
+
+.admin-search .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.admin-search .form-control:focus {
+  box-shadow: none !important;
+}
+
+/* Botón limpiar */
+.admin-search .btn {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.admin-search .btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-1px);
+  transition: 0.15s ease;
+}
+
+.admin-search .btn:disabled {
+  opacity: 0.5;
+  transform: none;
+}
+
+/* Texto “Mostrando X de Y” */
+.admin-search-info {
+  color: rgba(255, 255, 255, 0.75);
+}
