@@ -109,3 +109,20 @@
     max-width: 100%;
   }
 }
+/* Badge stock */
+.badge-stock {
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+
+/* Centrar verticalmente contenido de la celda Acciones */
+.col-acciones {
+  vertical-align: middle !important;
+}
+.col-acciones .acciones-botones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}

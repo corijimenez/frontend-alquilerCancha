@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 import { listarProductosApi, borrarProductoApi } from "../../helpers/queries";
 import "./AdminProductos.css";
 
@@ -27,14 +28,37 @@ const AdminProductos = () => {
     setCargando(false);
   };
 
-  const eliminarProducto = async (id) => {
+  const eliminarProducto = async (producto) => {
+    const confirmacion = await Swal.fire({
+      title: "¿Eliminar producto?",
+      html: `Vas a eliminar <b>${producto.nombre}</b>. Esta acción no se puede deshacer.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
     const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-    const respuesta = await borrarProductoApi(id, usuario.token);
+    const respuesta = await borrarProductoApi(producto._id, usuario.token);
 
     if (respuesta.ok) {
+      await Swal.fire({
+        title: "Eliminado",
+        text: "El producto fue eliminado correctamente.",
+        icon: "success",
+        timer: 1200,
+        showConfirmButton: false,
+      });
       obtenerProductos();
     } else {
-      console.log("Error al borrar:", respuesta.data);
+      await Swal.fire({
+        title: "No se pudo eliminar",
+        text: respuesta.data?.mensaje || "Ocurrió un error.",
+        icon: "error",
+      });
     }
   };
 
@@ -43,17 +67,12 @@ const AdminProductos = () => {
       <div className="admin-header">
         <h1 className="admin-title">Administrar Productos</h1>
 
-        <Button
-          as={Link}
-          to="/administrador/crear"
-          className="btn-admin-crear"
-        >
+        <Button as={Link} to="/administrador/crear" className="btn-admin-crear">
           <i className="bi bi-plus-circle me-2"></i>
           Crear producto
         </Button>
       </div>
 
-      {/* ✅ clave: en mobile NO se comprime, si no entra hace scroll */}
       <div className="table-responsive admin-table">
         <Table striped bordered hover variant="dark" className="mb-0">
           <thead>
@@ -82,8 +101,25 @@ const AdminProductos = () => {
               productos.map((producto, index) => (
                 <tr key={producto._id}>
                   <td className="col-num">{index + 1}</td>
-                  <td className="col-producto">{producto.nombre}</td>
+
+                  <td className="col-producto">
+                    <div className="d-flex flex-column">
+                      <span className="fw-semibold">{producto.nombre}</span>
+
+                      {/* ✅ Solo stock (sin “Activo”) */}
+                      <div className="mt-2">
+                        <Badge
+                          bg={Number(producto.stock) === 0 ? "danger" : "info"}
+                          className="badge-stock"
+                        >
+                          Stock: {producto.stock ?? 0}
+                        </Badge>
+                      </div>
+                    </div>
+                  </td>
+
                   <td className="col-precio">${producto.precio}</td>
+
                   <td className="col-acciones">
                     <div className="acciones-botones">
                       <Button
@@ -100,7 +136,7 @@ const AdminProductos = () => {
                         variant="danger"
                         size="sm"
                         className="btn-accion btn-eliminar"
-                        onClick={() => eliminarProducto(producto._id)}
+                        onClick={() => eliminarProducto(producto)}
                       >
                         Eliminar
                       </Button>
