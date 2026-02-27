@@ -30,10 +30,7 @@ function App() {
         <Route element={<ProtectorRutas />}>
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
-          <Route
-            path="/administrador/editar"
-            element={<FormularioProducto />}
-          />
+         <Route path="/administrador/editar/:id" element={<FormularioProducto />} />
           <Route path="/admin/reservas" element={<AdminReservas />} />
         </Route>
         <Route path="/admin/productos" element={<AdminProductos />} />
