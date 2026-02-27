@@ -40,7 +40,21 @@ const AdminProductos = () => {
 
   return (
     <main className="container my-4">
-      <h1 className="text-white fw-bold mb-4">Administrar Productos</h1>
+
+      {/* 🔹 Encabezado + botón crear */}
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h1 className="text-white fw-bold mb-0">
+          Administrar Productos
+        </h1>
+
+        <Button
+          as={Link}
+          to="/administrador/crear"
+          className="btn-verde-cancha"
+        >
+          Crear producto
+        </Button>
+      </div>
 
       <Table striped bordered hover variant="dark">
         <thead>
