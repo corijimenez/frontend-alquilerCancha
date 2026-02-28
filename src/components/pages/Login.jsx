@@ -159,26 +159,28 @@ const Login = () => {
             </div>
 
             <div className="text-center mt-3">
-              <p className="text-white-50 mb-0">
-                ¿No tenés cuenta?{" "}
-                <button
-                  type="button"
-                  className="login-register-link"
-                  onClick={() => navigate("/registro")}
-                >
-                  Registrate
-                </button>
-              </p>
+  <p className="text-white-50 mb-0">
+    ¿No tenés cuenta?{" "}
+    <button
+      type="button"
+      className="login-register-link"
+      onClick={() => navigate("/registro")}
+    >
+      Registrate
+    </button>
+  </p>
+</div>
 
-              <Button
-                variant="outline-light"
-                size="sm"
-                className="mt-3"
-                onClick={() => navigate("/")}
-              >
-                Volver al inicio
-              </Button>
-            </div>
+{/* Botón separado y más abajo */}
+<div className="text-center mt-5">
+  <Button
+    variant="outline-light"
+    size="sm"
+    onClick={() => navigate("/")}
+  >
+    Volver al inicio
+  </Button>
+</div>
           </Form>
         </Card.Body>
       </Card>
