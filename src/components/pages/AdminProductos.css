@@ -81,34 +81,6 @@
   filter: brightness(1.03);
 }
 
-/* ✅ Mobile: NO comprima columnas, y si se apila, que NO se salgan */
-@media (max-width: 576px) {
-  .admin-header {
-    align-items: flex-start;
-  }
-
-  .btn-admin-crear {
-    padding: 10px 12px;
-  }
-
-  /* si la tabla se hace scroll, está perfecto */
-  .col-acciones {
-    width: 170px;
-    white-space: normal;
-  }
-
-  .acciones-botones {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .btn-accion {
-    width: 100%;
-    max-width: 100%;
-  }
-}
 /* Badge stock */
 .badge-stock {
   font-weight: 700;
@@ -207,4 +179,48 @@
 /* Texto “Mostrando X de Y” */
 .admin-search-info {
   color: rgba(255, 255, 255, 0.75);
+}
+.admin-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn-admin-top {
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-admin-top:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* ✅ Mobile: NO comprima columnas, y si se apila, que NO se salgan */
+@media (max-width: 576px) {
+  .admin-header {
+    align-items: flex-start;
+  }
+
+  .btn-admin-crear {
+    padding: 10px 12px;
+  }
+
+  /* si la tabla se hace scroll, está perfecto */
+  .col-acciones {
+    width: 170px;
+    white-space: normal;
+  }
+
+  .acciones-botones {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .btn-accion {
+    width: 100%;
+    max-width: 100%;
+  }
 }

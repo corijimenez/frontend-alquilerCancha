@@ -78,13 +78,31 @@ const AdminProductos = () => {
   return (
     <main className="container my-4 admin-wrap">
       <div className="admin-header">
-        <h1 className="admin-title">Administrar Productos</h1>
+  <div>
+    <h1 className="admin-title">Administrar Productos</h1>
+  </div>
 
-        <Button as={Link} to="/administrador/crear" className="btn-admin-crear">
-          <i className="bi bi-plus-circle me-2"></i>
-          Crear producto
-        </Button>
-      </div>
+  <div className="admin-header-actions">
+    <Button
+      as={Link}
+      to="/administrador"
+      variant="outline-light"
+      className="btn-admin-top"
+    >
+      <i className="bi bi-arrow-left-circle me-2"></i>
+      Volver al panel
+    </Button>
+
+    <Button
+      as={Link}
+      to="/administrador/crear"
+      className="btn-admin-crear"
+    >
+      <i className="bi bi-plus-circle me-2"></i>
+      Crear producto
+    </Button>
+  </div>
+</div>
 
       {/* ✅ NUEVO: buscador */}
       <div className="admin-search">
