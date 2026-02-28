@@ -11,6 +11,7 @@ import Contacto from "./components/pages/Contacto";
 import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
+import Carrito from "./components/pages/Carrito";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/reserva" element={<ReservarCancha />} />
+        <Route path="/carrito" element={<Carrito />} />
 
         {/* 🔒 Rutas protegidas */}
         <Route element={<ProtectorRutas />}>
