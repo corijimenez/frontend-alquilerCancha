@@ -1,0 +1,137 @@
+/* ===== Admin Reservas (propio) ===== */
+.adminr-wrap {
+  padding-bottom: 1rem;
+}
+
+.adminr-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.adminr-titlebox {
+  min-width: 260px;
+}
+
+.adminr-title {
+  color: #fff;
+  font-weight: 800;
+  margin: 0 0 4px 0;
+}
+
+.adminr-subtitle {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.adminr-subtitle span {
+  color: #fff;
+  font-weight: 700;
+}
+
+.adminr-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Botones header */
+.adminr-btn {
+  border-radius: 12px;
+  font-weight: 700;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.adminr-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+/* Tabla */
+.adminr-table {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+}
+
+/* Columnas */
+.adminr-col-num {
+  width: 56px;
+  white-space: nowrap;
+}
+
+.adminr-col-precio {
+  width: 140px;
+  white-space: nowrap;
+}
+
+.adminr-col-acciones {
+  width: 260px;
+  white-space: nowrap;
+}
+
+/* Acciones: alineación prolija como en productos */
+.adminr-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* ✅ centrados */
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.adminr-action-btn {
+  border-radius: 8px;
+  font-weight: 800;
+  padding: 6px 12px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.adminr-action-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* Centrar encabezado de Acciones */
+.adminr-col-acciones {
+  text-align: center;
+}
+
+/* Por las dudas también el th específicamente */
+th.adminr-col-acciones {
+  text-align: center;
+}
+
+@media (max-width: 576px) {
+
+  /* Permitir scroll horizontal */
+  .adminr-table {
+    overflow-x: auto;
+  }
+
+  /* Asegurar ancho mínimo real */
+  .adminr-table table {
+    min-width: 700px;
+  }
+
+  /* Columna acciones más flexible */
+  .adminr-col-acciones {
+    width: 200px;
+    white-space: normal;
+  }
+
+  /* Apilar botones */
+  .adminr-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .adminr-action-btn {
+    width: 100%;
+  }
+}

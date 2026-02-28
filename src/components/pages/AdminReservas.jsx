@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
+import "./AdminReservas.css";
 
 const AdminReservas = () => {
   const [reservas, setReservas] = useState([]);
@@ -48,7 +50,6 @@ const AdminReservas = () => {
         return;
       }
 
-      // ✅ vuelve a pedir GET para sincronizar con la DB real
       await obtenerReservas();
     } catch (error) {
       alert("Error de conexión con el servidor");
@@ -69,7 +70,7 @@ const AdminReservas = () => {
             ...reserva,
             estado: nuevoEstado,
           }),
-        }
+        },
       );
 
       const data = await respuesta.json();
@@ -79,7 +80,6 @@ const AdminReservas = () => {
         return;
       }
 
-      // ✅ refresca tabla
       await obtenerReservas();
     } catch (error) {
       alert("Error al conectar con el servidor");
@@ -87,23 +87,34 @@ const AdminReservas = () => {
   };
 
   return (
-    <main className="container my-4">
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-3">
-        <div>
-          <h1 className="text-white fw-bold mb-1">Administrar Reservas</h1>
-          <p className="text-white-50 mb-0">
-            Endpoint actual del backend:{" "}
-            <span className="text-white">/api/canchas</span>
-          </p>
+    <main className="container my-4 adminr-wrap">
+      <div className="adminr-header">
+        <div className="adminr-titlebox">
+          <h1 className="adminr-title">Administrar Reservas</h1>
         </div>
 
-        <Button
-          variant="outline-light"
-          onClick={obtenerReservas}
-          disabled={cargando}
-        >
-          {cargando ? "Actualizando..." : "Actualizar"}
-        </Button>
+        <div className="adminr-header-actions">
+          {/* ✅ volver al panel */}
+          <Button
+            as={Link}
+            to="/administrador"
+            variant="outline-light"
+            className="adminr-btn adminr-btn-back"
+          >
+            <i className="bi bi-arrow-left-circle me-2"></i>
+            Volver al panel
+          </Button>
+
+          <Button
+            variant="outline-light"
+            onClick={obtenerReservas}
+            disabled={cargando}
+            className="adminr-btn adminr-btn-refresh"
+          >
+            <i className="bi bi-arrow-clockwise me-2"></i>
+            {cargando ? "Actualizando..." : "Actualizar"}
+          </Button>
+        </div>
       </div>
 
       {cargando && (
@@ -119,59 +130,71 @@ const AdminReservas = () => {
       )}
 
       {!cargando && reservas.length > 0 && (
-        <Table striped bordered hover variant="dark" responsive>
-          <thead>
-            <tr>
-              <th>#</th>
-              <th>Cancha</th>
-              <th>Fecha</th>
-              <th>Hora</th>
-              <th>Estado</th>
-              <th>Precio</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {reservas.map((reserva, index) => (
-              <tr key={reserva._id}>
-                <td>{index + 1}</td>
-                <td>{reserva.cancha}</td>
-                <td>{new Date(reserva.fecha).toLocaleDateString()}</td>
-                <td>{reserva.hora}</td>
-                <td
-                  className={
-                    reserva.estado === "confirmada"
-                      ? "text-success fw-semibold"
-                      : "text-warning fw-semibold"
-                  }
-                >
-                  {reserva.estado}
-                </td>
-                <td>${reserva.precio}</td>
-                <td className="d-flex gap-2">
-                  <Button
-                    variant={reserva.estado === "pendiente" ? "success" : "warning"}
-                    size="sm"
-                    onClick={() => cambiarEstado(reserva)}
-                  >
-                    {reserva.estado === "pendiente"
-                      ? "Confirmar"
-                      : "Marcar pendiente"}
-                  </Button>
-
-                  <Button
-                    variant="danger"
-                    size="sm"
-                    onClick={() => borrarReserva(reserva._id)}
-                  >
-                    Eliminar
-                  </Button>
-                </td>
+        <div className="table-responsive adminr-table">
+          <Table striped bordered hover variant="dark" className="mb-0">
+            {" "}
+            <thead>
+              <tr>
+                <th className="adminr-col-num">#</th>
+                <th>Cancha</th>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th className="adminr-col-precio">Precio</th>
+                <th className="adminr-col-acciones">Acciones</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody>
+              {reservas.map((reserva, index) => (
+                <tr key={reserva._id}>
+                  <td className="adminr-col-num">{index + 1}</td>
+                  <td>{reserva.cancha}</td>
+                  <td>{new Date(reserva.fecha).toLocaleDateString()}</td>
+                  <td>{reserva.hora}</td>
+
+                  <td
+                    className={
+                      reserva.estado === "confirmada"
+                        ? "text-success fw-semibold"
+                        : "text-warning fw-semibold"
+                    }
+                  >
+                    {reserva.estado}
+                  </td>
+
+                  <td className="adminr-col-precio">${reserva.precio}</td>
+
+                  {/* ✅ NO poner d-flex en el <td>, poner el wrapper */}
+                  <td className="adminr-col-acciones">
+                    <div className="adminr-actions">
+                      <Button
+                        variant={
+                          reserva.estado === "pendiente" ? "success" : "warning"
+                        }
+                        size="sm"
+                        className="adminr-action-btn adminr-action-state"
+                        onClick={() => cambiarEstado(reserva)}
+                      >
+                        {reserva.estado === "pendiente"
+                          ? "Confirmar"
+                          : "Pendiente"}
+                      </Button>
+
+                      <Button
+                        variant="danger"
+                        size="sm"
+                        className="adminr-action-btn adminr-action-delete"
+                        onClick={() => borrarReserva(reserva._id)}
+                      >
+                        Eliminar
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
       )}
     </main>
   );
