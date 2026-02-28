@@ -1,8 +1,12 @@
-import { useEffect, useState } from "react";
-import Table from "react-bootstrap/Table";
-import Spinner from "react-bootstrap/Spinner";
-import Button from "react-bootstrap/Button";
+import { useEffect, useMemo, useState } from "react";
+import { Table, Button, Form, InputGroup, Spinner } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
+import {
+  listarReservasApi,
+  borrarReservaApi,
+  cambiarEstadoReservaApi,
+} from "../../helpers/queries";
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
@@ -10,49 +14,79 @@ const AdminReservas = () => {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
 
+  // ✅ buscador
+  const [busqueda, setBusqueda] = useState("");
+
   const obtenerReservas = async () => {
-    try {
-      setError("");
-      setCargando(true);
+    setError("");
+    setCargando(true);
 
-      const respuesta = await fetch("http://localhost:3000/api/canchas");
-      const data = await respuesta.json();
+    const respuesta = await listarReservasApi();
 
-      if (!respuesta.ok) {
-        throw new Error("Error al obtener reservas");
-      }
-
-      setReservas(data);
-    } catch (err) {
+    if (respuesta.ok) {
+      setReservas(respuesta.data);
+    } else {
+      setReservas([]);
       setError("No se pudieron cargar las reservas");
-    } finally {
-      setCargando(false);
     }
+
+    setCargando(false);
   };
 
   useEffect(() => {
     obtenerReservas();
   }, []);
 
-  const borrarReserva = async (id) => {
-    const confirmar = confirm("¿Seguro que querés eliminar esta reserva?");
-    if (!confirmar) return;
+  const reservasFiltradas = useMemo(() => {
+    const texto = busqueda.trim().toLowerCase();
+    if (!texto) return reservas;
 
-    try {
-      const respuesta = await fetch(`http://localhost:3000/api/canchas/${id}`, {
-        method: "DELETE",
+    return reservas.filter((r) => {
+      const cancha = (r.cancha || "").toLowerCase();
+      const estado = (r.estado || "").toLowerCase();
+      const hora = (r.hora || "").toLowerCase();
+      const fecha = r.fecha ? new Date(r.fecha).toLocaleDateString() : "";
+
+      return (
+        cancha.includes(texto) ||
+        estado.includes(texto) ||
+        hora.includes(texto) ||
+        fecha.toLowerCase().includes(texto)
+      );
+    });
+  }, [busqueda, reservas]);
+
+  const borrarReserva = async (reserva) => {
+    const confirmacion = await Swal.fire({
+      title: "¿Eliminar reserva?",
+      html: `Vas a eliminar la reserva de <b>${reserva.cancha}</b>.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, eliminar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const respuesta = await borrarReservaApi(reserva._id, usuario.token);
+
+    if (respuesta.ok) {
+      await Swal.fire({
+        title: "Eliminada",
+        text: "La reserva fue eliminada correctamente.",
+        icon: "success",
+        timer: 1200,
+        showConfirmButton: false,
       });
-
-      const data = await respuesta.json();
-
-      if (!respuesta.ok) {
-        alert(data?.mensaje || "No se pudo eliminar la reserva");
-        return;
-      }
-
-      await obtenerReservas();
-    } catch (error) {
-      alert("Error de conexión con el servidor");
+      obtenerReservas();
+    } else {
+      await Swal.fire({
+        title: "No se pudo eliminar",
+        text: respuesta.data?.mensaje || "Ocurrió un error.",
+        icon: "error",
+      });
     }
   };
 
@@ -60,46 +94,35 @@ const AdminReservas = () => {
     const nuevoEstado =
       reserva.estado === "pendiente" ? "confirmada" : "pendiente";
 
-    try {
-      const respuesta = await fetch(
-        `http://localhost:3000/api/canchas/${reserva._id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...reserva,
-            estado: nuevoEstado,
-          }),
-        },
-      );
+ const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.token);
 
-      const data = await respuesta.json();
 
-      if (!respuesta.ok) {
-        alert(data?.mensaje || "No se pudo actualizar el estado");
-        return;
-      }
-
-      await obtenerReservas();
-    } catch (error) {
-      alert("Error al conectar con el servidor");
+    if (respuesta.ok) {
+      obtenerReservas();
+    } else {
+      Swal.fire({
+        title: "No se pudo actualizar",
+        text: respuesta.data?.mensaje || "No se pudo actualizar el estado",
+        icon: "error",
+      });
     }
   };
 
   return (
-    <main className="container my-4 adminr-wrap">
-      <div className="adminr-header">
-        <div className="adminr-titlebox">
-          <h1 className="adminr-title">Administrar Reservas</h1>
+    <main className="container my-4 reservas-wrap">
+      <div className="reservas-header">
+        <div>
+          <h1 className="reservas-title">Administrar Reservas</h1>
+          {/* ✅ sacamos el texto del endpoint */}
         </div>
 
-        <div className="adminr-header-actions">
-          {/* ✅ volver al panel */}
+        <div className="reservas-header-actions">
           <Button
             as={Link}
             to="/administrador"
             variant="outline-light"
-            className="adminr-btn adminr-btn-back"
+            className="reservas-btn-top"
           >
             <i className="bi bi-arrow-left-circle me-2"></i>
             Volver al panel
@@ -109,12 +132,43 @@ const AdminReservas = () => {
             variant="outline-light"
             onClick={obtenerReservas}
             disabled={cargando}
-            className="adminr-btn adminr-btn-refresh"
+            className="reservas-btn-top"
           >
             <i className="bi bi-arrow-clockwise me-2"></i>
             {cargando ? "Actualizando..." : "Actualizar"}
           </Button>
         </div>
+      </div>
+
+      {/* ✅ buscador estilo productos */}
+      <div className="reservas-search">
+        <InputGroup>
+          <InputGroup.Text className="reservas-search-icon">
+            <i className="bi bi-search"></i>
+          </InputGroup.Text>
+
+          <Form.Control
+            className="reservas-search-input"
+            placeholder="Buscar por cancha, estado, fecha u hora..."
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+          />
+
+          <Button
+            variant="outline-light"
+            className="reservas-search-clear"
+            onClick={() => setBusqueda("")}
+            disabled={!busqueda}
+          >
+            Limpiar
+          </Button>
+        </InputGroup>
+
+        {!cargando && (
+          <small className="reservas-search-info">
+            Mostrando <b>{reservasFiltradas.length}</b> de <b>{reservas.length}</b>
+          </small>
+        )}
       </div>
 
       {cargando && (
@@ -125,33 +179,38 @@ const AdminReservas = () => {
 
       {error && <div className="alert alert-danger">{error}</div>}
 
-      {!cargando && reservas.length === 0 && (
-        <div className="alert alert-info">No hay reservas registradas.</div>
+      {!cargando && reservasFiltradas.length === 0 && (
+        <div className="alert alert-info">
+          {busqueda.trim()
+            ? "No se encontraron reservas con esa búsqueda."
+            : "No hay reservas registradas."}
+        </div>
       )}
 
-      {!cargando && reservas.length > 0 && (
-        <div className="table-responsive adminr-table">
+      {!cargando && reservasFiltradas.length > 0 && (
+        <div className="table-responsive reservas-table">
           <Table striped bordered hover variant="dark" className="mb-0">
-            {" "}
             <thead>
               <tr>
-                <th className="adminr-col-num">#</th>
+                <th className="col-num">#</th>
                 <th>Cancha</th>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
-                <th className="adminr-col-precio">Precio</th>
-                <th className="adminr-col-acciones">Acciones</th>
+                <th className="col-precio">Precio</th>
+                <th className="col-acciones text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {reservas.map((reserva, index) => (
-                <tr key={reserva._id}>
-                  <td className="adminr-col-num">{index + 1}</td>
-                  <td>{reserva.cancha}</td>
-                  <td>{new Date(reserva.fecha).toLocaleDateString()}</td>
-                  <td>{reserva.hora}</td>
 
+            <tbody>
+              {reservasFiltradas.map((reserva, index) => (
+                <tr key={reserva._id}>
+                  <td className="col-num">{index + 1}</td>
+                  <td>{reserva.cancha}</td>
+                  <td>
+                    {reserva.fecha ? new Date(reserva.fecha).toLocaleDateString() : "-"}
+                  </td>
+                  <td>{reserva.hora}</td>
                   <td
                     className={
                       reserva.estado === "confirmada"
@@ -161,31 +220,29 @@ const AdminReservas = () => {
                   >
                     {reserva.estado}
                   </td>
+                  <td className="col-precio">${reserva.precio}</td>
 
-                  <td className="adminr-col-precio">${reserva.precio}</td>
-
-                  {/* ✅ NO poner d-flex en el <td>, poner el wrapper */}
-                  <td className="adminr-col-acciones">
-                    <div className="adminr-actions">
+                  <td className="col-acciones">
+                    <div className="reservas-actions">
                       <Button
-                        variant={
-                          reserva.estado === "pendiente" ? "success" : "warning"
-                        }
+                        variant={reserva.estado === "pendiente" ? "success" : "warning"}
                         size="sm"
-                        className="adminr-action-btn adminr-action-state"
+                        className="btn-accion"
                         onClick={() => cambiarEstado(reserva)}
                       >
+                        <i className="bi bi-arrow-repeat me-2"></i>
                         {reserva.estado === "pendiente"
                           ? "Confirmar"
-                          : "Pendiente"}
+                          : "Marcar pendiente"}
                       </Button>
 
                       <Button
                         variant="danger"
                         size="sm"
-                        className="adminr-action-btn adminr-action-delete"
-                        onClick={() => borrarReserva(reserva._id)}
+                        className="btn-accion"
+                        onClick={() => borrarReserva(reserva)}
                       >
+                        <i className="bi bi-trash3 me-2"></i>
                         Eliminar
                       </Button>
                     </div>
