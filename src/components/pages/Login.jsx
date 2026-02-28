@@ -41,14 +41,11 @@ const Login = () => {
     setErrorGeneral("");
 
     try {
-      const respuesta = await fetch(
-        "http://localhost:3000/api/usuarios/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
-        },
-      );
+      const respuesta = await fetch("http://localhost:3000/api/usuarios/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
       const data = await respuesta.json();
 
@@ -147,9 +144,7 @@ const Login = () => {
               </button>
 
               {errores.password && (
-                <Form.Text className="text-danger">
-                  {errores.password}
-                </Form.Text>
+                <Form.Text className="text-danger">{errores.password}</Form.Text>
               )}
             </Form.Group>
 
@@ -162,10 +157,23 @@ const Login = () => {
                 {enviando ? "Enviando..." : "Entrar"}
               </Button>
             </div>
+
             <div className="text-center mt-3">
+              <p className="text-white-50 mb-0">
+                ¿No tenés cuenta?{" "}
+                <button
+                  type="button"
+                  className="login-register-link"
+                  onClick={() => navigate("/registro")}
+                >
+                  Registrate
+                </button>
+              </p>
+
               <Button
                 variant="outline-light"
                 size="sm"
+                className="mt-3"
                 onClick={() => navigate("/")}
               >
                 Volver al inicio
