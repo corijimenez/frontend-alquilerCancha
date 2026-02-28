@@ -27,6 +27,8 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/reserva" element={<ReservarCancha />} />
+        
+
 
 
         {/* 🔒 Rutas protegidas */}
