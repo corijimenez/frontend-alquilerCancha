@@ -13,6 +13,8 @@ import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import AdminProductos from "./components/pages/AdminProductos";
+import Carrito from "./components/pages/Carrito";
+
 
 
 
@@ -27,6 +29,7 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/reserva" element={<ReservarCancha />} />
+        <Route path="/carrito" element={<Carrito />} />
         
 
 
