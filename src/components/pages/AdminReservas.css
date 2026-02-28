@@ -1,0 +1,142 @@
+.reservas-wrap {
+  padding-bottom: 1rem;
+}
+
+.reservas-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.reservas-title {
+  color: #fff;
+  font-weight: 800;
+  margin: 0;
+}
+
+.reservas-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.reservas-btn-top {
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.reservas-btn-top:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* Buscador estilo “profe” pero dark */
+.reservas-search {
+  margin-bottom: 12px;
+}
+
+.reservas-search-icon {
+  background: rgba(20, 20, 20, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+}
+
+.reservas-search-input {
+  background: rgba(10, 10, 10, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+}
+
+.reservas-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.reservas-search-clear {
+  border-radius: 0 10px 10px 0;
+}
+
+.reservas-search-info {
+  display: inline-block;
+  margin-top: 6px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* Tabla */
+/* Tabla */
+.reservas-table {
+  border-radius: 14px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+
+  /* ✅ clave: permitir scroll horizontal */
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  /* ✅ mejor experiencia en iOS */
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ✅ fuerza a que la tabla “necesite” scroll en pantallas chicas */
+.reservas-table table {
+  min-width: 780px; /* probá 720/780/860 según te guste */
+}
+
+.col-num {
+  width: 56px;
+  white-space: nowrap;
+}
+
+.col-precio {
+  width: 140px;
+  white-space: nowrap;
+}
+
+.col-acciones {
+  width: 320px;
+  white-space: nowrap;
+}
+
+/* Acciones alineadas como productos */
+.reservas-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.btn-accion {
+  border-radius: 8px;
+  font-weight: 800;
+  padding: 6px 12px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+
+.btn-accion:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+  /* ✅ no lo achiques, que haga scroll */
+  .col-acciones {
+    width: 320px;
+    white-space: nowrap;
+  }
+
+  .reservas-actions {
+    flex-direction: row;      /* ✅ no apilar */
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: nowrap;        /* ✅ que no baje de línea */
+  }
+
+  .btn-accion {
+    width: auto;              /* ✅ no ocupar todo el ancho */
+  }
+}
