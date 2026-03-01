@@ -78,7 +78,7 @@ const Carrito = ({ carrito, setCarrito }) => {
         <div className="text-center">
           <h4>Tu carrito está vacío</h4>
           <p>Agrega productos para poder continuar con la compra.</p>
-          <Link to="/" className="btn btn-primary">
+          <Link to="/tienda" className="btn btn-primary">
             Ver productos
           </Link>
         </div>
