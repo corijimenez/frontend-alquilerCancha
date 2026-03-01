@@ -46,8 +46,8 @@ const ReservarCancha = () => {
   useEffect(() => {
     const preciosBackend = {
       "Fútbol 5": 50000,
-      "Fútbol 7": 10000,
-      "Fútbol 11": 20000,
+      "Fútbol 7": 120000,
+      "Fútbol 11": 200000,
     };
 
     if (canchaSeleccionada) {
