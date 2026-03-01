@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router";
+import { useState } from "react";
 import Inicio from "./components/pages/Inicio";
 import Login from "./components/pages/Login";
 import Administrador from "./components/pages/Administrador";
@@ -19,9 +20,10 @@ import Carrito from "./components/pages/Carrito";
 
 
 function App() {
+  const [carrito, setCarrito] = useState([]);
   return (
     <BrowserRouter>
-      <Menu />
+      <Menu carrito={carrito} />
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
@@ -29,7 +31,7 @@ function App() {
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/reserva" element={<ReservarCancha />} />
-        <Route path="/carrito" element={<Carrito />} />
+        <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         
 
 

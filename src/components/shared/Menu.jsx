@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
 
-const Menu = () => {
+const Menu = ({ carrito = [] }) => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -49,7 +49,7 @@ const Menu = () => {
                     className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     style={{ fontSize: "0.6rem" }}
                   >
-                    0
+                    {carrito.length}
                   </span>
                 </i>
               </NavLink>
