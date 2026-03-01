@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // ✅ Agregar useLocation
 import Swal from "sweetalert2";
 import {
   listarReservasApi,
@@ -10,11 +10,10 @@ import {
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
+  const location = useLocation(); // ✅ Obtener datos del estado
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-
-  // ✅ buscador
   const [busqueda, setBusqueda] = useState("");
 
   const obtenerReservas = async () => {
@@ -34,8 +33,14 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
-    obtenerReservas();
-  }, []);
+    // ✅ Si viene de ReservarCancha, usar esas reservas
+    if (location.state?.reservas) {
+      setReservas(location.state.reservas);
+      setCargando(false);
+    } else {
+      obtenerReservas();
+    }
+  }, [location.state]);
 
   const reservasFiltradas = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
