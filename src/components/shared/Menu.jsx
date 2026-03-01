@@ -1,14 +1,14 @@
 import { Navbar, Container, Nav, Button } from "react-bootstrap";
-import { NavLink } from "react-router";
+import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
 
-const Menu = () => {
-  const navigate = useNavigate();
+const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
+  const navegacion = useNavigate();
 
-  const handleLogout = () => {
-    sessionStorage.removeItem("usuarioKey");
-    navigate("/login");
+  const logout = () => {
+    setUsuarioLogueado({});
+    navegacion("/");
   };
 
   return (
@@ -18,7 +18,11 @@ const Menu = () => {
       className="bg-negro-brand shadow-sm py-3"
     >
       <Container>
-        <Navbar.Brand as={NavLink} to="/" className="d-flex align-items-center">
+        <Navbar.Brand
+          as={NavLink}
+          to="/"
+          className="d-flex align-items-center"
+        >
           <i className="bi bi-trophy-fill text-verde-cancha me-2 fs-3"></i>
           <span className="fw-bold tracking-tight text-white">
             LOGO<span className="text-verde-cancha">CANCHA</span>
@@ -32,42 +36,51 @@ const Menu = () => {
             <NavLink className="nav-link px-3" to="/">
               Inicio
             </NavLink>
+
             <NavLink className="nav-link px-3" to="/reservas">
               Reservar canchas
             </NavLink>
+
             <NavLink className="nav-link px-3" to="/tienda">
               Tienda
             </NavLink>
-            <NavLink className="nav-link px-3" to="/administrador">
-              Panel Admin
-            </NavLink>
 
-            <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
-              <NavLink className="nav-link me-3" to="/carrito">
-                <i className="bi bi-cart3 fs-5 position-relative">
-                  <span
-                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    style={{ fontSize: "0.6rem" }}
+            {usuarioLogueado?.nombre ? (
+              <>
+                <NavLink className="nav-link px-3" to="/administrador">
+                  Panel Admin
+                </NavLink>
+
+                <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
+                  <NavLink className="nav-link me-3" to="/carrito">
+                    <i className="bi bi-cart3 fs-5 position-relative">
+                      <span
+                        className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                        style={{ fontSize: "0.6rem" }}
+                      >
+                        0
+                      </span>
+                    </i>
+                  </NavLink>
+
+                  <Button
+                    className="btn btn-verde-cancha rounded-pill px-4 shadow-sm"
+                    onClick={logout}
                   >
-                    0
-                  </span>
-                </i>
-              </NavLink>
-
-              <NavLink
-                className="btn btn-outline-light rounded-pill px-4 me-2"
-                to="/login"
-              >
-                Login
-              </NavLink>
-
-              <Button
-                className="btn btn-verde-cancha rounded-pill px-4 shadow-sm"
-                onClick={handleLogout}
-              >
-                Logout
-              </Button>
-            </div>
+                    Logout
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
+                <NavLink
+                  className="btn btn-outline-light rounded-pill px-4"
+                  to="/login"
+                >
+                  Login
+                </NavLink>
+              </div>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>
