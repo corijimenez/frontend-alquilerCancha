@@ -108,6 +108,11 @@ const Contacto = () => {
                             value: /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/,
                             message: "Solo se permiten letras",
                           },
+                          validate: {
+                            noSoloEspacios: (value) =>
+                              value.trim().length > 0 ||
+                              "No puede contener solo espacios",
+                          },
                         })}
                       />
                       {errors.nombre && (
@@ -131,6 +136,11 @@ const Contacto = () => {
                             value: /^[0-9]{8,15}$/,
                             message: "Debe contener entre 8 y 15 números",
                           },
+                          validate: {
+                            noTodosCeros: (value) =>
+                              !/^0+$/.test(value) ||
+                              "El teléfono no puede ser solo ceros",
+                          },
                         })}
                       />
                       {errors.telefono && (
@@ -149,6 +159,10 @@ const Contacto = () => {
                       className={`form-control custom-input ${errors.email ? "is-invalid" : ""}`}
                       {...register("email", {
                         required: "El email es obligatorio",
+                        maxLength: {
+                          value: 60,
+                          message: "Máximo 60 caracteres",
+                        },
                         pattern: {
                           value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                           message: "Ingrese un email válido",
@@ -180,8 +194,26 @@ const Contacto = () => {
                           value: 300,
                           message: "Máximo 300 caracteres",
                         },
+                        validate: {
+                          noSoloEspacios: (value) =>
+                            value.trim().length > 0 ||
+                            "No puede contener solo espacios",
+
+                          noSoloNumeros: (value) =>
+                            !/^\d+$/.test(value.trim()) ||
+                            "El mensaje no puede contener solo números",
+
+                          noSoloSimbolos: (value) =>
+                            /[a-zA-ZÁÉÍÓÚáéíóúÑñ]/.test(value) ||
+                            "El mensaje debe contener texto válido",
+
+                          noRepetitivo: (value) =>
+                            !/^(.)\1+$/.test(value.trim()) ||
+                            "El mensaje no puede ser repetitivo",
+                        },
                       })}
                     ></textarea>
+
                     {errors.mensaje && (
                       <small className="text-danger">
                         {errors.mensaje.message}
