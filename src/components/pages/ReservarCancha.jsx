@@ -5,6 +5,7 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+
 const ReservarCancha = () => {
   const [reservas, setReservas] = useState([]); // ✅ Estado para reservas
   const [cargando, setCargando] = useState(false);
@@ -86,16 +87,17 @@ const ReservarCancha = () => {
   };
 
   return (
+    
     <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
-          <Card className="shadow bg-dark text-white border-secondary">
+          <Card className="reservar-cancha-card shadow">
             <Card.Body className="p-4">
-              <h2 className="text-center mb-4 text-verde-cancha">Crear Reserva</h2>
+              <h2 className="text-center mb-4 text-white">Crear Reserva</h2>
               <Form onSubmit={handleSubmit(onSubmit)}>
                 
                 <Form.Group className="mb-3">
-                  <Form.Label>Seleccionar Cancha</Form.Label>
+                  <Form.Label className='text-white'>Seleccionar Cancha</Form.Label>
                   <Form.Select
                     {...register("cancha", { required: "Selecciona una cancha" })}
                     isInvalid={!!errors.cancha}
@@ -111,7 +113,7 @@ const ReservarCancha = () => {
                 <Row>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Fecha</Form.Label>
+                      <Form.Label className="text-white">Fecha</Form.Label>
                       <Form.Control
                         type="date"
                         {...register("fecha", { required: "La fecha es obligatoria" })}
@@ -124,7 +126,7 @@ const ReservarCancha = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label>Hora</Form.Label>
+                      <Form.Label className="text-white">Hora</Form.Label>
                       <Form.Control
                         type="time"
                         {...register("hora", {
@@ -143,7 +145,7 @@ const ReservarCancha = () => {
                 </Row>
 
                 <Form.Group className="mb-4">
-                  <Form.Label>Precio ($)</Form.Label>
+                  <Form.Label className="text-white">Precio ($)</Form.Label>
                   <Form.Control
                     type="number"
                     readOnly
@@ -172,6 +174,7 @@ const ReservarCancha = () => {
         </Col>
       </Row>
     </Container>
+  
   );
 };
 
