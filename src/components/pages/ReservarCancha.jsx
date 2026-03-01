@@ -149,7 +149,7 @@ const ReservarCancha = () => {
                     readOnly
                     className="bg-secondary text-white fw-bold"
                     {...register("precio", {
-                      min: { value: 40000, message: "El mínimo es 45.000" },
+                      min: { value: 40000, message: "El mínimo es 50.000" },
                       max: { value: 200000, message: "El máximo es 200.000" }
                     })}
                     isInvalid={!!errors.precio}
