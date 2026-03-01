@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
-import "./Contacto.css";
+import "../../Contacto.css";
 
 const Contacto = () => {
   const {
