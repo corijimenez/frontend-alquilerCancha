@@ -8,39 +8,58 @@ import {
   cambiarRolUsuarioApi,
 } from "../../helpers/queries";
 
+// ✅ helper: sacar el id del token (payload trae { id, role })
+const obtenerIdDesdeToken = (token) => {
+  try {
+    if (!token) return null;
+    const payloadBase64 = token.split(".")[1];
+    const payloadJson = atob(payloadBase64);
+    const payload = JSON.parse(payloadJson);
+    return payload.id || null;
+  } catch (error) {
+    console.error("No se pudo leer el token:", error);
+    return null;
+  }
+};
+
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
 
-  useEffect(() => {
-    const cargarUsuarios = async () => {
-      const usuarioLogueado =
-        JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-      const token = usuarioLogueado.token;
+  // ✅ loading por acción (para no spammear los PUT)
+  const [accionandoEstadoId, setAccionandoEstadoId] = useState(null);
+  const [accionandoRolId, setAccionandoRolId] = useState(null);
 
-      if (!token) {
-        setCargando(false);
-        Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
-        return;
-      }
+  const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+  const token = usuarioLogueado.token;
+  const miId = obtenerIdDesdeToken(token);
 
-      const respuesta = await listarUsuariosApi(token);
-
-      if (respuesta.ok) {
-        setUsuarios(respuesta.data);
-      } else {
-        Swal.fire(
-          "Error",
-          respuesta.data?.mensaje || "No se pudieron cargar los usuarios.",
-          "error"
-        );
-      }
-
+  const cargarUsuarios = async () => {
+    if (!token) {
       setCargando(false);
-    };
+      Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+      return;
+    }
 
+    const respuesta = await listarUsuariosApi(token);
+
+    if (respuesta.ok) {
+      setUsuarios(respuesta.data);
+    } else {
+      Swal.fire(
+        "Error",
+        respuesta.data?.mensaje || "No se pudieron cargar los usuarios.",
+        "error"
+      );
+    }
+
+    setCargando(false);
+  };
+
+  useEffect(() => {
     cargarUsuarios();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const usuariosFiltrados = useMemo(() => {
@@ -72,13 +91,21 @@ const AdminUsuarios = () => {
     return <Badge bg="danger">inactivo</Badge>;
   };
 
-  const cambiarEstado = async (usuario) => {
-    const usuarioLogueado =
-      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-    const token = usuarioLogueado.token;
+  const esMiUsuario = (idUsuario) => miId && idUsuario === miId;
 
+  const cambiarEstado = async (usuario) => {
     if (!token) {
       Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+      return;
+    }
+
+    // ✅ regla: no permitir desactivarte a vos mismo
+    if (esMiUsuario(usuario._id)) {
+      Swal.fire(
+        "Acción bloqueada",
+        "No podés desactivar tu propio usuario administrador.",
+        "info"
+      );
       return;
     }
 
@@ -98,37 +125,50 @@ const AdminUsuarios = () => {
 
     const nuevoEstado = !usuario.active;
 
-    const respuesta = await cambiarEstadoUsuarioApi(
-      usuario._id,
-      nuevoEstado,
-      token
-    );
+    try {
+      setAccionandoEstadoId(usuario._id);
 
-    if (!respuesta.ok) {
-      Swal.fire(
-        "Error",
-        respuesta.data?.mensaje || "No se pudo actualizar el estado.",
-        "error"
+      const respuesta = await cambiarEstadoUsuarioApi(
+        usuario._id,
+        nuevoEstado,
+        token
       );
-      return;
+
+      if (!respuesta.ok) {
+        Swal.fire(
+          "Error",
+          respuesta.data?.mensaje || "No se pudo actualizar el estado.",
+          "error"
+        );
+        return;
+      }
+
+      // ✅ actualizo local (rápido)
+      setUsuarios((prev) =>
+        prev.map((u) =>
+          u._id === usuario._id ? { ...u, active: nuevoEstado } : u
+        )
+      );
+
+      Swal.fire("Listo", "Estado actualizado correctamente.", "success");
+    } finally {
+      setAccionandoEstadoId(null);
     }
-
-    setUsuarios((prev) =>
-      prev.map((u) =>
-        u._id === usuario._id ? { ...u, active: nuevoEstado } : u
-      )
-    );
-
-    Swal.fire("Listo", "Estado actualizado correctamente.", "success");
   };
 
   const cambiarRol = async (usuario) => {
-    const usuarioLogueado =
-      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-    const token = usuarioLogueado.token;
-
     if (!token) {
       Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+      return;
+    }
+
+    // ✅ regla: no permitir cambiarte el rol a vos mismo
+    if (esMiUsuario(usuario._id)) {
+      Swal.fire(
+        "Acción bloqueada",
+        "No podés cambiar tu propio rol desde el panel.",
+        "info"
+      );
       return;
     }
 
@@ -146,22 +186,32 @@ const AdminUsuarios = () => {
 
     if (!confirmacion.isConfirmed) return;
 
-    const respuesta = await cambiarRolUsuarioApi(usuario._id, nuevoRol, token);
+    try {
+      setAccionandoRolId(usuario._id);
 
-    if (!respuesta.ok) {
-      Swal.fire(
-        "Error",
-        respuesta.data?.mensaje || "No se pudo actualizar el rol.",
-        "error"
+      const respuesta = await cambiarRolUsuarioApi(
+        usuario._id,
+        nuevoRol,
+        token
       );
-      return;
+
+      if (!respuesta.ok) {
+        Swal.fire(
+          "Error",
+          respuesta.data?.mensaje || "No se pudo actualizar el rol.",
+          "error"
+        );
+        return;
+      }
+
+      setUsuarios((prev) =>
+        prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
+      );
+
+      Swal.fire("Listo", "Rol actualizado correctamente.", "success");
+    } finally {
+      setAccionandoRolId(null);
     }
-
-    setUsuarios((prev) =>
-      prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
-    );
-
-    Swal.fire("Listo", "Rol actualizado correctamente.", "success");
   };
 
   return (
@@ -178,6 +228,11 @@ const AdminUsuarios = () => {
           <Button as={Link} to="/administrador" variant="outline-light">
             <i className="bi bi-arrow-left-circle me-2"></i>
             Volver al panel
+          </Button>
+
+          <Button variant="outline-info" onClick={cargarUsuarios} disabled={cargando}>
+            <i className="bi bi-arrow-clockwise me-2"></i>
+            Recargar
           </Button>
         </div>
       </div>
@@ -232,42 +287,67 @@ const AdminUsuarios = () => {
             </thead>
 
             <tbody>
-              {usuariosFiltrados.map((u, index) => (
-                <tr key={u._id}>
-                  <td>{index + 1}</td>
-                  <td>{u.nombre}</td>
-                  <td>{u.email}</td>
-                  <td>{badgeRol(u.role)}</td>
-                  <td>{badgeEstado(u.active)}</td>
-                  <td>
-                    {u.createdAt
-                      ? new Date(u.createdAt).toLocaleString()
-                      : "-"}
-                  </td>
+              {usuariosFiltrados.map((u, index) => {
+                const bloqueado = esMiUsuario(u._id);
 
-                  <td className="text-center">
-                    <div className="d-flex gap-2 justify-content-center flex-wrap">
-                      <Button
-                        size="sm"
-                        variant={u.active ? "warning" : "success"}
-                        onClick={() => cambiarEstado(u)}
-                      >
-                        <i className="bi bi-toggle2-on me-2"></i>
-                        {u.active ? "Desactivar" : "Activar"}
-                      </Button>
+                return (
+                  <tr key={u._id}>
+                    <td>{index + 1}</td>
+                    <td>
+                      {u.nombre}{" "}
+                      {bloqueado && (
+                        <Badge bg="light" text="dark" className="ms-2">
+                          vos
+                        </Badge>
+                      )}
+                    </td>
+                    <td>{u.email}</td>
+                    <td>{badgeRol(u.role)}</td>
+                    <td>{badgeEstado(u.active)}</td>
+                    <td>
+                      {u.createdAt
+                        ? new Date(u.createdAt).toLocaleString()
+                        : "-"}
+                    </td>
 
-                      <Button
-                        size="sm"
-                        variant="info"
-                        onClick={() => cambiarRol(u)}
-                      >
-                        <i className="bi bi-shield-lock me-2"></i>
-                        Cambiar rol
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    <td className="text-center">
+                      <div className="d-flex gap-2 justify-content-center flex-wrap">
+                        <Button
+                          size="sm"
+                          variant={u.active ? "warning" : "success"}
+                          onClick={() => cambiarEstado(u)}
+                          disabled={bloqueado || accionandoEstadoId === u._id}
+                        >
+                          <i className="bi bi-toggle2-on me-2"></i>
+                          {accionandoEstadoId === u._id
+                            ? "Procesando..."
+                            : u.active
+                            ? "Desactivar"
+                            : "Activar"}
+                        </Button>
+
+                        <Button
+                          size="sm"
+                          variant="info"
+                          onClick={() => cambiarRol(u)}
+                          disabled={bloqueado || accionandoRolId === u._id}
+                        >
+                          <i className="bi bi-shield-lock me-2"></i>
+                          {accionandoRolId === u._id
+                            ? "Procesando..."
+                            : "Cambiar rol"}
+                        </Button>
+                      </div>
+
+                      {bloqueado && (
+                        <small className="text-white-50 d-block mt-1">
+                          * No se permite modificar tu propio usuario.
+                        </small>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </div>
