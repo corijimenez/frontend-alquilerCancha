@@ -32,7 +32,7 @@ const Menu = ({ carrito = [] }) => {
             <NavLink className="nav-link px-3" to="/">
               Inicio
             </NavLink>
-            <NavLink className="nav-link px-3" to="/reservas">
+            <NavLink className="nav-link px-3" to="/reserva">
               Reservar canchas
             </NavLink>
             <NavLink className="nav-link px-3" to="/tienda">

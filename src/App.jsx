@@ -14,10 +14,14 @@ import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import AdminProductos from "./components/pages/AdminProductos";
+<<<<<<< HEAD
 import Carrito from "./components/pages/Carrito";
 
 
 
+=======
+import AdminUsuarios from "./components/pages/AdminUsuarios";
+>>>>>>> dev
 
 function App() {
   const [carrito, setCarrito] = useState([]);
@@ -30,18 +34,24 @@ function App() {
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
+<<<<<<< HEAD
         <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         
 
 
+=======
+       
+>>>>>>> dev
 
         {/* 🔒 Rutas protegidas */}
         <Route element={<ProtectorRutas />}>
+         <Route path="/reserva" element={<ReservarCancha />} />
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
          <Route path="/administrador/editar/:id" element={<FormularioProducto />} />
           <Route path="/admin/reservas" element={<AdminReservas />} />
+          <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         </Route>
         <Route path="/admin/productos" element={<AdminProductos />} />
         <Route path="*" element={<Error404 />} />

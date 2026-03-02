@@ -7,7 +7,7 @@ export default function BienvenidaInicio() {
       
       <Col md={12} className="p-5 rounded bg-dark shadow-sm text-center">
         <h2 className="display-5 fw-bold text-success">
-          Bienvenidos a FutbolProgramado
+          Bienvenidos a TucuGol
         </h2>
         <p className="lead text-white">
           Unite al club donde la pasión por la redonda no tiene límites. Reservá

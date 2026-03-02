@@ -52,7 +52,7 @@ const CanchasSeccion = () => {
                 </p>
 
                 <div className="d-flex justify-content-center gap-2 mt-3">
-                  <Link to="/reservas" className="btn btn-success btn-sm px-3">
+                  <Link to="/reserva" className="btn btn-success btn-sm px-3">
                     Reservar
                   </Link>
                 </div>

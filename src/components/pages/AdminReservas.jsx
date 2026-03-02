@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom"; // ✅ Agregar useLocation
 import Swal from "sweetalert2";
 import {
   listarReservasApi,
@@ -10,11 +10,10 @@ import {
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
+  const location = useLocation(); // ✅ Obtener datos del estado
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
-
-  // ✅ buscador
   const [busqueda, setBusqueda] = useState("");
 
   const obtenerReservas = async () => {
@@ -33,9 +32,9 @@ const AdminReservas = () => {
     setCargando(false);
   };
 
-  useEffect(() => {
-    obtenerReservas();
-  }, []);
+useEffect(() => {
+  obtenerReservas();
+}, []);
 
   const reservasFiltradas = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -47,11 +46,19 @@ const AdminReservas = () => {
       const hora = (r.hora || "").toLowerCase();
       const fecha = r.fecha ? new Date(r.fecha).toLocaleDateString() : "";
 
+      // ✅ NUEVO: usuario (si viene populado)
+      const usuarioNombre =
+        typeof r.usuario === "object" ? (r.usuario?.nombre || "").toLowerCase() : "";
+      const usuarioEmail =
+        typeof r.usuario === "object" ? (r.usuario?.email || "").toLowerCase() : "";
+
       return (
         cancha.includes(texto) ||
         estado.includes(texto) ||
         hora.includes(texto) ||
-        fecha.toLowerCase().includes(texto)
+        fecha.toLowerCase().includes(texto) ||
+        usuarioNombre.includes(texto) ||
+        usuarioEmail.includes(texto)
       );
     });
   }, [busqueda, reservas]);
@@ -94,9 +101,12 @@ const AdminReservas = () => {
     const nuevoEstado =
       reserva.estado === "pendiente" ? "confirmada" : "pendiente";
 
- const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.token);
-
+    const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const respuesta = await cambiarEstadoReservaApi(
+      reserva,
+      nuevoEstado,
+      usuario.token
+    );
 
     if (respuesta.ok) {
       obtenerReservas();
@@ -118,6 +128,16 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
         </div>
 
         <div className="reservas-header-actions">
+<Button
+  as={Link}
+  to="/reserva"
+  variant="outline-light"
+  className="reservas-btn-top"
+>
+  <i className="bi bi-calendar-plus me-2"></i>
+  Reservar cancha
+</Button>
+
           <Button
             as={Link}
             to="/administrador"
@@ -149,7 +169,7 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
 
           <Form.Control
             className="reservas-search-input"
-            placeholder="Buscar por cancha, estado, fecha u hora..."
+            placeholder="Buscar por cancha, usuario, estado, fecha u hora..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -194,6 +214,10 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
               <tr>
                 <th className="col-num">#</th>
                 <th>Cancha</th>
+
+                {/* ✅ NUEVO */}
+                <th>Usuario</th>
+
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -207,8 +231,27 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
                 <tr key={reserva._id}>
                   <td className="col-num">{index + 1}</td>
                   <td>{reserva.cancha}</td>
+
+                  {/* ✅ NUEVO: muestra nombre + email si viene populado */}
                   <td>
-                    {reserva.fecha ? new Date(reserva.fecha).toLocaleDateString() : "-"}
+                    {typeof reserva.usuario === "object" && reserva.usuario ? (
+                      <div className="d-flex flex-column">
+                        <span className="fw-semibold">
+                          {reserva.usuario?.nombre || "Sin nombre"}
+                        </span>
+                        <small className="text-white-50">
+                          {reserva.usuario?.email || ""}
+                        </small>
+                      </div>
+                    ) : (
+                      <span className="text-white-50">Sin usuario</span>
+                    )}
+                  </td>
+
+                  <td>
+                    {reserva.fecha
+                      ? new Date(reserva.fecha).toLocaleDateString()
+                      : "-"}
                   </td>
                   <td>{reserva.hora}</td>
                   <td
@@ -225,7 +268,9 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
                   <td className="col-acciones">
                     <div className="reservas-actions">
                       <Button
-                        variant={reserva.estado === "pendiente" ? "success" : "warning"}
+                        variant={
+                          reserva.estado === "pendiente" ? "success" : "warning"
+                        }
                         size="sm"
                         className="btn-accion"
                         onClick={() => cambiarEstado(reserva)}

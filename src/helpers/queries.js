@@ -54,7 +54,6 @@ export const obtenerProductoApi = async (id) => {
 };
 
 
-
 // =====================
 // ✅ RESERVAS / CANCHAS
 // =====================
@@ -92,9 +91,9 @@ export const cambiarEstadoReservaApi = async (reserva, nuevoEstado, token) => {
     const headers = { "Content-Type": "application/json" };
     if (token) headers.Authorization = `Bearer ${token}`;
 
-    // ✅ IMPORTANTE: tu schema exige usuario (required)
+    // exige usuario sin usuario logueado no puedo cambiar el estado, por eso se lo paso como parámetro
     const body = {
-      usuario: reserva.usuario, // 👈 CLAVE
+      usuario: reserva.usuario, 
       cancha: reserva.cancha,
       fecha: reserva.fecha,
       hora: reserva.hora,
@@ -106,6 +105,83 @@ export const cambiarEstadoReservaApi = async (reserva, nuevoEstado, token) => {
       method: "PUT",
       headers,
       body: JSON.stringify(body),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
+
+export const crearReservaApi = async (nuevaReserva, token) => {
+  try {
+    const respuesta = await fetch(`${API_URL}/canchas`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+      },
+      body: JSON.stringify(nuevaReserva),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, status: respuesta.status, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
+// =====================
+// ✅ USUARIOS (solo admin)
+// =====================
+
+export const listarUsuariosApi = async (token) => {
+  try {
+    const respuesta = await fetch(`${API_URL}/usuarios`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+
+    const data = await respuesta.json().catch(() => []);
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: [] };
+  }
+};
+
+export const cambiarEstadoUsuarioApi = async (id, active, token) => {
+  try {
+    const respuesta = await fetch(`${API_URL}/usuarios/${id}/estado`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ active }),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
+export const cambiarRolUsuarioApi = async (id, role, token) => {
+  try {
+    const respuesta = await fetch(`${API_URL}/usuarios/${id}/rol`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ role }),
     });
 
     const data = await respuesta.json().catch(() => ({}));
