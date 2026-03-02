@@ -1,9 +1,8 @@
 import { useMemo, useState } from "react";
-import { Button, Form, InputGroup } from "react-bootstrap";
+import { Button, Form, InputGroup, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
 const AdminUsuarios = () => {
-  // ✅ mock inicial (después lo conectamos al back)
   const [usuarios] = useState([
     {
       _id: "1",
@@ -62,7 +61,6 @@ const AdminUsuarios = () => {
         </div>
       </div>
 
-      {/* Buscador */}
       <div className="mb-3">
         <InputGroup>
           <InputGroup.Text>
@@ -89,9 +87,49 @@ const AdminUsuarios = () => {
         </small>
       </div>
 
-      <div className="alert alert-info mb-0">
-        Próximo paso: renderizar tabla de usuarios.
-      </div>
+      {usuariosFiltrados.length === 0 ? (
+        <div className="alert alert-info">
+          {busqueda.trim()
+            ? "No se encontraron usuarios con esa búsqueda."
+            : "No hay usuarios para mostrar."}
+        </div>
+      ) : (
+        <div className="table-responsive">
+          <Table striped bordered hover variant="dark" className="mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Creado</th>
+                <th className="text-center">Acciones</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {usuariosFiltrados.map((u, index) => (
+                <tr key={u._id}>
+                  <td>{index + 1}</td>
+                  <td>{u.nombre}</td>
+                  <td>{u.email}</td>
+                  <td>{u.role}</td>
+                  <td>{u.active ? "activo" : "inactivo"}</td>
+                  <td>
+                    {u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}
+                  </td>
+                  <td className="text-center">
+                    <small className="text-white-50">
+                      Próximo paso: botones
+                    </small>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      )}
     </main>
   );
 };
