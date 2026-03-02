@@ -1,9 +1,10 @@
 import { useMemo, useState } from "react";
-import { Button, Form, InputGroup, Table } from "react-bootstrap";
+import { Button, Form, InputGroup, Table, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 const AdminUsuarios = () => {
-  const [usuarios] = useState([
+  const [usuarios, setUsuarios] = useState([
     {
       _id: "1",
       nombre: "Admin Principal",
@@ -42,6 +43,54 @@ const AdminUsuarios = () => {
       );
     });
   }, [busqueda, usuarios]);
+
+  const badgeRol = (role) => {
+    if (role === "admin") return <Badge bg="primary">admin</Badge>;
+    return <Badge bg="secondary">user</Badge>;
+  };
+
+  const badgeEstado = (active) => {
+    if (active) return <Badge bg="success">activo</Badge>;
+    return <Badge bg="danger">inactivo</Badge>;
+  };
+
+  const cambiarEstado = async (usuario) => {
+    const confirmacion = await Swal.fire({
+      title: "¿Cambiar estado?",
+      html: `Vas a ${usuario.active ? "desactivar" : "activar"} a <b>${usuario.nombre}</b>.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    setUsuarios((prev) =>
+      prev.map((u) => (u._id === usuario._id ? { ...u, active: !u.active } : u))
+    );
+  };
+
+  const cambiarRol = async (usuario) => {
+    const nuevoRol = usuario.role === "admin" ? "user" : "admin";
+
+    const confirmacion = await Swal.fire({
+      title: "¿Cambiar rol?",
+      html: `Vas a cambiar el rol de <b>${usuario.nombre}</b> a <b>${nuevoRol}</b>.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cambiar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    setUsuarios((prev) =>
+      prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
+    );
+  };
 
   return (
     <main className="container my-4">
@@ -114,15 +163,32 @@ const AdminUsuarios = () => {
                   <td>{index + 1}</td>
                   <td>{u.nombre}</td>
                   <td>{u.email}</td>
-                  <td>{u.role}</td>
-                  <td>{u.active ? "activo" : "inactivo"}</td>
+                  <td>{badgeRol(u.role)}</td>
+                  <td>{badgeEstado(u.active)}</td>
                   <td>
                     {u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}
                   </td>
+
                   <td className="text-center">
-                    <small className="text-white-50">
-                      Próximo paso: botones
-                    </small>
+                    <div className="d-flex gap-2 justify-content-center flex-wrap">
+                      <Button
+                        size="sm"
+                        variant={u.active ? "warning" : "success"}
+                        onClick={() => cambiarEstado(u)}
+                      >
+                        <i className="bi bi-toggle2-on me-2"></i>
+                        {u.active ? "Desactivar" : "Activar"}
+                      </Button>
+
+                      <Button
+                        size="sm"
+                        variant="info"
+                        onClick={() => cambiarRol(u)}
+                      >
+                        <i className="bi bi-shield-lock me-2"></i>
+                        Cambiar rol
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
