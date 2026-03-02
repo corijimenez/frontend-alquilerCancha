@@ -2,7 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Form, InputGroup, Table, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { listarUsuariosApi, cambiarEstadoUsuarioApi } from "../../helpers/queries";
+import {
+  listarUsuariosApi,
+  cambiarEstadoUsuarioApi,
+  cambiarRolUsuarioApi,
+} from "../../helpers/queries";
 
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -109,7 +113,6 @@ const AdminUsuarios = () => {
       return;
     }
 
-    // ✅ actualizo la tabla sin volver a pedir todo al back
     setUsuarios((prev) =>
       prev.map((u) =>
         u._id === usuario._id ? { ...u, active: nuevoEstado } : u
@@ -117,6 +120,48 @@ const AdminUsuarios = () => {
     );
 
     Swal.fire("Listo", "Estado actualizado correctamente.", "success");
+  };
+
+  const cambiarRol = async (usuario) => {
+    const usuarioLogueado =
+      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const token = usuarioLogueado.token;
+
+    if (!token) {
+      Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+      return;
+    }
+
+    const nuevoRol = usuario.role === "admin" ? "user" : "admin";
+
+    const confirmacion = await Swal.fire({
+      title: "¿Cambiar rol?",
+      html: `Vas a cambiar el rol de <b>${usuario.nombre}</b> a <b>${nuevoRol}</b>.`,
+      icon: "question",
+      showCancelButton: true,
+      confirmButtonText: "Sí, cambiar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    const respuesta = await cambiarRolUsuarioApi(usuario._id, nuevoRol, token);
+
+    if (!respuesta.ok) {
+      Swal.fire(
+        "Error",
+        respuesta.data?.mensaje || "No se pudo actualizar el rol.",
+        "error"
+      );
+      return;
+    }
+
+    setUsuarios((prev) =>
+      prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
+    );
+
+    Swal.fire("Listo", "Rol actualizado correctamente.", "success");
   };
 
   return (
@@ -211,9 +256,13 @@ const AdminUsuarios = () => {
                         {u.active ? "Desactivar" : "Activar"}
                       </Button>
 
-                      <Button size="sm" variant="info" disabled>
+                      <Button
+                        size="sm"
+                        variant="info"
+                        onClick={() => cambiarRol(u)}
+                      >
                         <i className="bi bi-shield-lock me-2"></i>
-                        Cambiar rol (paso 3)
+                        Cambiar rol
                       </Button>
                     </div>
                   </td>
