@@ -129,6 +129,16 @@ const AdminReservas = () => {
         </div>
 
         <div className="reservas-header-actions">
+<Button
+  as={Link}
+  to="/reserva"
+  variant="outline-light"
+  className="reservas-btn-top"
+>
+  <i className="bi bi-calendar-plus me-2"></i>
+  Reservar cancha
+</Button>
+
           <Button
             as={Link}
             to="/administrador"
