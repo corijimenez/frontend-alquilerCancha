@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Button, Form, InputGroup, Table, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { listarUsuariosApi } from "../../helpers/queries";
+import { listarUsuariosApi, cambiarEstadoUsuarioApi } from "../../helpers/queries";
 
 const AdminUsuarios = () => {
   const [usuarios, setUsuarios] = useState([]);
@@ -66,6 +66,57 @@ const AdminUsuarios = () => {
   const badgeEstado = (active) => {
     if (active) return <Badge bg="success">activo</Badge>;
     return <Badge bg="danger">inactivo</Badge>;
+  };
+
+  const cambiarEstado = async (usuario) => {
+    const usuarioLogueado =
+      JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const token = usuarioLogueado.token;
+
+    if (!token) {
+      Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+      return;
+    }
+
+    const confirmacion = await Swal.fire({
+      title: "¿Cambiar estado?",
+      html: `Vas a ${usuario.active ? "desactivar" : "activar"} a <b>${
+        usuario.nombre
+      }</b>.`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Sí, confirmar",
+      cancelButtonText: "Cancelar",
+      reverseButtons: true,
+    });
+
+    if (!confirmacion.isConfirmed) return;
+
+    const nuevoEstado = !usuario.active;
+
+    const respuesta = await cambiarEstadoUsuarioApi(
+      usuario._id,
+      nuevoEstado,
+      token
+    );
+
+    if (!respuesta.ok) {
+      Swal.fire(
+        "Error",
+        respuesta.data?.mensaje || "No se pudo actualizar el estado.",
+        "error"
+      );
+      return;
+    }
+
+    // ✅ actualizo la tabla sin volver a pedir todo al back
+    setUsuarios((prev) =>
+      prev.map((u) =>
+        u._id === usuario._id ? { ...u, active: nuevoEstado } : u
+      )
+    );
+
+    Swal.fire("Listo", "Estado actualizado correctamente.", "success");
   };
 
   return (
@@ -148,10 +199,23 @@ const AdminUsuarios = () => {
                       ? new Date(u.createdAt).toLocaleString()
                       : "-"}
                   </td>
+
                   <td className="text-center">
-                    <small className="text-white-50">
-                      Próximo paso: acciones
-                    </small>
+                    <div className="d-flex gap-2 justify-content-center flex-wrap">
+                      <Button
+                        size="sm"
+                        variant={u.active ? "warning" : "success"}
+                        onClick={() => cambiarEstado(u)}
+                      >
+                        <i className="bi bi-toggle2-on me-2"></i>
+                        {u.active ? "Desactivar" : "Activar"}
+                      </Button>
+
+                      <Button size="sm" variant="info" disabled>
+                        <i className="bi bi-shield-lock me-2"></i>
+                        Cambiar rol (paso 3)
+                      </Button>
+                    </div>
                   </td>
                 </tr>
               ))}
