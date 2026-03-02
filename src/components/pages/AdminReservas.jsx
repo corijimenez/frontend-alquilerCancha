@@ -32,15 +32,9 @@ const AdminReservas = () => {
     setCargando(false);
   };
 
-  useEffect(() => {
-    // ✅ Si viene de ReservarCancha, usar esas reservas
-    if (location.state?.reservas) {
-      setReservas(location.state.reservas);
-      setCargando(false);
-    } else {
-      obtenerReservas();
-    }
-  }, [location.state]);
+useEffect(() => {
+  obtenerReservas();
+}, []);
 
   const reservasFiltradas = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
