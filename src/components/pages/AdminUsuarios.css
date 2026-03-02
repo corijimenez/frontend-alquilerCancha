@@ -1,11 +1,14 @@
 /* =========================
-   ADMIN USUARIOS (estilo similar a AdminReservas/AdminProductos)
+   ADMIN USUARIOS
+   (estilo similar a AdminReservas/AdminProductos)
 ========================= */
 
+/* Contenedor */
 .usuarios-wrap {
   padding-bottom: 1rem;
 }
 
+/* Header */
 .usuarios-header {
   display: flex;
   align-items: flex-start;
@@ -26,6 +29,7 @@
   margin: 0;
 }
 
+/* Acciones header (volver / recargar) */
 .usuarios-header-actions {
   display: flex;
   gap: 10px;
@@ -42,8 +46,20 @@
   filter: brightness(1.05);
 }
 
-/* Buscador */
+/* Más aire en pantallas grandes */
+@media (min-width: 1200px) {
+  .usuarios-header {
+    margin-bottom: 32px;
+  }
+}
+
+/* =========================
+   BUSCADOR
+========================= */
 .usuarios-search {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 12px;
 }
 
@@ -53,57 +69,71 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
 }
 
+/* Lupa */
 .usuarios-search .input-group-text {
   background: rgba(20, 20, 20, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
-  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  color: rgba(255, 255, 255, 0.9) !important;
 }
 
+/* Input */
 .usuarios-search .form-control {
   background: rgba(10, 10, 10, 0.55) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-left: none !important;
+  border-right: none !important;
   color: #fff !important;
 }
 
 .usuarios-search .form-control::placeholder {
-  color: rgba(255, 255, 255, 0.65) !important;
+  color: rgba(255, 255, 255, 0.65);
 }
 
 .usuarios-search .form-control:focus {
   box-shadow: none !important;
 }
 
+/* Botón limpiar */
 .usuarios-search .btn {
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
   background: rgba(255, 255, 255, 0.08) !important;
   color: #fff !important;
   font-weight: 700;
+  transition: transform 0.15s ease, filter 0.15s ease, background 0.15s ease;
 }
 
 .usuarios-search .btn:hover {
   background: rgba(255, 255, 255, 0.12) !important;
   transform: translateY(-1px);
-  transition: 0.15s ease;
+  filter: brightness(1.04);
 }
 
 .usuarios-search .btn:disabled {
   opacity: 0.5;
   transform: none;
+  filter: none;
 }
 
-/* ✅ Tabla con scroll horizontal (clave para md/xs) */
+/* Texto “Mostrando X de Y” (si lo usás) */
+.usuarios-search-info {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* =========================
+   TABLA (scroll horizontal)
+========================= */
 .usuarios-table {
   border-radius: 14px;
   box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
-
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
 }
 
-/* Fuerza a que “necesite” scroll en pantallas chicas */
+/* obligamos a que en pantallas chicas haya scroll */
 .usuarios-table table {
-  min-width: 920px; /* ajustable: 860/920/980 */
+  min-width: 920px; /* ajustable */
 }
 
 /* Columnas */
@@ -114,18 +144,26 @@
 
 .col-acciones {
   width: 320px;
+  min-width: 320px;
   white-space: nowrap;
   vertical-align: middle !important;
 }
 
-/* Acciones */
+/* centra encabezado acciones (desktop también) */
+th.col-acciones {
+  text-align: center;
+}
+
+/* =========================
+   ACCIONES (botones)
+========================= */
 .usuarios-actions {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 12px;
   width: 100%;
-  flex-wrap: nowrap; /* ✅ que no se vayan abajo en md/xs */
+  flex-wrap: nowrap; /* que no salten de línea en md */
 }
 
 .btn-accion {
@@ -133,7 +171,7 @@
   font-weight: 800;
   padding: 6px 12px;
   transition: transform 0.12s ease, filter 0.12s ease;
-  width: 130px; /* ✅ mismo ancho Activar/Desactivar */
+  width: 130px; /* mismo ancho Activar/Desactivar */
   white-space: nowrap;
 }
 
@@ -142,42 +180,14 @@
   filter: brightness(1.04);
 }
 
-/* Mobile xs: mejor apilar botones (no se cortan nunca) */
+/* =========================
+   XS (≤576px)
+   - botones top compactos
+   - columna acciones más angosta y centrada
+   - botones acciones más chicos
+========================= */
 @media (max-width: 576px) {
-  .usuarios-table table {
-    min-width: 900px;
-  }
-
-  .usuarios-actions {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 8px;
-  }
-
-  .btn-accion {
-    width: 100%;
-  }
-}
-/* ✅ Más espacio entre header y buscador en pantallas grandes */
-@media (min-width: 1200px) {
-  .usuarios-header {
-    margin-bottom: 32px; /* antes era 12px */
-  }
-}
-
-/* botones top: mismo estilo que AdminProductos */
-.btn-admin-top {
-  border-radius: 12px;
-  transition: transform 0.15s ease, filter 0.15s ease;
-}
-
-.btn-admin-top:hover {
-  transform: translateY(-1px);
-  filter: brightness(1.05);
-}
-
-/* XS: súper compactos (no ocupan pantalla) */
-@media (max-width: 576px) {
+  /* top buttons: compactos */
   .btn-admin-compact {
     padding: 6px 10px !important;
     font-weight: 700;
@@ -185,5 +195,38 @@
 
   .btn-admin-compact i {
     font-size: 1.1rem;
+  }
+
+  /* tabla: sigue con scroll */
+  .usuarios-table table {
+    min-width: 900px;
+  }
+
+  /* columna acciones más chica (evita “sobrante”) */
+  .col-acciones {
+    width: 220px !important;
+    min-width: 220px !important;
+  }
+
+  th.col-acciones {
+    text-align: center !important;
+  }
+
+  td.col-acciones {
+    text-align: center !important;
+  }
+
+  /* acciones: botones más chicos */
+  .usuarios-actions {
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-accion {
+    width: 150px !important;
+    max-width: 150px !important;
+    padding: 6px 8px !important;
+    font-size: 13px;
   }
 }
