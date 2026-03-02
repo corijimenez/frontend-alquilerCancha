@@ -13,6 +13,7 @@ import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import AdminProductos from "./components/pages/AdminProductos";
+import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
           <Route path="/administrador/crear" element={<FormularioProducto />} />
          <Route path="/administrador/editar/:id" element={<FormularioProducto />} />
           <Route path="/admin/reservas" element={<AdminReservas />} />
+          <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         </Route>
         <Route path="/admin/productos" element={<AdminProductos />} />
         <Route path="*" element={<Error404 />} />
