@@ -14,14 +14,8 @@ import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import AdminProductos from "./components/pages/AdminProductos";
-<<<<<<< HEAD
 import Carrito from "./components/pages/Carrito";
-
-
-
-=======
 import AdminUsuarios from "./components/pages/AdminUsuarios";
->>>>>>> dev
 
 function App() {
   const [carrito, setCarrito] = useState([]);
@@ -34,15 +28,10 @@ function App() {
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
-<<<<<<< HEAD
         <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         
-
-
-=======
-       
->>>>>>> dev
+        
 
         {/* 🔒 Rutas protegidas */}
         <Route element={<ProtectorRutas />}>
