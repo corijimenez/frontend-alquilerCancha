@@ -210,3 +210,40 @@ body {
   transform: scale(1.15);
   color: #2ecc71;
 }
+
+/*LOGO PARA NAVBAR*/
+.logo-img {
+  height: 42px;
+  transition: transform 0.4s ease;
+}
+
+/* Animacin de giro */
+@keyframes girarPelota {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Gira solo cuando paso el mouse */
+.logo-brand:hover .logo-img {
+  animation: girarPelota 0.8s linear;
+}
+
+.logo-text {
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.logo-brand:hover .logo-text {
+  text-shadow: 
+    0 0 5px #28a745,
+    0 0 10px #28a745,
+    0 0 20px #28a745;
+}
+
+.badge-carrito {
+  font-size: 0.6rem;
+}

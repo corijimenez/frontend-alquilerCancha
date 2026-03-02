@@ -21,11 +21,16 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
         <Navbar.Brand
           as={NavLink}
           to="/"
-          className="d-flex align-items-center"
+          className="logo-brand d-flex align-items-center text-decoration-none"
         >
-          <i className="bi bi-trophy-fill text-verde-cancha me-2 fs-3"></i>
-          <span className="fw-bold tracking-tight text-white">
-            LOGO<span className="text-verde-cancha">CANCHA</span>
+          <img
+            src="/img/logo2.png"
+            alt="Logo TucuGol"
+            className="logo-img me-2"
+          />
+
+          <span className="logo-text fw-bold fs-4">
+            Tucu<span className="text-verde-cancha">Gol</span>
           </span>
         </Navbar.Brand>
 
@@ -54,10 +59,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
                 <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
                   <NavLink className="nav-link me-3" to="/carrito">
                     <i className="bi bi-cart3 fs-5 position-relative">
-                      <span
-                        className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                        style={{ fontSize: "0.6rem" }}
-                      >
+                      <span className="badge-carrito position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         0
                       </span>
                     </i>
@@ -67,7 +69,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
                     className="btn btn-verde-cancha rounded-pill px-4 shadow-sm"
                     onClick={logout}
                   >
-                    Logout
+                    Cerrar sesión
                   </Button>
                 </div>
               </>
@@ -77,7 +79,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
                   className="btn btn-outline-light rounded-pill px-4"
                   to="/login"
                 >
-                  Login
+                  Iniciar sesión
                 </NavLink>
               </div>
             )}
