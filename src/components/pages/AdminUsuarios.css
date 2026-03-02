@@ -1,0 +1,189 @@
+/* =========================
+   ADMIN USUARIOS (estilo similar a AdminReservas/AdminProductos)
+========================= */
+
+.usuarios-wrap {
+  padding-bottom: 1rem;
+}
+
+.usuarios-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.usuarios-title {
+  color: #fff;
+  font-weight: 800;
+  margin: 0;
+}
+
+.usuarios-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+}
+
+.usuarios-header-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.usuarios-btn-top {
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.usuarios-btn-top:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* Buscador */
+.usuarios-search {
+  margin-bottom: 12px;
+}
+
+.usuarios-search .input-group {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.usuarios-search .input-group-text {
+  background: rgba(20, 20, 20, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+}
+
+.usuarios-search .form-control {
+  background: rgba(10, 10, 10, 0.55) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  color: #fff !important;
+}
+
+.usuarios-search .form-control::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+.usuarios-search .form-control:focus {
+  box-shadow: none !important;
+}
+
+.usuarios-search .btn {
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
+  font-weight: 700;
+}
+
+.usuarios-search .btn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  transform: translateY(-1px);
+  transition: 0.15s ease;
+}
+
+.usuarios-search .btn:disabled {
+  opacity: 0.5;
+  transform: none;
+}
+
+/* ✅ Tabla con scroll horizontal (clave para md/xs) */
+.usuarios-table {
+  border-radius: 14px;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.35);
+
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fuerza a que “necesite” scroll en pantallas chicas */
+.usuarios-table table {
+  min-width: 920px; /* ajustable: 860/920/980 */
+}
+
+/* Columnas */
+.col-num {
+  width: 56px;
+  white-space: nowrap;
+}
+
+.col-acciones {
+  width: 320px;
+  white-space: nowrap;
+  vertical-align: middle !important;
+}
+
+/* Acciones */
+.usuarios-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: nowrap; /* ✅ que no se vayan abajo en md/xs */
+}
+
+.btn-accion {
+  border-radius: 10px;
+  font-weight: 800;
+  padding: 6px 12px;
+  transition: transform 0.12s ease, filter 0.12s ease;
+  width: 130px; /* ✅ mismo ancho Activar/Desactivar */
+  white-space: nowrap;
+}
+
+.btn-accion:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.04);
+}
+
+/* Mobile xs: mejor apilar botones (no se cortan nunca) */
+@media (max-width: 576px) {
+  .usuarios-table table {
+    min-width: 900px;
+  }
+
+  .usuarios-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .btn-accion {
+    width: 100%;
+  }
+}
+/* ✅ Más espacio entre header y buscador en pantallas grandes */
+@media (min-width: 1200px) {
+  .usuarios-header {
+    margin-bottom: 32px; /* antes era 12px */
+  }
+}
+
+/* botones top: mismo estilo que AdminProductos */
+.btn-admin-top {
+  border-radius: 12px;
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-admin-top:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+}
+
+/* XS: súper compactos (no ocupan pantalla) */
+@media (max-width: 576px) {
+  .btn-admin-compact {
+    padding: 6px 10px !important;
+    font-weight: 700;
+  }
+
+  .btn-admin-compact i {
+    font-size: 1.1rem;
+  }
+}

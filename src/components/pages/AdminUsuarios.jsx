@@ -7,6 +7,7 @@ import {
   cambiarEstadoUsuarioApi,
   cambiarRolUsuarioApi,
 } from "../../helpers/queries";
+import "./AdminUsuarios.css";
 
 // 🔐 Helper para obtener el id desde el token JWT
 const obtenerIdDesdeToken = (token) => {
@@ -64,7 +65,7 @@ const AdminUsuarios = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ✅ Buscador corregido
+  // 🔎 Buscador
   const usuariosFiltrados = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
     if (!texto) return usuarios;
@@ -207,31 +208,45 @@ const AdminUsuarios = () => {
   };
 
   return (
-    <main className="container my-4">
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <main className="container my-4 usuarios-wrap">
+      {/* HEADER */}
+      <div className="usuarios-header">
         <div>
-          <h1 className="text-white fw-bold mb-1">Administrar Usuarios</h1>
-          <p className="text-white mb-0">
+          <h1 className="usuarios-title">Administrar Usuarios</h1>
+          <p className="usuarios-subtitle">
             Gestioná usuarios y permisos desde este panel.
           </p>
         </div>
 
-        <div className="d-flex gap-2">
-          <Button as={Link} to="/administrador" variant="outline-light">
-            Volver al panel
-          </Button>
+       <div className="d-flex gap-2 flex-wrap justify-content-start justify-content-sm-end">
+  <Button
+    as={Link}
+    to="/administrador"
+    variant="outline-light"
+    size="sm"
+    className="btn-admin-top btn-admin-compact"
+  >
+    <i className="bi bi-arrow-left-circle"></i>
+    <span className="d-none d-sm-inline ms-2">Volver al panel</span>
+  </Button>
 
-          <Button
-            variant="outline-info"
-            onClick={cargarUsuarios}
-            disabled={cargando}
-          >
-            Recargar
-          </Button>
-        </div>
+  <Button
+    variant="outline-light"
+    size="sm"
+    onClick={cargarUsuarios}
+    disabled={cargando}
+    className="btn-admin-top btn-admin-compact"
+  >
+    <i className="bi bi-arrow-clockwise"></i>
+    <span className="d-none d-sm-inline ms-2">
+      {cargando ? "Cargando..." : "Recargar"}
+    </span>
+  </Button>
+</div>
       </div>
 
-      <div className="mb-3">
+      {/* BUSCADOR */}
+      <div className="usuarios-search">
         <InputGroup>
           <InputGroup.Text>
             <i className="bi bi-search"></i>
@@ -256,17 +271,17 @@ const AdminUsuarios = () => {
       {cargando ? (
         <div className="alert alert-info">Cargando usuarios...</div>
       ) : (
-        <div className="table-responsive">
-          <Table striped bordered hover variant="dark">
+        <div className="usuarios-table">
+          <Table striped bordered hover variant="dark" className="mb-0">
             <thead>
               <tr>
-                <th>#</th>
+                <th className="col-num">#</th>
                 <th>Nombre</th>
                 <th>Email</th>
                 <th>Rol</th>
                 <th>Estado</th>
                 <th>Creado</th>
-                <th>Acciones</th>
+                <th className="col-acciones">Acciones</th>
               </tr>
             </thead>
 
@@ -276,7 +291,7 @@ const AdminUsuarios = () => {
 
                 return (
                   <tr key={u._id}>
-                    <td>{index + 1}</td>
+                    <td className="col-num">{index + 1}</td>
                     <td>
                       {u.nombre}{" "}
                       {bloqueado && (
@@ -293,10 +308,11 @@ const AdminUsuarios = () => {
                         ? new Date(u.createdAt).toLocaleString()
                         : "-"}
                     </td>
-                    <td>
-                      <div className="d-flex gap-2">
+                    <td className="col-acciones">
+                      <div className="usuarios-actions">
                         <Button
                           size="sm"
+                          className="btn-accion"
                           variant={u.active ? "warning" : "success"}
                           onClick={() => cambiarEstado(u)}
                           disabled={bloqueado || accionandoEstadoId === u._id}
@@ -310,6 +326,7 @@ const AdminUsuarios = () => {
 
                         <Button
                           size="sm"
+                          className="btn-accion"
                           variant="info"
                           onClick={() => cambiarRol(u)}
                           disabled={bloqueado || accionandoRolId === u._id}
