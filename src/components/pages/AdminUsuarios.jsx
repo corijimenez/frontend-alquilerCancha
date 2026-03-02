@@ -8,7 +8,7 @@ import {
   cambiarRolUsuarioApi,
 } from "../../helpers/queries";
 
-// ✅ helper: sacar el id del token (payload trae { id, role })
+// 🔐 Helper para obtener el id desde el token JWT
 const obtenerIdDesdeToken = (token) => {
   try {
     if (!token) return null;
@@ -27,13 +27,15 @@ const AdminUsuarios = () => {
   const [busqueda, setBusqueda] = useState("");
   const [cargando, setCargando] = useState(true);
 
-  // ✅ loading por acción (para no spammear los PUT)
   const [accionandoEstadoId, setAccionandoEstadoId] = useState(null);
   const [accionandoRolId, setAccionandoRolId] = useState(null);
 
-  const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+  const usuarioLogueado =
+    JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
   const token = usuarioLogueado.token;
   const miId = obtenerIdDesdeToken(token);
+
+  const esMiUsuario = (idUsuario) => miId && idUsuario === miId;
 
   const cargarUsuarios = async () => {
     if (!token) {
@@ -62,9 +64,18 @@ const AdminUsuarios = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // ✅ Buscador corregido
   const usuariosFiltrados = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
     if (!texto) return usuarios;
+
+    if (texto === "activo" || texto === "activos") {
+      return usuarios.filter((u) => u.active === true);
+    }
+
+    if (texto === "inactivo" || texto === "inactivos") {
+      return usuarios.filter((u) => u.active === false);
+    }
 
     return usuarios.filter((u) => {
       const nombre = (u.nombre || "").toLowerCase();
@@ -91,15 +102,9 @@ const AdminUsuarios = () => {
     return <Badge bg="danger">inactivo</Badge>;
   };
 
-  const esMiUsuario = (idUsuario) => miId && idUsuario === miId;
-
   const cambiarEstado = async (usuario) => {
-    if (!token) {
-      Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
-      return;
-    }
+    if (!token) return;
 
-    // ✅ regla: no permitir desactivarte a vos mismo
     if (esMiUsuario(usuario._id)) {
       Swal.fire(
         "Acción bloqueada",
@@ -111,9 +116,7 @@ const AdminUsuarios = () => {
 
     const confirmacion = await Swal.fire({
       title: "¿Cambiar estado?",
-      html: `Vas a ${usuario.active ? "desactivar" : "activar"} a <b>${
-        usuario.nombre
-      }</b>.`,
+      html: `Vas a ${usuario.active ? "desactivar" : "activar"} a <b>${usuario.nombre}</b>.`,
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Sí, confirmar",
@@ -135,15 +138,10 @@ const AdminUsuarios = () => {
       );
 
       if (!respuesta.ok) {
-        Swal.fire(
-          "Error",
-          respuesta.data?.mensaje || "No se pudo actualizar el estado.",
-          "error"
-        );
+        Swal.fire("Error", "No se pudo actualizar el estado.", "error");
         return;
       }
 
-      // ✅ actualizo local (rápido)
       setUsuarios((prev) =>
         prev.map((u) =>
           u._id === usuario._id ? { ...u, active: nuevoEstado } : u
@@ -157,16 +155,12 @@ const AdminUsuarios = () => {
   };
 
   const cambiarRol = async (usuario) => {
-    if (!token) {
-      Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
-      return;
-    }
+    if (!token) return;
 
-    // ✅ regla: no permitir cambiarte el rol a vos mismo
     if (esMiUsuario(usuario._id)) {
       Swal.fire(
         "Acción bloqueada",
-        "No podés cambiar tu propio rol desde el panel.",
+        "No podés cambiar tu propio rol.",
         "info"
       );
       return;
@@ -196,16 +190,14 @@ const AdminUsuarios = () => {
       );
 
       if (!respuesta.ok) {
-        Swal.fire(
-          "Error",
-          respuesta.data?.mensaje || "No se pudo actualizar el rol.",
-          "error"
-        );
+        Swal.fire("Error", "No se pudo actualizar el rol.", "error");
         return;
       }
 
       setUsuarios((prev) =>
-        prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
+        prev.map((u) =>
+          u._id === usuario._id ? { ...u, role: nuevoRol } : u
+        )
       );
 
       Swal.fire("Listo", "Rol actualizado correctamente.", "success");
@@ -216,22 +208,24 @@ const AdminUsuarios = () => {
 
   return (
     <main className="container my-4">
-      <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-3">
+      <div className="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h1 className="text-white fw-bold mb-1">Administrar Usuarios</h1>
-          <p className="text-white-50 mb-0">
-            Vista de usuarios + acciones (activar/desactivar y cambiar rol).
+          <p className="text-white mb-0">
+            Gestioná usuarios y permisos desde este panel.
           </p>
         </div>
 
         <div className="d-flex gap-2">
           <Button as={Link} to="/administrador" variant="outline-light">
-            <i className="bi bi-arrow-left-circle me-2"></i>
             Volver al panel
           </Button>
 
-          <Button variant="outline-info" onClick={cargarUsuarios} disabled={cargando}>
-            <i className="bi bi-arrow-clockwise me-2"></i>
+          <Button
+            variant="outline-info"
+            onClick={cargarUsuarios}
+            disabled={cargando}
+          >
             Recargar
           </Button>
         </div>
@@ -257,23 +251,13 @@ const AdminUsuarios = () => {
             Limpiar
           </Button>
         </InputGroup>
-
-        <small className="text-white-50">
-          Mostrando <b>{usuariosFiltrados.length}</b> de <b>{usuarios.length}</b>
-        </small>
       </div>
 
       {cargando ? (
         <div className="alert alert-info">Cargando usuarios...</div>
-      ) : usuariosFiltrados.length === 0 ? (
-        <div className="alert alert-info">
-          {busqueda.trim()
-            ? "No se encontraron usuarios con esa búsqueda."
-            : "No hay usuarios para mostrar."}
-        </div>
       ) : (
         <div className="table-responsive">
-          <Table striped bordered hover variant="dark" className="mb-0">
+          <Table striped bordered hover variant="dark">
             <thead>
               <tr>
                 <th>#</th>
@@ -282,7 +266,7 @@ const AdminUsuarios = () => {
                 <th>Rol</th>
                 <th>Estado</th>
                 <th>Creado</th>
-                <th className="text-center">Acciones</th>
+                <th>Acciones</th>
               </tr>
             </thead>
 
@@ -296,7 +280,7 @@ const AdminUsuarios = () => {
                     <td>
                       {u.nombre}{" "}
                       {bloqueado && (
-                        <Badge bg="light" text="dark" className="ms-2">
+                        <Badge bg="light" text="dark">
                           vos
                         </Badge>
                       )}
@@ -309,16 +293,14 @@ const AdminUsuarios = () => {
                         ? new Date(u.createdAt).toLocaleString()
                         : "-"}
                     </td>
-
-                    <td className="text-center">
-                      <div className="d-flex gap-2 justify-content-center flex-wrap">
+                    <td>
+                      <div className="d-flex gap-2">
                         <Button
                           size="sm"
                           variant={u.active ? "warning" : "success"}
                           onClick={() => cambiarEstado(u)}
                           disabled={bloqueado || accionandoEstadoId === u._id}
                         >
-                          <i className="bi bi-toggle2-on me-2"></i>
                           {accionandoEstadoId === u._id
                             ? "Procesando..."
                             : u.active
@@ -332,18 +314,11 @@ const AdminUsuarios = () => {
                           onClick={() => cambiarRol(u)}
                           disabled={bloqueado || accionandoRolId === u._id}
                         >
-                          <i className="bi bi-shield-lock me-2"></i>
                           {accionandoRolId === u._id
                             ? "Procesando..."
                             : "Cambiar rol"}
                         </Button>
                       </div>
-
-                      {bloqueado && (
-                        <small className="text-white-50 d-block mt-1">
-                          * No se permite modificar tu propio usuario.
-                        </small>
-                      )}
                     </td>
                   </tr>
                 );
