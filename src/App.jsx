@@ -24,10 +24,11 @@ function App() {
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
-        <Route path="/reserva" element={<ReservarCancha />} />
+       
 
         {/* 🔒 Rutas protegidas */}
         <Route element={<ProtectorRutas />}>
+         <Route path="/reserva" element={<ReservarCancha />} />
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
          <Route path="/administrador/editar/:id" element={<FormularioProducto />} />

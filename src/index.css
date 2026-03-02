@@ -245,5 +245,35 @@ body {
 }
 
 .badge-carrito {
-  font-size: 0.6rem;
+  font-size: 0.6rem;}
+/* Contenedor principal con imagen de fondo */
+/* ✅ ESTILOS PARA RESERVAR CANCHA */
+
+/* Contenedor principal con imagen de fondo */
+/* ✅ FONDO SOLO PARA LA TARJETA DEL FORMULARIO */
+
+.reservar-cancha-card {
+  background-image: url('../public/formu.jpg');
+  background-size: 65%;
+  background-position: center;
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Overlay oscuro sobre la tarjeta para legibilidad */
+.reservar-cancha-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  z-index: 0;
+}
+
+.reservar-cancha-card .card-body {
+  position: relative;
+  z-index: 1;
 }

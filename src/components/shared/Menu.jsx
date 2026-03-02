@@ -41,8 +41,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
             <NavLink className="nav-link px-3" to="/">
               Inicio
             </NavLink>
-
-            <NavLink className="nav-link px-3" to="/reservas">
+            <NavLink className="nav-link px-3" to="/reserva">
               Reservar canchas
             </NavLink>
 
