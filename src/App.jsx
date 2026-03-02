@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"; // 👈 ojo: dom
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
   return (
