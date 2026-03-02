@@ -1,29 +1,43 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Button, Form, InputGroup, Table, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { listarUsuariosApi } from "../../helpers/queries";
 
 const AdminUsuarios = () => {
-  const [usuarios, setUsuarios] = useState([
-    {
-      _id: "1",
-      nombre: "Admin Principal",
-      email: "admin2@canchas.com",
-      role: "admin",
-      active: true,
-      createdAt: "2026-02-28T03:03:29.035Z",
-    },
-    {
-      _id: "2",
-      nombre: "gaston",
-      email: "gastongomez875@gmail.com",
-      role: "user",
-      active: false,
-      createdAt: "2026-03-01T06:44:29.367Z",
-    },
-  ]);
-
+  const [usuarios, setUsuarios] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [cargando, setCargando] = useState(true);
+
+  useEffect(() => {
+    const cargarUsuarios = async () => {
+      const usuarioLogueado =
+        JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+      const token = usuarioLogueado.token;
+
+      if (!token) {
+        setCargando(false);
+        Swal.fire("Sin sesión", "Debés iniciar sesión nuevamente.", "warning");
+        return;
+      }
+
+      const respuesta = await listarUsuariosApi(token);
+
+      if (respuesta.ok) {
+        setUsuarios(respuesta.data);
+      } else {
+        Swal.fire(
+          "Error",
+          respuesta.data?.mensaje || "No se pudieron cargar los usuarios.",
+          "error"
+        );
+      }
+
+      setCargando(false);
+    };
+
+    cargarUsuarios();
+  }, []);
 
   const usuariosFiltrados = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -52,44 +66,6 @@ const AdminUsuarios = () => {
   const badgeEstado = (active) => {
     if (active) return <Badge bg="success">activo</Badge>;
     return <Badge bg="danger">inactivo</Badge>;
-  };
-
-  const cambiarEstado = async (usuario) => {
-    const confirmacion = await Swal.fire({
-      title: "¿Cambiar estado?",
-      html: `Vas a ${usuario.active ? "desactivar" : "activar"} a <b>${usuario.nombre}</b>.`,
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Sí, confirmar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true,
-    });
-
-    if (!confirmacion.isConfirmed) return;
-
-    setUsuarios((prev) =>
-      prev.map((u) => (u._id === usuario._id ? { ...u, active: !u.active } : u))
-    );
-  };
-
-  const cambiarRol = async (usuario) => {
-    const nuevoRol = usuario.role === "admin" ? "user" : "admin";
-
-    const confirmacion = await Swal.fire({
-      title: "¿Cambiar rol?",
-      html: `Vas a cambiar el rol de <b>${usuario.nombre}</b> a <b>${nuevoRol}</b>.`,
-      icon: "question",
-      showCancelButton: true,
-      confirmButtonText: "Sí, cambiar",
-      cancelButtonText: "Cancelar",
-      reverseButtons: true,
-    });
-
-    if (!confirmacion.isConfirmed) return;
-
-    setUsuarios((prev) =>
-      prev.map((u) => (u._id === usuario._id ? { ...u, role: nuevoRol } : u))
-    );
   };
 
   return (
@@ -136,7 +112,9 @@ const AdminUsuarios = () => {
         </small>
       </div>
 
-      {usuariosFiltrados.length === 0 ? (
+      {cargando ? (
+        <div className="alert alert-info">Cargando usuarios...</div>
+      ) : usuariosFiltrados.length === 0 ? (
         <div className="alert alert-info">
           {busqueda.trim()
             ? "No se encontraron usuarios con esa búsqueda."
@@ -166,29 +144,14 @@ const AdminUsuarios = () => {
                   <td>{badgeRol(u.role)}</td>
                   <td>{badgeEstado(u.active)}</td>
                   <td>
-                    {u.createdAt ? new Date(u.createdAt).toLocaleString() : "-"}
+                    {u.createdAt
+                      ? new Date(u.createdAt).toLocaleString()
+                      : "-"}
                   </td>
-
                   <td className="text-center">
-                    <div className="d-flex gap-2 justify-content-center flex-wrap">
-                      <Button
-                        size="sm"
-                        variant={u.active ? "warning" : "success"}
-                        onClick={() => cambiarEstado(u)}
-                      >
-                        <i className="bi bi-toggle2-on me-2"></i>
-                        {u.active ? "Desactivar" : "Activar"}
-                      </Button>
-
-                      <Button
-                        size="sm"
-                        variant="info"
-                        onClick={() => cambiarRol(u)}
-                      >
-                        <i className="bi bi-shield-lock me-2"></i>
-                        Cambiar rol
-                      </Button>
-                    </div>
+                    <small className="text-white-50">
+                      Próximo paso: acciones
+                    </small>
                   </td>
                 </tr>
               ))}
