@@ -71,6 +71,29 @@ const Carrito = ({ carrito, setCarrito }) => {
     );
   };
 
+  const actualizarCantidad = (id, cantidad) => {
+    const nuevaCantidad = Number(cantidad);
+    if (isNaN(nuevaCantidad) || nuevaCantidad < 1) return;
+    const nuevoCarrito = carrito.map((item) =>
+      item._id === id ? { ...item, quantity: nuevaCantidad } : item
+    );
+    setCarrito(nuevoCarrito);
+  };
+
+  const incrementar = (id) => {
+    const producto = carrito.find((p) => p._id === id);
+    if (producto) {
+      actualizarCantidad(id, producto.quantity + 1);
+    }
+  };
+
+  const decrementar = (id) => {
+    const producto = carrito.find((p) => p._id === id);
+    if (producto && producto.quantity > 1) {
+      actualizarCantidad(id, producto.quantity - 1);
+    }
+  };
+
   return (
     <Container className="mainSection my-4 admin-wrap">
       <div className="admin-header">
@@ -122,7 +145,22 @@ const Carrito = ({ carrito, setCarrito }) => {
                     </div>
                   </td>
                   <td>${Number(item.precio).toFixed(2)}</td>
-                  <td>{item.quantity}</td>
+                  <td className="d-flex align-items-center gap-2">
+                    <Button variant="outline-light" size="sm" onClick={() => decrementar(item._id)} disabled={item.quantity <= 1}>
+                      <i className="bi bi-dash"></i>
+                    </Button>
+                    <input
+                      type="number"
+                      value={item.quantity}
+                      min="1"
+                      className="form-control text-center"
+                      style={{ width: "60px" }}
+                      onChange={(e) => actualizarCantidad(item._id, e.target.value)}
+                    />
+                    <Button variant="outline-light" size="sm" onClick={() => incrementar(item._id)}>
+                      <i className="bi bi-plus"></i>
+                    </Button>
+                  </td>
                   <td>${(item.precio * item.quantity).toFixed(2)}</td>
                   <td>
                     <div className="acciones-botones">
