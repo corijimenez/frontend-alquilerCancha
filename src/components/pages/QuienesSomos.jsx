@@ -28,7 +28,7 @@ const team = [
         role: "Database Manager",
         description:
             "Diseño del modelo de datos en MongoDB y gestión de reservas y productos.",
-        image: "/img/integrante4.jpg",
+        image: "/img/corina.jpeg",
     },
     {
         name: "Valeria Stakelun",
@@ -42,7 +42,7 @@ const team = [
         role: "Project Manager",
         description:
             "Coordinación del equipo, organización en Taiga y seguimiento del proyecto.",
-        image: "/img/integrante6.jpg",
+        image: "/img/gaston.jpeg",
     },
 ];
 
