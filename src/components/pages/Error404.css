@@ -1,9 +1,23 @@
+/* =========================
+   ERROR 404 (estilo TucuGol)
+========================= */
+
 .error404-page {
   min-height: calc(100vh - 120px);
   padding: 48px 0;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* ✅ Fondo + overlay (va adentro de la clase) */
+  background-image: linear-gradient(
+      rgba(0, 0, 0, 0.55),
+      rgba(0, 0, 0, 0.55)
+    ),
+    url("/error404-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .error404-card {
@@ -19,4 +33,14 @@
 
 .error404-text {
   color: rgba(255, 255, 255, 0.9);
+}
+
+.error404-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 900;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.08);
 }
