@@ -121,7 +121,7 @@ const Carrito = ({ carrito, setCarrito }) => {
         </Card>
       ) : (
         <div className="table-responsive admin-table">
-          <Table striped bordered hover variant="dark" className="mb-0">
+          <Table striped bordered hover variant="dark" className="mb-0 text-center align-middle">
             <thead>
               <tr>
                 <th>#</th>
@@ -145,21 +145,23 @@ const Carrito = ({ carrito, setCarrito }) => {
                     </div>
                   </td>
                   <td>${Number(item.precio).toFixed(2)}</td>
-                  <td className="d-flex align-items-center gap-2">
-                    <Button variant="outline-light" size="sm" onClick={() => decrementar(item._id)} disabled={item.quantity <= 1}>
-                      <i className="bi bi-dash"></i>
-                    </Button>
-                    <input
-                      type="number"
-                      value={item.quantity}
-                      min="1"
-                      className="form-control text-center"
-                      style={{ width: "60px" }}
-                      onChange={(e) => actualizarCantidad(item._id, e.target.value)}
-                    />
-                    <Button variant="outline-light" size="sm" onClick={() => incrementar(item._id)}>
-                      <i className="bi bi-plus"></i>
-                    </Button>
+                  <td className="align-middle text-center">
+                    <div className="d-flex align-items-center justify-content-center gap-2">
+                      <Button variant="outline-light" size="sm" onClick={() => decrementar(item._id)} disabled={item.quantity <= 1}>
+                        <i className="bi bi-dash"></i>
+                      </Button>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        min="1"
+                        className="form-control form-control-sm text-center" 
+                        style={{ width: "60px", height: "32px" }}
+                        onChange={(e) => actualizarCantidad(item._id, e.target.value)}
+                      />
+                      <Button variant="outline-light" size="sm" onClick={() => incrementar(item._id)}>
+                        <i className="bi bi-plus"></i>
+                      </Button>
+                    </div>
                   </td>
                   <td>${(item.precio * item.quantity).toFixed(2)}</td>
                   <td>
