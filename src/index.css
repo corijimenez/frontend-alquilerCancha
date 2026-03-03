@@ -353,3 +353,38 @@ body {
   z-index: 1;
 }
 
+/* Estilos para la sección de Sponsors */
+
+.sponsors-wrapper {
+  /* Fondo negro con un resplandor verde oscuro en el centro tipo estadio */
+  background: radial-gradient(circle, rgba(25, 135, 84, 0.15) 0%, rgba(0, 0, 0, 1) 80%);
+  border-top: 1px solid rgba(25, 135, 84, 0.3);
+  border-bottom: 1px solid rgba(25, 135, 84, 0.3);
+  overflow: hidden;
+}
+
+.sponsor-title {
+  letter-spacing: 5px;
+  font-size: 0.9rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.sponsor-logo {
+  /* Reducimos el tamaño máximo para que se vean más pequeños */
+  max-width: 100px; 
+  height: auto;
+  object-fit: contain;
+  /* Mantenemos el filtro blanco para contraste total sobre negro */
+  filter: brightness(0) invert(1); 
+  opacity: 0.6;
+  transition: all 0.4s ease-in-out;
+}
+
+.sponsor-logo:hover {
+  opacity: 1;
+  transform: scale(1.15);
+  /* Al pasar el mouse, el logo brilla en blanco en lugar de volver al color original */
+  filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
+}
+
+
