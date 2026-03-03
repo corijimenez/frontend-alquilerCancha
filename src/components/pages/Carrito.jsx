@@ -72,11 +72,20 @@ const Carrito = ({ carrito, setCarrito }) => {
   };
 
   return (
-    <Container className="mainSection admin-wrap">
+    <Container className="mainSection my-4 admin-wrap">
       <div className="admin-header">
-        <h1 className="admin-title">Carrito de Compras</h1>
+        <div>
+          <h1 className="admin-title">Carrito de Compras</h1>
+        </div>
         <div className="admin-header-actions">
-          <Link to="/tienda" className="btn btn-admin-crear">Ver productos</Link>
+          <Button
+            as={Link}
+            to="/tienda"
+            className="btn-admin-crear"
+          >
+            <i className="bi bi-cart3 me-2"></i>
+            Ver productos
+          </Button>
         </div>
       </div>
 

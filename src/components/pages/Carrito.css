@@ -14,14 +14,14 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 14px; /* mismo espacio que AdminProductos */
 }
 
 .admin-title {
   color: #fff;
-  font-weight: 900;
+  font-weight: 800; /* coincide con AdminProductos */
   margin: 0;
-  font-size: 1.6rem;
+  /* no se fuerza font-size, usa el h1 por defecto */
 }
 
 .admin-header-actions {
