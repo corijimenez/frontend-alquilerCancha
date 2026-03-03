@@ -47,6 +47,13 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
             <NavLink className="nav-link px-3" to="/tienda">
               Tienda
             </NavLink>
+            <NavLink className="nav-link me-3" to="/carrito">
+              <i className="bi bi-cart3 fs-5 position-relative">
+                <span className="badge-carrito position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {carrito.length}
+                </span>
+              </i>
+            </NavLink>
 
             {usuarioLogueado?.nombre ? (
               <>
@@ -55,14 +62,6 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
                 </NavLink>
 
                 <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
-                  <NavLink className="nav-link me-3" to="/carrito">
-                    <i className="bi bi-cart3 fs-5 position-relative">
-                      <span className="badge-carrito position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {carrito.length}
-                      </span>
-                    </i>
-                  </NavLink>
-
                   <Button
                     className="btn btn-verde-cancha rounded-pill px-4 shadow-sm"
                     onClick={logout}
