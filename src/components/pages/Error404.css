@@ -1,0 +1,22 @@
+.error404-page {
+  min-height: calc(100vh - 120px);
+  padding: 48px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.error404-card {
+  width: min(920px, 92vw);
+  border-radius: 18px;
+  padding: 28px 22px;
+  background: rgba(20, 20, 20, 0.75);
+}
+
+.error404-title {
+  color: #fff;
+}
+
+.error404-text {
+  color: rgba(255, 255, 255, 0.9);
+}
