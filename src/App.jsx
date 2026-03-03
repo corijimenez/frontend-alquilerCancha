@@ -15,10 +15,36 @@ import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
 import AdminProductos from "./components/pages/AdminProductos";
 import Carrito from "./components/pages/Carrito";
+import Tienda from "./components/pages/Tienda";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
   const [carrito, setCarrito] = useState([]);
+  const agregarAlCarrito = (producto) => {
+    setCarrito((prev) => {
+      const id = producto._id || producto.id || producto.nombreProducto || producto.nombre || JSON.stringify(producto.nombre || producto);
+      const nombre = producto.nombreProducto || producto.nombre || "Producto";
+      const precio = Number(producto.precio) || 0;
+      const imagen = producto.imagen || producto.img || "";
+
+      const existente = prev.find((p) => p._id === id);
+      if (existente) {
+        return prev.map((p) =>
+          p._id === id ? { ...p, quantity: p.quantity + 1 } : p
+        );
+      }
+
+      const nuevo = {
+        _id: id,
+        nombreProducto: nombre,
+        precio,
+        imagen,
+        quantity: 1,
+      };
+
+      return [...prev, nuevo];
+    });
+  };
   return (
     <BrowserRouter>
       <Menu carrito={carrito} />
@@ -30,6 +56,7 @@ function App() {
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
+        <Route path="/tienda" element={<Tienda agregarAlCarrito={agregarAlCarrito} />} />
         
         
 

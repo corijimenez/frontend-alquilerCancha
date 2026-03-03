@@ -1,8 +1,9 @@
 import React from "react";
-import { Button, ListGroup, Row, Col, Card, Container } from "react-bootstrap";
+import { Button, Row, Col, Card, Container, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { crearOrdenCarritoAPI } from "../../helpers/queriesPagos";
 import { Link } from "react-router";
+import "./AdminProductos.css";
 
 const Carrito = ({ carrito, setCarrito }) => {
   const handlePagar = async () => {
@@ -71,54 +72,71 @@ const Carrito = ({ carrito, setCarrito }) => {
   };
 
   return (
-    <Container className="mainSection">
-      <h1 className="display-4 mt-5">Carrito de Compras</h1>
-      <hr />
+    <Container className="mainSection admin-wrap">
+      <div className="admin-header">
+        <h1 className="admin-title">Carrito de Compras</h1>
+        <div className="admin-header-actions">
+          <Link to="/tienda" className="btn btn-admin-crear">Ver productos</Link>
+        </div>
+      </div>
+
       {carrito.length === 0 ? (
         <div className="text-center">
           <h4>Tu carrito está vacío</h4>
           <p>Agrega productos para poder continuar con la compra.</p>
-          <Link to="/tienda" className="btn btn-primary">
-            Ver productos
-          </Link>
         </div>
       ) : (
-        <Row>
-          <Col md={8}>
-            <ListGroup>
-              {carrito.map((item) => (
-                <ListGroup.Item key={item._id} className="d-flex justify-content-between align-items-center">
-                  <img src={item.imagen} alt={item.nombreProducto} className="img-thumbnail " />
-                  <div className="ms-3 me-auto">
-                    <div className="fw-bold">{item.nombreProducto}</div>
-                    Cantidad: {item.quantity}
-                  </div>
-                  <span className="fw-bold me-3">${(item.precio * item.quantity).toFixed(2)}</span>
-                  <div>
-                    <Button variant="danger" onClick={() => handleBorrarProducto(item._id)}>
-                      <i className="bi bi-trash-fill"></i>
-                    </Button>
-                  </div>
-                </ListGroup.Item>
+        <div className="table-responsive admin-table">
+          <Table striped bordered hover variant="dark" className="mb-0">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Producto</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {carrito.map((item, idx) => (
+                <tr key={item._id || idx}>
+                  <td>{idx + 1}</td>
+                  <td>
+                    <div className="d-flex align-items-center gap-3">
+                      <img src={item.imagen} alt={item.nombreProducto} style={{width:64, height:64, objectFit:'cover'}} />
+                      <div>
+                        <div className="fw-semibold">{item.nombreProducto}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>${Number(item.precio).toFixed(2)}</td>
+                  <td>{item.quantity}</td>
+                  <td>${(item.precio * item.quantity).toFixed(2)}</td>
+                  <td>
+                    <div className="acciones-botones">
+                      <Button variant="danger" size="sm" onClick={() => handleBorrarProducto(item._id)}>
+                        <i className="bi bi-trash3 me-2"></i>Eliminar
+                      </Button>
+                    </div>
+                  </td>
+                </tr>
               ))}
-            </ListGroup>
-          </Col>
-          <Col md={4} className="mt-3 mt-md-0">
-            <Card>
-              <Card.Body>
-                <Card.Title>Resumen del Pedido</Card.Title>
-                <hr />
-                <div className="d-flex justify-content-between">
-                  <h5>Total:</h5>
-                  <h5>${calcularTotal().toFixed(2)}</h5>
-                </div>
-                <Button variant="success" className="w-100 mt-3" onClick={handlePagar}>
-                  Pagar con Mercado Pago
-                </Button>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+            </tbody>
+          </Table>
+
+          <Card className="mt-3">
+            <Card.Body>
+              <div className="d-flex justify-content-between align-items-center">
+                <h5>Total:</h5>
+                <h5>${calcularTotal().toFixed(2)}</h5>
+              </div>
+              <Button variant="success" className="w-100 mt-3" onClick={handlePagar}>
+                Pagar con Mercado Pago
+              </Button>
+            </Card.Body>
+          </Card>
+        </div>
       )}
     </Container>
   );
