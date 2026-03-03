@@ -16,10 +16,11 @@ const AdminReservas = () => {
   const [error, setError] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // ✅ Función para formatear fechas sin problemas de timezone
+  // ✅ Función para formatear fechas evitando problemas de timezone
   const formatearFecha = (fechaString) => {
     if (!fechaString) return "-";
-    return fechaString; // La fecha ya está en formato "2026-03-02"
+    // Si la fecha viene como "YYYY-MM-DD", la mostramos tal cual o la manipulamos controladamente
+    return fechaString; 
   };
 
   const obtenerReservas = async () => {
@@ -39,6 +40,7 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
+    // Priorizar datos que vengan por navegación, si no, consultar API
     if (location.state?.reservas) {
       setReservas(location.state.reservas);
       setCargando(false);
@@ -55,13 +57,21 @@ const AdminReservas = () => {
       const cancha = (r.cancha || "").toLowerCase();
       const estado = (r.estado || "").toLowerCase();
       const hora = (r.hora || "").toLowerCase();
-      const fecha = formatearFecha(r.fecha).toLowerCase(); //  Usar la función
+      const fecha = formatearFecha(r.fecha).toLowerCase();
+      
+      // Datos de usuario (si el objeto está populado)
+      const usuarioNombre = 
+        typeof r.usuario === "object" ? (r.usuario?.nombre || "").toLowerCase() : "";
+      const usuarioEmail = 
+        typeof r.usuario === "object" ? (r.usuario?.email || "").toLowerCase() : "";
 
       return (
         cancha.includes(texto) ||
         estado.includes(texto) ||
         hora.includes(texto) ||
-        fecha.includes(texto)
+        fecha.includes(texto) ||
+        usuarioNombre.includes(texto) ||
+        usuarioEmail.includes(texto)
       );
     });
   }, [busqueda, reservas]);
@@ -105,7 +115,11 @@ const AdminReservas = () => {
       reserva.estado === "pendiente" ? "confirmada" : "pendiente";
 
     const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-    const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.token);
+    const respuesta = await cambiarEstadoReservaApi(
+      reserva,
+      nuevoEstado,
+      usuario.token
+    );
 
     if (respuesta.ok) {
       obtenerReservas();
@@ -126,6 +140,16 @@ const AdminReservas = () => {
         </div>
 
         <div className="reservas-header-actions">
+          <Button
+            as={Link}
+            to="/reserva"
+            variant="outline-light"
+            className="reservas-btn-top"
+          >
+            <i className="bi bi-calendar-plus me-2"></i>
+            Reservar cancha
+          </Button>
+
           <Button
             as={Link}
             to="/administrador"
@@ -156,7 +180,7 @@ const AdminReservas = () => {
 
           <Form.Control
             className="reservas-search-input"
-            placeholder="Buscar por cancha, estado, fecha u hora..."
+            placeholder="Buscar por cancha, usuario, estado, fecha u hora..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -201,6 +225,7 @@ const AdminReservas = () => {
               <tr>
                 <th className="col-num">#</th>
                 <th>Cancha</th>
+                <th>Usuario</th>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -215,8 +240,20 @@ const AdminReservas = () => {
                   <td className="col-num">{index + 1}</td>
                   <td>{reserva.cancha}</td>
                   <td>
-                    {formatearFecha(reserva.fecha)}
+                    {typeof reserva.usuario === "object" && reserva.usuario ? (
+                      <div className="d-flex flex-column">
+                        <span className="fw-semibold">
+                          {reserva.usuario?.nombre || "Sin nombre"}
+                        </span>
+                        <small className="text-white-50">
+                          {reserva.usuario?.email || ""}
+                        </small>
+                      </div>
+                    ) : (
+                      <span className="text-white-50">Sin usuario</span>
+                    )}
                   </td>
+                  <td>{formatearFecha(reserva.fecha)}</td>
                   <td>{reserva.hora}</td>
                   <td
                     className={
