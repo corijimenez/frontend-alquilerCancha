@@ -14,7 +14,7 @@
       rgba(0, 0, 0, 0.55),
       rgba(0, 0, 0, 0.55)
     ),
-    url("/public/error404-bg.jpg");
+    url("/error404-bg.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
