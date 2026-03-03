@@ -81,10 +81,12 @@ const Carrito = ({ carrito, setCarrito }) => {
       </div>
 
       {carrito.length === 0 ? (
-        <div className="text-center">
-          <h4>Tu carrito está vacío</h4>
-          <p>Agrega productos para poder continuar con la compra.</p>
-        </div>
+        <Card className="reservar-cancha-card shadow carrito-empty">
+          <Card.Body>
+            <h4>Tu carrito está vacío</h4>
+            <p>Agrega productos para poder continuar con la compra.</p>
+          </Card.Body>
+        </Card>
       ) : (
         <div className="table-responsive admin-table">
           <Table striped bordered hover variant="dark" className="mb-0">
