@@ -54,7 +54,6 @@ function App() {
       <Menu carrito={carrito} usuarioLogueado={usuarioLogueado} setUsuarioLogueado={setUsuarioLogueado} />
       <Routes>
         <Route path="/" element={<Inicio />} />
-        <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro/>}/>
         <Route path="/verificar-cuenta" element={<VerificarCuenta/>} />
         <Route path="/verificar-error" element={<VerificarError/>} />
