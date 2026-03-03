@@ -5,7 +5,7 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Login = ({ setUsuarioLogueado }) => {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
@@ -61,7 +61,7 @@ const Login = () => {
         token: data.token,
       };
       sessionStorage.setItem("usuarioKey", JSON.stringify(usuario));
-
+      setUsuarioLogueado(usuario);
       setEnviando(false);
       navigate("/administrador");
     } catch (error) {
