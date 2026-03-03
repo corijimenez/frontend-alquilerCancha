@@ -10,7 +10,10 @@ import Footer from "./components/shared/Footer";
 import Contacto from "./components/pages/Contacto";
 import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
+import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
+import AdminProductos from "./components/pages/AdminProductos";
+import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
   return (
@@ -22,15 +25,18 @@ function App() {
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
-        <Route path="/reserva" element={<ReservarCancha />} />
+       
 
         {/* 🔒 Rutas protegidas */}
         <Route element={<ProtectorRutas />}>
+         <Route path="/reserva" element={<ReservarCancha />} />
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
-          <Route path="/administrador/editar" element={<FormularioProducto />} />
+         <Route path="/administrador/editar/:id" element={<FormularioProducto />} />
+          <Route path="/admin/reservas" element={<AdminReservas />} />
+          <Route path="/admin/usuarios" element={<AdminUsuarios />} />
         </Route>
-
+        <Route path="/admin/productos" element={<AdminProductos />} />
         <Route path="*" element={<Error404 />} />
       </Routes>
       <Footer />

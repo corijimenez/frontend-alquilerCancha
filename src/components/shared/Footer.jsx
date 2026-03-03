@@ -55,7 +55,7 @@ const Footer = () => {
       <hr className="border-light opacity-25 my-2" />
       <div className="text-center">
         <p className="mb-0 text-white-50" style={{ fontSize: '0.75rem' }}>
-          &copy; 2026 Rolling Canchas – Alquiler de Canchas
+          &copy; 2026 TucuGol – Alquiler de Canchas
         </p>
       </div>
     </footer>
