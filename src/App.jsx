@@ -22,6 +22,7 @@ import Tienda from "./components/pages/Tienda";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
+  const [usuarioLogueado, setUsuarioLogueado] = useState({});
   const [carrito, setCarrito] = useState([]);
   const agregarAlCarrito = (producto) => {
     setCarrito((prev) => {
@@ -50,13 +51,14 @@ function App() {
   };
   return (
     <BrowserRouter>
-      <Menu carrito={carrito} />
+      <Menu carrito={carrito} usuarioLogueado={usuarioLogueado} setUsuarioLogueado={setUsuarioLogueado} />
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Registro/>}/>
         <Route path="/verificar-cuenta" element={<VerificarCuenta/>} />
         <Route path="/verificar-error" element={<VerificarError/>} />
+        <Route path="/login" element={<Login setUsuarioLogueado={setUsuarioLogueado} />} />
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
