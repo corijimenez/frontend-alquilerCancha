@@ -3,9 +3,8 @@ import { NavLink } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../../index.css";
 
-const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
+const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
   const navegacion = useNavigate();
-
   const logout = () => {
     setUsuarioLogueado({});
     navegacion("/");
@@ -59,7 +58,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado }) => {
                   <NavLink className="nav-link me-3" to="/carrito">
                     <i className="bi bi-cart3 fs-5 position-relative">
                       <span className="badge-carrito position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        0
+                        {carrito.length}
                       </span>
                     </i>
                   </NavLink>

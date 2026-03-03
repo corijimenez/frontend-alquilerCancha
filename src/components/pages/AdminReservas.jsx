@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom"; // ✅ Agregar useLocation
+import { Link, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   listarReservasApi,
@@ -10,11 +10,18 @@ import {
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
-  const location = useLocation(); // ✅ Obtener datos del estado
+  const location = useLocation();
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [busqueda, setBusqueda] = useState("");
+
+  // ✅ Función para formatear fechas evitando problemas de timezone
+  const formatearFecha = (fechaString) => {
+    if (!fechaString) return "-";
+    // Si la fecha viene como "YYYY-MM-DD", la mostramos tal cual o la manipulamos controladamente
+    return fechaString; 
+  };
 
   const obtenerReservas = async () => {
     setError("");
@@ -33,7 +40,7 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
-    // ✅ Si viene de ReservarCancha, usar esas reservas
+    // Priorizar datos que vengan por navegación, si no, consultar API
     if (location.state?.reservas) {
       setReservas(location.state.reservas);
       setCargando(false);
@@ -50,13 +57,21 @@ const AdminReservas = () => {
       const cancha = (r.cancha || "").toLowerCase();
       const estado = (r.estado || "").toLowerCase();
       const hora = (r.hora || "").toLowerCase();
-      const fecha = r.fecha ? new Date(r.fecha).toLocaleDateString() : "";
+      const fecha = formatearFecha(r.fecha).toLowerCase();
+      
+      // Datos de usuario (si el objeto está populado)
+      const usuarioNombre = 
+        typeof r.usuario === "object" ? (r.usuario?.nombre || "").toLowerCase() : "";
+      const usuarioEmail = 
+        typeof r.usuario === "object" ? (r.usuario?.email || "").toLowerCase() : "";
 
       return (
         cancha.includes(texto) ||
         estado.includes(texto) ||
         hora.includes(texto) ||
-        fecha.toLowerCase().includes(texto)
+        fecha.includes(texto) ||
+        usuarioNombre.includes(texto) ||
+        usuarioEmail.includes(texto)
       );
     });
   }, [busqueda, reservas]);
@@ -99,9 +114,12 @@ const AdminReservas = () => {
     const nuevoEstado =
       reserva.estado === "pendiente" ? "confirmada" : "pendiente";
 
- const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.token);
-
+    const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const respuesta = await cambiarEstadoReservaApi(
+      reserva,
+      nuevoEstado,
+      usuario.token
+    );
 
     if (respuesta.ok) {
       obtenerReservas();
@@ -119,10 +137,19 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
       <div className="reservas-header">
         <div>
           <h1 className="reservas-title">Administrar Reservas</h1>
-          {/* ✅ sacamos el texto del endpoint */}
         </div>
 
         <div className="reservas-header-actions">
+          <Button
+            as={Link}
+            to="/reserva"
+            variant="outline-light"
+            className="reservas-btn-top"
+          >
+            <i className="bi bi-calendar-plus me-2"></i>
+            Reservar cancha
+          </Button>
+
           <Button
             as={Link}
             to="/administrador"
@@ -145,7 +172,6 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
         </div>
       </div>
 
-      {/* ✅ buscador estilo productos */}
       <div className="reservas-search">
         <InputGroup>
           <InputGroup.Text className="reservas-search-icon">
@@ -154,7 +180,7 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
 
           <Form.Control
             className="reservas-search-input"
-            placeholder="Buscar por cancha, estado, fecha u hora..."
+            placeholder="Buscar por cancha, usuario, estado, fecha u hora..."
             value={busqueda}
             onChange={(e) => setBusqueda(e.target.value)}
           />
@@ -199,6 +225,7 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
               <tr>
                 <th className="col-num">#</th>
                 <th>Cancha</th>
+                <th>Usuario</th>
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -213,8 +240,20 @@ const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.to
                   <td className="col-num">{index + 1}</td>
                   <td>{reserva.cancha}</td>
                   <td>
-                    {reserva.fecha ? new Date(reserva.fecha).toLocaleDateString() : "-"}
+                    {typeof reserva.usuario === "object" && reserva.usuario ? (
+                      <div className="d-flex flex-column">
+                        <span className="fw-semibold">
+                          {reserva.usuario?.nombre || "Sin nombre"}
+                        </span>
+                        <small className="text-white-50">
+                          {reserva.usuario?.email || ""}
+                        </small>
+                      </div>
+                    ) : (
+                      <span className="text-white-50">Sin usuario</span>
+                    )}
                   </td>
+                  <td>{formatearFecha(reserva.fecha)}</td>
                   <td>{reserva.hora}</td>
                   <td
                     className={
