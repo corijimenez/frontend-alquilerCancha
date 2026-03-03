@@ -138,8 +138,7 @@ body {
 .cancha-img, 
 .producto-img,
 .card-img-top-nueva {
-.cancha-img,
-.producto-img {
+
   width: 100%;
   height: 250px; /* Altura estándar para ambas */
   object-fit: cover;
@@ -318,4 +317,4 @@ body {
   position: relative;
   z-index: 1;
 }
-}
+
