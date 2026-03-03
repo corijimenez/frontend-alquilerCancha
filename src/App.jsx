@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router";
 import Inicio from "./components/pages/Inicio";
 import Login from "./components/pages/Login";
+import Registro from "./components/pages/Registro";
 import Administrador from "./components/pages/Administrador";
 import DetalleProducto from "./components/pages/DetalleProducto";
 import FormularioProducto from "./components/pages/FormularioProducto";
@@ -21,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro/>}/>
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
