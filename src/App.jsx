@@ -1,7 +1,10 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 import Inicio from "./components/pages/Inicio";
 import Login from "./components/pages/Login";
+import Registro from "./components/pages/Registro";
+import VerificarCuenta from "./components/pages/VerificarCuenta";
+import VerificarError from "./components/pages/VerificarError";
 import Administrador from "./components/pages/Administrador";
 import DetalleProducto from "./components/pages/DetalleProducto";
 import FormularioProducto from "./components/pages/FormularioProducto";
@@ -19,6 +22,7 @@ import Tienda from "./components/pages/Tienda";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
+  const [usuarioLogueado, setUsuarioLogueado] = useState({});
   const [carrito, setCarrito] = useState([]);
   const agregarAlCarrito = (producto) => {
     setCarrito((prev) => {
@@ -47,10 +51,14 @@ function App() {
   };
   return (
     <BrowserRouter>
-      <Menu carrito={carrito} />
+      <Menu carrito={carrito} usuarioLogueado={usuarioLogueado} setUsuarioLogueado={setUsuarioLogueado} />
       <Routes>
         <Route path="/" element={<Inicio />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/registro" element={<Registro/>}/>
+        <Route path="/verificar-cuenta" element={<VerificarCuenta/>} />
+        <Route path="/verificar-error" element={<VerificarError/>} />
+        <Route path="/login" element={<Login setUsuarioLogueado={setUsuarioLogueado} />} />
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
