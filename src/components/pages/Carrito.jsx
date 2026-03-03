@@ -3,7 +3,7 @@ import { Button, Row, Col, Card, Container, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { crearOrdenCarritoAPI } from "../../helpers/queriesPagos";
 import { Link } from "react-router";
-import "./AdminProductos.css";
+import "./Carrito.css";
 
 const Carrito = ({ carrito, setCarrito }) => {
   const handlePagar = async () => {
@@ -104,7 +104,7 @@ const Carrito = ({ carrito, setCarrito }) => {
                   <td>{idx + 1}</td>
                   <td>
                     <div className="d-flex align-items-center gap-3">
-                      <img src={item.imagen} alt={item.nombreProducto} style={{width:64, height:64, objectFit:'cover'}} />
+                      <img src={item.imagen} alt={item.nombreProducto} className="cart-img" />
                       <div>
                         <div className="fw-semibold">{item.nombreProducto}</div>
                       </div>
