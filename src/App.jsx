@@ -54,7 +54,6 @@ function App() {
         <Route path="/detalle" element={<DetalleProducto />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/nosotros" element={<QuienesSomos />} />
-        <Route path="/reserva" element={<ReservarCancha />} />
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         <Route path="/tienda" element={<Tienda agregarAlCarrito={agregarAlCarrito} />} />
         

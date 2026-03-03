@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Table, Button, Form, InputGroup, Spinner } from "react-bootstrap";
-import { Link, useLocation } from "react-router-dom"; // ✅ Agregar useLocation
+import { Link, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import {
   listarReservasApi,
@@ -10,11 +10,18 @@ import {
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
-  const location = useLocation(); // ✅ Obtener datos del estado
+  const location = useLocation();
   const [reservas, setReservas] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [busqueda, setBusqueda] = useState("");
+
+  // ✅ Función para formatear fechas evitando problemas de timezone
+  const formatearFecha = (fechaString) => {
+    if (!fechaString) return "-";
+    // Si la fecha viene como "YYYY-MM-DD", la mostramos tal cual o la manipulamos controladamente
+    return fechaString; 
+  };
 
   const obtenerReservas = async () => {
     setError("");
@@ -32,9 +39,15 @@ const AdminReservas = () => {
     setCargando(false);
   };
 
-useEffect(() => {
-  obtenerReservas();
-}, []);
+  useEffect(() => {
+    // Priorizar datos que vengan por navegación, si no, consultar API
+    if (location.state?.reservas) {
+      setReservas(location.state.reservas);
+      setCargando(false);
+    } else {
+      obtenerReservas();
+    }
+  }, [location.state]);
 
   const reservasFiltradas = useMemo(() => {
     const texto = busqueda.trim().toLowerCase();
@@ -44,19 +57,19 @@ useEffect(() => {
       const cancha = (r.cancha || "").toLowerCase();
       const estado = (r.estado || "").toLowerCase();
       const hora = (r.hora || "").toLowerCase();
-      const fecha = r.fecha ? new Date(r.fecha).toLocaleDateString() : "";
-
-      // ✅ NUEVO: usuario (si viene populado)
-      const usuarioNombre =
+      const fecha = formatearFecha(r.fecha).toLowerCase();
+      
+      // Datos de usuario (si el objeto está populado)
+      const usuarioNombre = 
         typeof r.usuario === "object" ? (r.usuario?.nombre || "").toLowerCase() : "";
-      const usuarioEmail =
+      const usuarioEmail = 
         typeof r.usuario === "object" ? (r.usuario?.email || "").toLowerCase() : "";
 
       return (
         cancha.includes(texto) ||
         estado.includes(texto) ||
         hora.includes(texto) ||
-        fecha.toLowerCase().includes(texto) ||
+        fecha.includes(texto) ||
         usuarioNombre.includes(texto) ||
         usuarioEmail.includes(texto)
       );
@@ -124,19 +137,18 @@ useEffect(() => {
       <div className="reservas-header">
         <div>
           <h1 className="reservas-title">Administrar Reservas</h1>
-          {/* ✅ sacamos el texto del endpoint */}
         </div>
 
         <div className="reservas-header-actions">
-<Button
-  as={Link}
-  to="/reserva"
-  variant="outline-light"
-  className="reservas-btn-top"
->
-  <i className="bi bi-calendar-plus me-2"></i>
-  Reservar cancha
-</Button>
+          <Button
+            as={Link}
+            to="/reserva"
+            variant="outline-light"
+            className="reservas-btn-top"
+          >
+            <i className="bi bi-calendar-plus me-2"></i>
+            Reservar cancha
+          </Button>
 
           <Button
             as={Link}
@@ -160,7 +172,6 @@ useEffect(() => {
         </div>
       </div>
 
-      {/* ✅ buscador estilo productos */}
       <div className="reservas-search">
         <InputGroup>
           <InputGroup.Text className="reservas-search-icon">
@@ -214,10 +225,7 @@ useEffect(() => {
               <tr>
                 <th className="col-num">#</th>
                 <th>Cancha</th>
-
-                {/* ✅ NUEVO */}
                 <th>Usuario</th>
-
                 <th>Fecha</th>
                 <th>Hora</th>
                 <th>Estado</th>
@@ -231,8 +239,6 @@ useEffect(() => {
                 <tr key={reserva._id}>
                   <td className="col-num">{index + 1}</td>
                   <td>{reserva.cancha}</td>
-
-                  {/* ✅ NUEVO: muestra nombre + email si viene populado */}
                   <td>
                     {typeof reserva.usuario === "object" && reserva.usuario ? (
                       <div className="d-flex flex-column">
@@ -247,12 +253,7 @@ useEffect(() => {
                       <span className="text-white-50">Sin usuario</span>
                     )}
                   </td>
-
-                  <td>
-                    {reserva.fecha
-                      ? new Date(reserva.fecha).toLocaleDateString()
-                      : "-"}
-                  </td>
+                  <td>{formatearFecha(reserva.fecha)}</td>
                   <td>{reserva.hora}</td>
                   <td
                     className={
@@ -268,9 +269,7 @@ useEffect(() => {
                   <td className="col-acciones">
                     <div className="reservas-actions">
                       <Button
-                        variant={
-                          reserva.estado === "pendiente" ? "success" : "warning"
-                        }
+                        variant={reserva.estado === "pendiente" ? "success" : "warning"}
                         size="sm"
                         className="btn-accion"
                         onClick={() => cambiarEstado(reserva)}
