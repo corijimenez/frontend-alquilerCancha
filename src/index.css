@@ -286,8 +286,6 @@ body {
   color: #2ecc71;
 }
 
-/* Contenedor principal con imagen de fondo */
-/* ✅ ESTILOS PARA RESERVAR CANCHA */
 
 /* Contenedor principal con imagen de fondo */
 /* ✅ FONDO SOLO PARA LA TARJETA DEL FORMULARIO */
@@ -317,4 +315,9 @@ body {
   position: relative;
   z-index: 1;
 }
+
+/* Estilos para la sección de Sponsors */
+
+
+
 
