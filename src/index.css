@@ -106,15 +106,31 @@ body {
   position: relative;
 }
 
+/* solo para tarjetas de la tienda */
+.tienda-card {
+  max-width: 18rem; /* evitar que las tarjetas crezcan demasiado */
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .tienda-card {
+    max-width: 100%;
+  }
+}
+
 /* 2. Imágenes (Unificamos altura para que se vean parejas) */
 .cancha-img, 
-.producto-img {
+.producto-img,
+.card-img-top-nueva {
   width: 100%;
   height: 250px; /* Altura estándar para ambas */
   object-fit: cover;
   transition: transform 0.5s ease;
-  
+}
 
+/* adicional: si imagen no tiene ratio 1:1, limitar altura automática */
+.card-img-top-nueva {
+  max-height: 250px;
 }
 
 /* 3. EFECTO HOVER PARA AMBAS CARDS */

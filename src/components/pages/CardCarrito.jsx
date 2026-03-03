@@ -4,7 +4,7 @@ import { Link } from "react-router";
 const CardProducto = ({producto, agregarAlCarrito}) => {
   return (
     <Col md={4} lg={3} className="mb-3">
-      <Card className="h-100">
+      <Card className="h-100 tienda-card">
         <div>
           <img
             src={producto.imagen}
