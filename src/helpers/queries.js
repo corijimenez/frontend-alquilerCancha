@@ -53,6 +53,48 @@ export const obtenerProductoApi = async (id) => {
   }
 };
 
+export const crearProductoApi = async (nuevoProducto, token) => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const respuesta = await fetch(`${API_URL}/productos`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(nuevoProducto),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
+export const editarProductoApi = async (id, productoActualizado, token) => {
+  try {
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const respuesta = await fetch(`${API_URL}/productos/${id}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify(productoActualizado),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
 
 // =====================
 // ✅ RESERVAS / CANCHAS
