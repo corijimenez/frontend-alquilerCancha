@@ -55,15 +55,15 @@ export const obtenerProductoApi = async (id) => {
 
 export const crearProductoApi = async (nuevoProducto, token) => {
   try {
-    const headers = {
-      "Content-Type": "application/json",
-    };
+    const esFormData = nuevoProducto instanceof FormData;
+    const headers = {};
+    if (!esFormData) headers["Content-Type"] = "application/json";
     if (token) headers.Authorization = `Bearer ${token}`;
 
     const respuesta = await fetch(`${API_URL}/productos`, {
       method: "POST",
       headers,
-      body: JSON.stringify(nuevoProducto),
+      body: esFormData ? nuevoProducto : JSON.stringify(nuevoProducto),
     });
 
     const data = await respuesta.json().catch(() => ({}));
@@ -76,15 +76,15 @@ export const crearProductoApi = async (nuevoProducto, token) => {
 
 export const editarProductoApi = async (id, productoActualizado, token) => {
   try {
-    const headers = {
-      "Content-Type": "application/json",
-    };
+    const esFormData = productoActualizado instanceof FormData;
+    const headers = {};
+    if (!esFormData) headers["Content-Type"] = "application/json";
     if (token) headers.Authorization = `Bearer ${token}`;
 
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
       method: "PUT",
       headers,
-      body: JSON.stringify(productoActualizado),
+      body: esFormData ? productoActualizado : JSON.stringify(productoActualizado),
     });
 
     const data = await respuesta.json().catch(() => ({}));

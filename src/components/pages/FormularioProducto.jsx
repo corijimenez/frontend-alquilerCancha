@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button, Card, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -16,11 +16,18 @@ const FormularioProducto = () => {
   const esEdicion = Boolean(id);
   const [cargandoProducto, setCargandoProducto] = useState(esEdicion);
   const [guardando, setGuardando] = useState(false);
+  const [imagenArchivo, setImagenArchivo] = useState(null);
+  const [imagenPreview, setImagenPreview] = useState("");
+  const [arrastreActivo, setArrastreActivo] = useState(false);
+  const [fileInputKey, setFileInputKey] = useState(0);
+  const inputFileRef = useRef(null);
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    trigger,
     formState: { errors },
   } = useForm({
     mode: "onBlur",
@@ -28,7 +35,9 @@ const FormularioProducto = () => {
       nombre: "",
       descripcion: "",
       precio: "",
-      stock: 0,
+      stock: 1,
+      categoria: "",
+      subcategoria: "",
       imagen: "",
     },
   });
@@ -69,36 +78,104 @@ const FormularioProducto = () => {
         nombre: producto.nombre || producto.nombreProducto || "",
         descripcion: producto.descripcion || producto.descripcion_breve || "",
         precio: producto.precio ?? "",
-        stock: producto.stock ?? 0,
+        stock: producto.stock ?? 1,
+        categoria: producto.categoria || "",
+        subcategoria: producto.subcategoria || "",
         imagen: producto.imagen || producto.img || "",
       });
+      setImagenArchivo(null);
+      setImagenPreview(producto.imagen || producto.img || "");
       setCargandoProducto(false);
     };
 
     cargarProducto();
   }, [esEdicion, id, navegacion, reset]);
 
+  const procesarArchivo = async (archivo) => {
+    if (!archivo) return;
+    if (!archivo.type.startsWith("image/")) {
+      await Swal.fire("Archivo inválido", "Seleccioná una imagen válida.", "warning");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(archivo);
+    setImagenArchivo(archivo);
+    setImagenPreview(previewUrl);
+    // Si se carga imagen local, la URL queda vacía para mantener opción única.
+    setValue("imagen", "", { shouldValidate: true });
+    trigger("imagen");
+  };
+
+  const onArchivoSeleccionado = async (e) => {
+    const archivo = e.target.files?.[0];
+    await procesarArchivo(archivo);
+  };
+
+  const onDropImagen = async (e) => {
+    e.preventDefault();
+    setArrastreActivo(false);
+    const archivo = e.dataTransfer.files?.[0];
+    await procesarArchivo(archivo);
+  };
+
+  const limpiarImagenLocal = () => {
+    setImagenArchivo(null);
+    setFileInputKey((prev) => prev + 1);
+    trigger("imagen");
+  };
+
   const onSubmit = async (datos) => {
     const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const imagenUrl = datos.imagen.trim();
+    const imagenFinal = imagenArchivo || imagenUrl;
+
+    if (!imagenFinal) {
+      await Swal.fire({
+        title: "Imagen requerida",
+        text: "Agregá una imagen por URL o subí una desde tu PC.",
+        icon: "warning",
+      });
+      return;
+    }
+
+    if (esEdicion && imagenArchivo) {
+      await Swal.fire({
+        title: "Edición de imagen no disponible",
+        text: "Tu backend no acepta archivo en PUT /productos/:id. Para editar, usá una URL de imagen.",
+        icon: "info",
+      });
+      return;
+    }
 
     const nombre = datos.nombre.trim();
     const descripcion = datos.descripcion.trim();
-    const imagen = datos.imagen.trim();
-    const payload = {
-      // Compatibilidad con esquemas que usan nombre/descripcion/imagen
+    const categoria = (datos.categoria || "").trim().toLowerCase();
+    const subcategoria = (datos.subcategoria || "").trim();
+    const payloadJson = {
       nombre,
       descripcion,
-      imagen,
-      // Compatibilidad con esquemas que usan nombreProducto/descripcion_breve/img
-      nombreProducto: nombre,
-      descripcion_breve: descripcion,
-      img: imagen,
+      imagen: imagenUrl,
       precio: Number(datos.precio),
       stock: Number(datos.stock),
+      categoria,
+      subcategoria,
     };
 
+    let payload = payloadJson;
+    if (imagenArchivo) {
+      const formData = new FormData();
+      formData.append("nombre", nombre);
+      formData.append("descripcion", descripcion);
+      formData.append("precio", String(Number(datos.precio)));
+      formData.append("stock", String(Number(datos.stock)));
+      formData.append("categoria", categoria);
+      formData.append("subcategoria", subcategoria);
+      formData.append("imagen", imagenArchivo);
+      payload = formData;
+    }
+
     setGuardando(true);
-    const respuesta = esEdicion
+    let respuesta = esEdicion
       ? await editarProductoApi(id, payload, usuario.token)
       : await crearProductoApi(payload, usuario.token);
 
@@ -114,9 +191,16 @@ const FormularioProducto = () => {
       });
       navegacion("/admin/productos");
     } else {
+      const detalleErrores = Array.isArray(respuesta.data?.errors)
+        ? respuesta.data.errors.map((e) => e.msg || e.message).filter(Boolean).join(" | ")
+        : "";
       await Swal.fire({
         title: "No se pudo guardar",
-        text: respuesta.data?.mensaje || "Revisá los datos e intentá nuevamente.",
+        text:
+          respuesta.data?.mensaje ||
+          respuesta.data?.message ||
+          detalleErrores ||
+          "Revisá los datos e intentá nuevamente.",
         icon: "error",
       });
     }
@@ -157,8 +241,8 @@ const FormularioProducto = () => {
                     {...register("nombre", {
                       required: "El nombre es obligatorio",
                       minLength: {
-                        value: 2,
-                        message: "Debe tener al menos 2 caracteres",
+                        value: 3,
+                        message: "Debe tener al menos 3 caracteres",
                       },
                     })}
                     isInvalid={!!errors.nombre}
@@ -199,8 +283,8 @@ const FormularioProducto = () => {
                         {...register("precio", {
                           required: "El precio es obligatorio",
                           min: {
-                            value: 1,
-                            message: "Debe ser mayor a 0",
+                            value: 20000,
+                            message: "El precio mínimo es $20.000",
                           },
                         })}
                         isInvalid={!!errors.precio}
@@ -220,8 +304,8 @@ const FormularioProducto = () => {
                         {...register("stock", {
                           required: "El stock es obligatorio",
                           min: {
-                            value: 0,
-                            message: "No puede ser negativo",
+                            value: 1,
+                            message: "Debe ser al menos 1",
                           },
                         })}
                         isInvalid={!!errors.stock}
@@ -233,13 +317,73 @@ const FormularioProducto = () => {
                   </Col>
                 </Row>
 
+                <Row>
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Categoría</Form.Label>
+                      <Form.Select
+                        {...register("categoria", {
+                          required: "La categoría es obligatoria",
+                        })}
+                        isInvalid={!!errors.categoria}
+                      >
+                        <option value="">Seleccioná una categoría</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="ropa">Ropa</option>
+                        <option value="calzado">Calzado</option>
+                        <option value="accesorios">Accesorios</option>
+                        <option value="equipamiento">Equipamiento</option>
+                      </Form.Select>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.categoria?.message}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+
+                  <Col md={6}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Subcategoría</Form.Label>
+                      <Form.Control
+                        type="text"
+                        placeholder="Ej: Pelotas, Botines, Camisetas"
+                        {...register("subcategoria", {
+                          required: "La subcategoría es obligatoria",
+                        })}
+                        isInvalid={!!errors.subcategoria}
+                      />
+                      <Form.Control.Feedback type="invalid">
+                        {errors.subcategoria?.message}
+                      </Form.Control.Feedback>
+                    </Form.Group>
+                  </Col>
+                </Row>
+
                 <Form.Group className="mb-4">
                   <Form.Label>Imagen (URL)</Form.Label>
                   <Form.Control
                     type="text"
                     placeholder="https://..."
                     {...register("imagen", {
-                      required: "La URL de imagen es obligatoria",
+                      onChange: (e) => {
+                        const url = (e.target.value || "").trim();
+                        // Si hay URL, limpiar imagen local para usar una sola opción.
+                        if (url && imagenArchivo) {
+                          setImagenArchivo(null);
+                          setFileInputKey((prev) => prev + 1);
+                        }
+                        if (!imagenArchivo) {
+                          setImagenPreview(url);
+                        }
+                      },
+                      validate: (value) => {
+                        const url = (value || "").trim();
+                        if (imagenArchivo) return true;
+                        if (!url) return true;
+                        return (
+                          /^https:\/\/.+\.(jpg|jpeg|png|gif|webp|bmp|svg)$/i.test(url) ||
+                          "La URL debe comenzar con https:// y terminar en extensión de imagen"
+                        );
+                      },
                     })}
                     isInvalid={!!errors.imagen}
                   />
@@ -247,6 +391,77 @@ const FormularioProducto = () => {
                     {errors.imagen?.message}
                   </Form.Control.Feedback>
                 </Form.Group>
+
+                <Form.Group className="mb-4">
+                  <Form.Label>O subir imagen desde tu PC</Form.Label>
+
+                  <input
+                    key={fileInputKey}
+                    ref={inputFileRef}
+                    type="file"
+                    accept="image/*"
+                    className="d-none"
+                    onChange={onArchivoSeleccionado}
+                  />
+
+                  <div
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => inputFileRef.current?.click()}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") inputFileRef.current?.click();
+                    }}
+                    onDragEnter={(e) => {
+                      e.preventDefault();
+                      setArrastreActivo(true);
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault();
+                      setArrastreActivo(true);
+                    }}
+                    onDragLeave={(e) => {
+                      e.preventDefault();
+                      setArrastreActivo(false);
+                    }}
+                    onDrop={onDropImagen}
+                    style={{
+                      border: `2px dashed ${arrastreActivo ? "#1F8A3B" : "rgba(255,255,255,0.45)"}`,
+                      borderRadius: "12px",
+                      padding: "18px",
+                      textAlign: "center",
+                      cursor: "pointer",
+                      background: arrastreActivo ? "rgba(31,138,59,0.15)" : "rgba(255,255,255,0.04)",
+                    }}
+                  >
+                    Arrastrá una imagen aquí o hacé click para elegir un archivo
+                  </div>
+
+                  {imagenArchivo && (
+                    <div className="mt-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline-warning"
+                        onClick={limpiarImagenLocal}
+                      >
+                        Quitar imagen local
+                      </Button>
+                    </div>
+                  )}
+                </Form.Group>
+
+                {imagenPreview && (
+                  <Form.Group className="mb-4">
+                    <Form.Label>Vista previa</Form.Label>
+                    <div className="border rounded overflow-hidden">
+                      <img
+                        src={imagenPreview}
+                        alt="Vista previa del producto"
+                        style={{ width: "100%", maxHeight: "260px", objectFit: "cover" }}
+                      />
+                    </div>
+                  </Form.Group>
+                )}
 
                 <Button
                   type="submit"
