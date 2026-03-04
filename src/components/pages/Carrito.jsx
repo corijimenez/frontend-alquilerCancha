@@ -2,11 +2,30 @@ import React from "react";
 import { Button, Row, Col, Card, Container, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { crearOrdenCarritoAPI } from "../../helpers/queriesPagos";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Carrito.css";
 
 const Carrito = ({ carrito, setCarrito }) => {
+  const navigate = useNavigate();
+
   const handlePagar = async () => {
+    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    if (!usuarioLogueado?.token) {
+      const resultado = await Swal.fire({
+        title: "Iniciá sesión para continuar",
+        text: "Para pagar tu carrito necesitás ingresar con tu cuenta.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ir a login",
+        cancelButtonText: "Cancelar",
+      });
+
+      if (resultado.isConfirmed) {
+        navigate("/login");
+      }
+      return;
+    }
+
     // 1. Formatear los productos del carrito según lo esperado por el backend
     const productosFormateados = carrito.map((item) => ({
       id: item._id, // Asegúrate de que el backend espera el _id como 'id'
