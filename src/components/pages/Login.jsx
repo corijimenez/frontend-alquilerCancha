@@ -58,6 +58,7 @@ const Login = ({ setUsuarioLogueado }) => {
       const usuario = {
         nombre: data.nombre,
         role: data.role,
+        token: data.token,
         uid: data.uid || data.id
       };
      
