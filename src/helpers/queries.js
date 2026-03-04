@@ -38,10 +38,14 @@ export const borrarProductoApi = async (id, token) => {
   }
 };
 
-export const obtenerProductoApi = async (id) => {
+export const obtenerProductoApi = async (id, token) => {
   try {
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
       cache: "no-store",
+      headers,
     });
 
     const data = await respuesta.json();

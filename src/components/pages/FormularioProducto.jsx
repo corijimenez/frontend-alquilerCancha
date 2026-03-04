@@ -47,7 +47,8 @@ const FormularioProducto = () => {
 
     const cargarProducto = async () => {
       setCargandoProducto(true);
-      const respuesta = await obtenerProductoApi(id);
+      const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+      const respuesta = await obtenerProductoApi(id, usuario.token);
 
       if (!respuesta.ok || !respuesta.data) {
         await Swal.fire({
@@ -134,15 +135,6 @@ const FormularioProducto = () => {
         title: "Imagen requerida",
         text: "Agregá una imagen por URL o subí una desde tu PC.",
         icon: "warning",
-      });
-      return;
-    }
-
-    if (esEdicion && imagenArchivo) {
-      await Swal.fire({
-        title: "Edición de imagen no disponible",
-        text: "Tu backend no acepta archivo en PUT /productos/:id. Para editar, usá una URL de imagen.",
-        icon: "info",
       });
       return;
     }
