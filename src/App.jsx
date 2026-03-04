@@ -22,7 +22,9 @@ import Tienda from "./components/pages/Tienda";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
-  const [usuarioLogueado, setUsuarioLogueado] = useState({});
+   const [usuarioLogueado, setUsuarioLogueado] = useState(
+    JSON.parse(sessionStorage.getItem("usuarioKey")) || {}
+  );
   const [carrito, setCarrito] = useState([]);
   const agregarAlCarrito = (producto) => {
     setCarrito((prev) => {
