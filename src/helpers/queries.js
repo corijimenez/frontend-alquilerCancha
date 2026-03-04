@@ -38,10 +38,14 @@ export const borrarProductoApi = async (id, token) => {
   }
 };
 
-export const obtenerProductoApi = async (id) => {
+export const obtenerProductoApi = async (id, token) => {
   try {
+    const headers = {};
+    if (token) headers.Authorization = `Bearer ${token}`;
+
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
       cache: "no-store",
+      headers,
     });
 
     const data = await respuesta.json();
@@ -50,6 +54,48 @@ export const obtenerProductoApi = async (id) => {
   } catch (error) {
     console.error(error);
     return { ok: false, data: {} };
+  }
+};
+
+export const crearProductoApi = async (nuevoProducto, token) => {
+  try {
+    const esFormData = nuevoProducto instanceof FormData;
+    const headers = {};
+    if (!esFormData) headers["Content-Type"] = "application/json";
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const respuesta = await fetch(`${API_URL}/productos`, {
+      method: "POST",
+      headers,
+      body: esFormData ? nuevoProducto : JSON.stringify(nuevoProducto),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
+  }
+};
+
+export const editarProductoApi = async (id, productoActualizado, token) => {
+  try {
+    const esFormData = productoActualizado instanceof FormData;
+    const headers = {};
+    if (!esFormData) headers["Content-Type"] = "application/json";
+    if (token) headers.Authorization = `Bearer ${token}`;
+
+    const respuesta = await fetch(`${API_URL}/productos/${id}`, {
+      method: "PUT",
+      headers,
+      body: esFormData ? productoActualizado : JSON.stringify(productoActualizado),
+    });
+
+    const data = await respuesta.json().catch(() => ({}));
+    return { ok: respuesta.ok, data };
+  } catch (error) {
+    console.error(error);
+    return { ok: false, data: { mensaje: "Error de conexión" } };
   }
 };
 

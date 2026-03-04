@@ -179,3 +179,18 @@
   font-weight: 600;
   color: rgba(255,255,255,0.6);
 }
+
+.carrito-item-mobile {
+  border-radius: 12px;
+}
+
+.carrito-cantidad-input {
+  width: 64px;
+  height: 34px;
+}
+
+.carrito-total-card {
+  background: rgba(20, 20, 20, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
