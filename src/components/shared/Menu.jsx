@@ -6,7 +6,13 @@ import "../../index.css";
 const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
   const navegacion = useNavigate();
   const logout = () => {
+     // 1. Borramos los datos del almacenamiento del navegador
+    sessionStorage.removeItem("usuarioKey"); 
+    
+    // 2. Limpiamos el estado global de la aplicación
     setUsuarioLogueado({});
+    
+    // 3. Redirigimos al inicio
     navegacion("/");
   };
 
