@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Row, Col, Card, Container, Table } from "react-bootstrap";
 import Swal from "sweetalert2";
 import { crearOrdenCarritoAPI } from "../../helpers/queriesPagos";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import "./Carrito.css";
 
 const Carrito = ({ carrito, setCarrito }) => {
@@ -71,6 +71,13 @@ const Carrito = ({ carrito, setCarrito }) => {
     );
   };
 
+  const formatearMoneda = (valor) =>
+    Number(valor || 0).toLocaleString("es-AR", {
+      style: "currency",
+      currency: "ARS",
+      minimumFractionDigits: 2,
+    });
+
   const actualizarCantidad = (id, cantidad) => {
     const nuevaCantidad = Number(cantidad);
     if (isNaN(nuevaCantidad) || nuevaCantidad < 1) return;
@@ -120,33 +127,83 @@ const Carrito = ({ carrito, setCarrito }) => {
           </Card.Body>
         </Card>
       ) : (
-        <div className="table-responsive admin-table">
-          <Table striped bordered hover variant="dark" className="mb-0 text-center align-middle">
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Producto</th>
-                <th>Precio</th>
-                <th>Cantidad</th>
-                <th>Total</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {carrito.map((item, idx) => (
-                <tr key={item._id || idx}>
-                  <td>{idx + 1}</td>
-                  <td>
-                    <div className="d-flex align-items-center gap-3">
-                      <img src={item.imagen} alt={item.nombreProducto} className="cart-img" />
-                      <div>
-                        <div className="fw-semibold">{item.nombreProducto}</div>
+        <>
+          <div className="table-responsive admin-table d-none d-md-block">
+            <Table striped bordered hover variant="dark" className="mb-0 text-center align-middle">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Producto</th>
+                  <th>Precio</th>
+                  <th>Cantidad</th>
+                  <th>Total</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {carrito.map((item, idx) => (
+                  <tr key={item._id || idx}>
+                    <td>{idx + 1}</td>
+                    <td>
+                      <div className="d-flex align-items-center gap-3">
+                        <img src={item.imagen} alt={item.nombreProducto} className="cart-img" />
+                        <div>
+                          <div className="fw-semibold">{item.nombreProducto}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td>{formatearMoneda(item.precio)}</td>
+                    <td className="align-middle text-center">
+                      <div className="d-flex align-items-center justify-content-center gap-2">
+                        <Button variant="outline-light" size="sm" onClick={() => decrementar(item._id)} disabled={item.quantity <= 1}>
+                          <i className="bi bi-dash"></i>
+                        </Button>
+                        <input
+                          type="number"
+                          value={item.quantity}
+                          min="1"
+                          className="form-control form-control-sm text-center"
+                          style={{ width: "60px", height: "32px" }}
+                          onChange={(e) => actualizarCantidad(item._id, e.target.value)}
+                        />
+                        <Button variant="outline-light" size="sm" onClick={() => incrementar(item._id)}>
+                          <i className="bi bi-plus"></i>
+                        </Button>
+                      </div>
+                    </td>
+                    <td>{formatearMoneda(item.precio * item.quantity)}</td>
+                    <td>
+                      <div className="acciones-botones">
+                        <Button variant="danger" size="sm" onClick={() => handleBorrarProducto(item._id)}>
+                          <i className="bi bi-trash3 me-2"></i>Eliminar
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+
+          <div className="d-md-none">
+            {carrito.map((item, idx) => (
+              <Card key={item._id || idx} className="mb-3 carrito-item-mobile bg-dark text-white border-0 shadow">
+                <Card.Body>
+                  <div className="d-flex gap-3">
+                    <img src={item.imagen} alt={item.nombreProducto} className="cart-img" />
+                    <div className="flex-grow-1">
+                      <div className="fw-semibold">{item.nombreProducto}</div>
+                      <div className="text-white-50 small">
+                        Precio: {formatearMoneda(item.precio)}
+                      </div>
+                      <div className="text-warning fw-bold">
+                        Subtotal: {formatearMoneda(item.precio * item.quantity)}
                       </div>
                     </div>
-                  </td>
-                  <td>${Number(item.precio).toFixed(2)}</td>
-                  <td className="align-middle text-center">
-                    <div className="d-flex align-items-center justify-content-center gap-2">
+                  </div>
+
+                  <div className="d-flex align-items-center justify-content-between gap-2 mt-3">
+                    <div className="d-flex align-items-center gap-2">
                       <Button variant="outline-light" size="sm" onClick={() => decrementar(item._id)} disabled={item.quantity <= 1}>
                         <i className="bi bi-dash"></i>
                       </Button>
@@ -154,40 +211,35 @@ const Carrito = ({ carrito, setCarrito }) => {
                         type="number"
                         value={item.quantity}
                         min="1"
-                        className="form-control form-control-sm text-center" 
-                        style={{ width: "60px", height: "32px" }}
+                        className="form-control form-control-sm text-center carrito-cantidad-input"
                         onChange={(e) => actualizarCantidad(item._id, e.target.value)}
                       />
                       <Button variant="outline-light" size="sm" onClick={() => incrementar(item._id)}>
                         <i className="bi bi-plus"></i>
                       </Button>
                     </div>
-                  </td>
-                  <td>${(item.precio * item.quantity).toFixed(2)}</td>
-                  <td>
-                    <div className="acciones-botones">
-                      <Button variant="danger" size="sm" onClick={() => handleBorrarProducto(item._id)}>
-                        <i className="bi bi-trash3 me-2"></i>Eliminar
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
 
-          <Card className="mt-3">
+                    <Button variant="danger" size="sm" onClick={() => handleBorrarProducto(item._id)}>
+                      <i className="bi bi-trash3 me-1"></i>Eliminar
+                    </Button>
+                  </div>
+                </Card.Body>
+              </Card>
+            ))}
+          </div>
+
+          <Card className="mt-3 carrito-total-card">
             <Card.Body>
               <div className="d-flex justify-content-between align-items-center">
-                <h5>Total:</h5>
-                <h5>${calcularTotal().toFixed(2)}</h5>
+                <h5 className="mb-0">Total del carrito:</h5>
+                <h5 className="mb-0 text-warning">{formatearMoneda(calcularTotal())}</h5>
               </div>
               <Button variant="success" className="w-100 mt-3" onClick={handlePagar}>
                 Pagar con Mercado Pago
               </Button>
             </Card.Body>
           </Card>
-        </div>
+        </>
       )}
     </Container>
   );

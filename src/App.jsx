@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Inicio from "./components/pages/Inicio";
 import Login from "./components/pages/Login";
 import Registro from "./components/pages/Registro";
@@ -22,10 +22,24 @@ import Tienda from "./components/pages/Tienda";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
-   const [usuarioLogueado, setUsuarioLogueado] = useState(
+  const [usuarioLogueado, setUsuarioLogueado] = useState(
     JSON.parse(sessionStorage.getItem("usuarioKey")) || {}
   );
-  const [carrito, setCarrito] = useState([]);
+  const [carrito, setCarrito] = useState(() => {
+    try {
+      const guardado = localStorage.getItem("carritoKey");
+      const parseado = guardado ? JSON.parse(guardado) : [];
+      return Array.isArray(parseado) ? parseado : [];
+    } catch (error) {
+      console.error("No se pudo leer carrito de localStorage:", error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    localStorage.setItem("carritoKey", JSON.stringify(carrito));
+  }, [carrito]);
+
   const agregarAlCarrito = (producto) => {
     setCarrito((prev) => {
       const id = producto._id || producto.id || producto.nombreProducto || producto.nombre || JSON.stringify(producto.nombre || producto);
