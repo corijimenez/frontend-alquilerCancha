@@ -1,7 +1,9 @@
 import { Col, Card, Button } from "react-bootstrap";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const CardProducto = ({producto, agregarAlCarrito}) => {
+  const precioFormateado = Number(producto.precio || 0).toLocaleString("es-AR");
+
   return (
     <Col md={4} lg={3} className="mb-3">
       <Card className="h-100 tienda-card">
@@ -12,13 +14,12 @@ const CardProducto = ({producto, agregarAlCarrito}) => {
             className="card-img-top-nueva"
           />
         </div>
-        <Card.Body>
+        <Card.Body className="d-flex flex-column">
           <Card.Title className="primary-font">{producto.nombreProducto}</Card.Title>
-          <Card.Text>
-            {producto.descripcion_breve}
-            <br className="mb-2" />
-            <span className="fw-bold">Precio: ${producto.precio}</span>
+          <Card.Text className="text-light small flex-grow-1">
+            {producto.descripcion_breve || "Sin descripción disponible."}
           </Card.Text>
+          <div className="fw-bold fs-5 text-warning">${precioFormateado}</div>
         </Card.Body>
         <Card.Footer className="text-end">
           <Button variant="success" className="me-2" onClick={() => agregarAlCarrito(producto)}>
