@@ -15,6 +15,20 @@ const obtenerFechaLocal = () => {
 
 const fechaHoy = obtenerFechaLocal();
 
+const obtenerIdDesdeToken = (token) => {
+  try {
+    if (!token) return null;
+    const payloadBase64 = token.split(".")[1];
+    const payloadJson = atob(payloadBase64);
+    const payload = JSON.parse(payloadJson);
+    return payload.id || payload.uid || payload._id || null;
+  } catch (error) {
+    console.error("No se pudo leer el token:", error);
+    return null;
+  }
+  
+};
+
 const ReservarCancha = () => {
   const [reservas, setReservas] = useState([]); 
   const [cargando, setCargando] = useState(false);
@@ -67,9 +81,15 @@ const ReservarCancha = () => {
 
   const onSubmit = async (datos) => {
     const session = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const usuarioId = session.uid || session.id || obtenerIdDesdeToken(session.token);
+
+    if (!usuarioId) {
+      Swal.fire("Error", "No se pudo identificar el usuario logueado.", "error");
+      return;
+    }
 
     const nuevaReserva = {
-      usuario: session.uid || session.id || "69a25b010c2aec2a7b7761ee",
+      usuario: usuarioId,
       cancha: datos.cancha,
       fecha: datos.fecha,
       hora: datos.hora,

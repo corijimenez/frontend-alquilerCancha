@@ -32,6 +32,7 @@ const Footer = () => {
               <li><Link to="/contacto" className="text-white-50 text-decoration-none footer-link">Contacto</Link></li>
               <li><Link to="/reserva" className="text-white-50 text-decoration-none footer-link">Reservas</Link></li>
             </ul>
+            
           </Col>
 
           {/* Columna 3: Contacto y Redes */}

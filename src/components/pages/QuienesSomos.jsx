@@ -123,6 +123,7 @@ const QuienesSomos = () => {
             </Container>
         </section >
     );
+    
 };
 
 export default QuienesSomos;

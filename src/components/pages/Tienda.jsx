@@ -20,6 +20,7 @@ export default function Tienda({ agregarAlCarrito }) {
     };
 
     fetchProductos();
+    
   }, []);
 
   const productosNormalizados = useMemo(

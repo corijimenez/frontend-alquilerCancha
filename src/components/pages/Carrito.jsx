@@ -18,6 +18,7 @@ const Carrito = ({ carrito, setCarrito }) => {
         showCancelButton: true,
         confirmButtonText: "Ir a login",
         cancelButtonText: "Cancelar",
+        
       });
 
       if (resultado.isConfirmed) {

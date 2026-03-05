@@ -23,6 +23,7 @@ const Login = ({ setUsuarioLogueado }) => {
 
     if (!email.trim()) {
       nuevosErrores.email = "El email es obligatorio";
+      
     } else if (!/^\S+@\S+\.\S+$/.test(email)) {
       nuevosErrores.email = "Debe ser un email válido";
     }

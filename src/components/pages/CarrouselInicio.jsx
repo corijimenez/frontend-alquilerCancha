@@ -23,6 +23,7 @@ export default function CarrouselInicio() {
           className="d-block w-100 carousel-img"
           src="./noche.jpg"
           alt="Fútbol 7 Techada"
+          
         />
         <Carousel.Caption className="bg-dark bg-opacity-50 rounded p-2">
           <h3>Fútbol 7 </h3>

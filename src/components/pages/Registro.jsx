@@ -36,6 +36,7 @@ function Registro() {
       nuevosErrores.password = "La contraseña es obligatoria";
     } else if (form.password.length < 8) {
       nuevosErrores.password = "Debe tener al menos 8 caracteres";
+      
     }
 
     if (!form.repeatPassword) {

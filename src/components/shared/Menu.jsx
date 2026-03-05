@@ -88,6 +88,9 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
       </Container>
     </Navbar>
   );
+
+  
+  
 };
 
 export default Menu;

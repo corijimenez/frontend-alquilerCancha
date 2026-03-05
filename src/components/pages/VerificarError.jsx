@@ -22,6 +22,7 @@ const VerificacionError = () => {
 
               {/* Texto */}
               <p className="text-white-50 mb-4">
+                
                 El enlace de verificación no es válido o ya expiró.
                 <br />
                 Podés solicitar uno nuevo desde la pantalla de verificación.
