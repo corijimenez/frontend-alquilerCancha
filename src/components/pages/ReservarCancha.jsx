@@ -140,12 +140,19 @@ const ReservarCancha = () => {
                       <Form.Label className="text-white">Hora</Form.Label>
                       <Form.Control
                         type="time"
+                        step="3600" // Restringe el selector a horas en punto (3600 segundos = 1 hora)
                         {...register("hora", {
                           required: "La hora es obligatoria",
-                          validate: (valor) => {
-                            const hora = parseInt(valor.split(":")[0]);
-                            const esValida = (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
-                            return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
+                          validate: {
+                            rangoHorario: (valor) => {
+                              const hora = parseInt(valor.split(":")[0]);
+                              const esValida = (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
+                              return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
+                            },
+                            soloEnPunto: (valor) => {
+                              const minutos = valor.split(":")[1];
+                              return minutos === "00" || "Solo se permiten reservas en horas en punto (ej: 10:00)";
+                            }
                           }
                         })}
                         isInvalid={!!errors.hora}
