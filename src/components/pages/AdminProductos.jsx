@@ -25,7 +25,6 @@ const AdminProductos = () => {
       setProductos(respuesta.data);
     } else {
       setProductos([]);
-      console.log("Error al listar productos:", respuesta.data);
     }
 
     setCargando(false);

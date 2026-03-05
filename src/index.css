@@ -204,7 +204,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url("/public/login-bg.jpeg");
+  background-image: url("/login-bg.jpeg");
   background-size: cover;
   background-position: center;
   transform: scale(1.05);
@@ -328,7 +328,7 @@ body {
 /* ✅ FONDO SOLO PARA LA TARJETA DEL FORMULARIO */
 
 .reservar-cancha-card {
-  background-image: url('../public/formu.jpg');
+  background-image: url('/formu.jpg');
   background-size: 65%;
   background-position: center;
   border-radius: 15px;
