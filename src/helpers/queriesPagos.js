@@ -1,13 +1,24 @@
-const URL_PAGOS = (import.meta.env.VITE_API_PAGOS || "").replace(/\/+$/, "");
+const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+const URL_PAGOS = (
+  import.meta.env.VITE_API_PAGOS || (API_URL ? `${API_URL}/pagos` : "")
+).replace(/\/+$/, "");
 
-export const crearOrdenCarritoAPI = async (productosCarrito) => {
+export const crearOrdenCarritoAPI = async (productosCarrito, token) => {
   try {
+    if (!URL_PAGOS) {
+      throw new Error("Falta configurar VITE_API_PAGOS o VITE_API_URL");
+    }
+
+    const headers = {
+      "Content-Type": "application/json",
+    };
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+
     const respuesta = await fetch(`${URL_PAGOS}/crear-orden-carrito`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // El backend espera un objeto { productosCarrito: [...] }
+      headers,
       body: JSON.stringify({ productosCarrito }),
     });
     return respuesta;

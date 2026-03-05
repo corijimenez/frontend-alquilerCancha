@@ -34,12 +34,15 @@ const Carrito = ({ carrito, setCarrito }) => {
 
     // 2. Enviar la petición al backend
     try {
-      const respuesta = await crearOrdenCarritoAPI(productosFormateados);
+      const respuesta = await crearOrdenCarritoAPI(
+        productosFormateados,
+        usuarioLogueado.token,
+      );
 
-      if (respuesta && respuesta.status === 201) {
+      if (respuesta && respuesta.ok) {
         const data = await respuesta.json();
         // 3. Redirigir al init_point de Mercado Pago
-        window.location.href = data.init_point;
+        window.location.href = data.init_point || data.sandbox_init_point;
       } else {
         const errorData = await respuesta.json();
         Swal.fire({
@@ -265,3 +268,5 @@ const Carrito = ({ carrito, setCarrito }) => {
 };
 
 export default Carrito;
+
+
