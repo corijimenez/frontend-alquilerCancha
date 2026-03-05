@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 function Registro() {
   const [form, setForm] = useState({
     nombre: "",
@@ -66,7 +68,7 @@ function Registro() {
       setLoading(true);
 
       const response = await fetch(
-        "http://localhost:3000/api/usuarios/registro",
+        `${API_URL}/usuarios/registro`,
         {
           method: "POST",
           headers: {

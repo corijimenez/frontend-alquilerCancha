@@ -5,6 +5,8 @@ import Container from "react-bootstrap/Container";
 import Card from "react-bootstrap/Card";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = import.meta.env.VITE_API_URL;
+
 const Login = ({ setUsuarioLogueado }) => {
   const navigate = useNavigate();
 
@@ -41,7 +43,7 @@ const Login = ({ setUsuarioLogueado }) => {
     setErrorGeneral("");
 
     try {
-      const respuesta = await fetch("http://localhost:3000/api/usuarios/login", {
+      const respuesta = await fetch(`${API_URL}/usuarios/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
