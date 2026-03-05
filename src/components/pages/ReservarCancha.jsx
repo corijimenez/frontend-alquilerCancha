@@ -5,9 +5,18 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+// Función para obtener la fecha local en formato YYYY-MM-DD
+const obtenerFechaLocal = () => {
+  const fecha = new Date();
+  const offset = fecha.getTimezoneOffset();
+  fecha.setMinutes(fecha.getMinutes() - offset);
+  return fecha.toISOString().split("T")[0];
+};
+
+const fechaHoy = obtenerFechaLocal();
 
 const ReservarCancha = () => {
-  const [reservas, setReservas] = useState([]); // ✅ Estado para reservas
+  const [reservas, setReservas] = useState([]); 
   const [cargando, setCargando] = useState(false);
 
   const {
@@ -22,13 +31,13 @@ const ReservarCancha = () => {
     defaultValues: {
       cancha: "",
       precio: 0,
+      fecha: fechaHoy, 
     },
   });
 
   const navegacion = useNavigate();
   const canchaSeleccionada = watch("cancha");
 
-  // ✅ Cargar reservas al montar el componente
   const obtenerReservas = async () => {
     try {
       const respuesta = await listarReservasApi();
@@ -72,14 +81,13 @@ const ReservarCancha = () => {
     const respuesta = await crearReservaApi(nuevaReserva, session.token);
 
     if (respuesta.ok) {
-      // ✅ Agregar nueva reserva al estado local
-      setReservas([respuesta.data, ...reservas]);
+      const nuevasReservasActualizadas = [respuesta.data, ...reservas];
+      setReservas(nuevasReservasActualizadas);
 
       await Swal.fire("Éxito", "Reserva creada correctamente", "success");
       reset();
       
-      // ✅ Ir al AdminReservas con las reservas actualizadas
-      navegacion("/admin/reservas", { state: { reservas: [respuesta.data, ...reservas] } });
+      navegacion("/admin/reservas", { state: { reservas: nuevasReservasActualizadas } });
     } else {
       Swal.fire("Error", respuesta.data?.mensaje || "Error al crear la reserva", "error");
     }
@@ -87,7 +95,6 @@ const ReservarCancha = () => {
   };
 
   return (
-    
     <Container className="my-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
@@ -116,7 +123,11 @@ const ReservarCancha = () => {
                       <Form.Label className="text-white">Fecha</Form.Label>
                       <Form.Control
                         type="date"
-                        {...register("fecha", { required: "La fecha es obligatoria" })}
+                        min={fechaHoy} 
+                        {...register("fecha", { 
+                          required: "La fecha es obligatoria",
+                          validate: (valor) => valor >= fechaHoy || "No puedes reservar en una fecha pasada" 
+                        })}
                         isInvalid={!!errors.fecha}
                       />
                       <Form.Control.Feedback type="invalid">
@@ -129,12 +140,19 @@ const ReservarCancha = () => {
                       <Form.Label className="text-white">Hora</Form.Label>
                       <Form.Control
                         type="time"
+                        step="3600" // Restringe el selector a horas en punto (3600 segundos = 1 hora)
                         {...register("hora", {
                           required: "La hora es obligatoria",
-                          validate: (valor) => {
-                            const hora = parseInt(valor.split(":")[0]);
-                            const esValida = (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
-                            return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
+                          validate: {
+                            rangoHorario: (valor) => {
+                              const hora = parseInt(valor.split(":")[0]);
+                              const esValida = (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
+                              return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
+                            },
+                            soloEnPunto: (valor) => {
+                              const minutos = valor.split(":")[1];
+                              return minutos === "00" || "Solo se permiten reservas en horas en punto (ej: 10:00)";
+                            }
                           }
                         })}
                         isInvalid={!!errors.hora}
@@ -174,7 +192,6 @@ const ReservarCancha = () => {
         </Col>
       </Row>
     </Container>
-  
   );
 };
 
