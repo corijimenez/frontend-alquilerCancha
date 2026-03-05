@@ -5,6 +5,15 @@ import { crearOrdenCarritoAPI } from "../../helpers/queriesPagos";
 import { Link, useNavigate } from "react-router-dom";
 import "./Carrito.css";
 
+const parseRespuesta = async (respuesta) => {
+  const contentType = respuesta.headers.get("content-type") || "";
+  if (contentType.includes("application/json")) {
+    return await respuesta.json().catch(() => ({}));
+  }
+  const texto = await respuesta.text().catch(() => "");
+  return { mensaje: texto.slice(0, 200) };
+};
+
 const Carrito = ({ carrito, setCarrito }) => {
   const navigate = useNavigate();
 
@@ -40,15 +49,16 @@ const Carrito = ({ carrito, setCarrito }) => {
       );
 
       if (respuesta && respuesta.ok) {
-        const data = await respuesta.json();
+        const data = await parseRespuesta(respuesta);
         // 3. Redirigir al init_point de Mercado Pago
         window.location.href = data.init_point || data.sandbox_init_point;
       } else {
-        const errorData = await respuesta.json();
+        const errorData = respuesta ? await parseRespuesta(respuesta) : {};
         Swal.fire({
           title: "Ocurrió un error",
           text:
             errorData.mensaje ||
+            errorData.message ||
             "No se pudo procesar el pago. Intente nuevamente en unos minutos.",
           icon: "error",
         });
@@ -268,5 +278,7 @@ const Carrito = ({ carrito, setCarrito }) => {
 };
 
 export default Carrito;
+
+
 
 
