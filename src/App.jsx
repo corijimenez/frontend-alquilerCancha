@@ -20,6 +20,7 @@ import AdminProtector from "./components/routes/AdminProtector";
 import AdminProductos from "./components/pages/AdminProductos";
 import Carrito from "./components/pages/Carrito";
 import Tienda from "./components/pages/Tienda";
+import Galeria from "./components/pages/Galeria";
 import AdminUsuarios from "./components/pages/AdminUsuarios";
 
 function App() {
@@ -81,6 +82,7 @@ function App() {
         <Route path="/nosotros" element={<QuienesSomos />} />
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         <Route path="/tienda" element={<Tienda agregarAlCarrito={agregarAlCarrito} />} />
+        <Route path="/galeria" element={<Galeria />} />
         
          {/* Solo usuario logueado */}
     <Route element={<ProtectorRutas />}>
