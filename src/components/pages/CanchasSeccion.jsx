@@ -63,6 +63,7 @@ const CanchasSeccion = () => {
       </div>
     </>
   );
+  
 };
 
 export default CanchasSeccion;

@@ -28,4 +28,5 @@ export default function BienvenidaInicio() {
       </Col>
     </Row>
   );
+  
 }

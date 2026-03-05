@@ -109,6 +109,7 @@ const Administrador = () => {
       </div>
     </main>
   );
+  
 };
 
 export default Administrador;

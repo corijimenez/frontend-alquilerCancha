@@ -26,6 +26,7 @@ const Galeria = () => {
   return (
   <Container className="py-5">
     
+    
     {/* 🔥 Header mejorado */}
     <div className="text-center mb-5">
       <h1 className="fw-bold text-white display-4 mb-3">

@@ -346,6 +346,7 @@ const AdminUsuarios = () => {
       )}
     </main>
   );
+  
 };
 
 export default AdminUsuarios;

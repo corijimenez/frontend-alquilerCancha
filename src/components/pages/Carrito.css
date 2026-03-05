@@ -22,6 +22,7 @@
   font-weight: 800; /* coincide con AdminProductos */
   margin: 0;
   /* no se fuerza font-size, usa el h1 por defecto */
+  
 }
 
 .admin-header-actions {

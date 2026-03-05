@@ -32,6 +32,7 @@ const CardProducto = ({producto, agregarAlCarrito}) => {
       </Card>
     </Col>
   );
+  
 };
 
 export default CardProducto;

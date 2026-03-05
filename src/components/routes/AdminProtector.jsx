@@ -12,6 +12,7 @@ const AdminProtector = () => {
   }
 
   return <Outlet />;
+  
 };
 
 export default AdminProtector

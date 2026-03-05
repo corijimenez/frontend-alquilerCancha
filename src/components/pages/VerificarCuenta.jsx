@@ -20,6 +20,7 @@ const VerificacionCuenta = () => {
 
   if (!email) {
     setError("No se encontró el email para reenviar.");
+    
     return;
   }
 

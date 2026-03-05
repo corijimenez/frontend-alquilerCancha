@@ -3,6 +3,7 @@ const DetalleProducto = () => {
         <div>
             Detalle producto
         </div>
+        
     );
 };
 

@@ -90,6 +90,7 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
   );
 
   
+  
 };
 
 export default Menu;

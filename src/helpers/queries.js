@@ -25,6 +25,7 @@ export const borrarProductoApi = async (id, token) => {
     console.error(error);
     return { ok: false, data: { mensaje: "Error de conexión" } };
   }
+  
 };
 
 export const obtenerProductoApi = async (id, token) => {

@@ -174,3 +174,4 @@ frontend-alquilerCancha/
 - El frontend depende de respuestas del backend para autenticación, productos, reservas y pagos.
 - Si una ruta protegida no tiene token o no tiene rol admin, redirige a login o inicio.
 
+

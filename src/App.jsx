@@ -36,6 +36,7 @@ function App() {
       console.error("No se pudo leer carrito de localStorage:", error);
       return [];
     }
+    
   });
 
   useEffect(() => {
