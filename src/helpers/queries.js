@@ -3,31 +3,20 @@ const API_URL = import.meta.env.VITE_API_URL;
 // ✅ PRODUCTOS
 export const listarProductosApi = async () => {
   try {
-    const respuesta = await fetch(`${API_URL}/productos`, {
-      cache: "no-store",
-    });
-
+    const respuesta = await fetch(`${API_URL}/productos`, { cache: "no-store" });
     const data = await respuesta.json();
-
-    return {
-      ok: respuesta.ok,
-      data: data,
-    };
+    return { ok: respuesta.ok, data };
   } catch (error) {
     console.error(error);
-    return {
-      ok: false,
-      data: [],
-    };
+    return { ok: false, data: [] };
   }
 };
+
 export const borrarProductoApi = async (id, token) => {
   try {
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     });
 
     const data = await respuesta.json().catch(() => ({}));
@@ -49,7 +38,6 @@ export const obtenerProductoApi = async (id, token) => {
     });
 
     const data = await respuesta.json();
-
     return { ok: respuesta.ok, data };
   } catch (error) {
     console.error(error);
@@ -88,7 +76,9 @@ export const editarProductoApi = async (id, productoActualizado, token) => {
     const respuesta = await fetch(`${API_URL}/productos/${id}`, {
       method: "PUT",
       headers,
-      body: esFormData ? productoActualizado : JSON.stringify(productoActualizado),
+      body: esFormData
+        ? productoActualizado
+        : JSON.stringify(productoActualizado),
     });
 
     const data = await respuesta.json().catch(() => ({}));
@@ -98,7 +88,6 @@ export const editarProductoApi = async (id, productoActualizado, token) => {
     return { ok: false, data: { mensaje: "Error de conexión" } };
   }
 };
-
 
 // =====================
 // ✅ RESERVAS / CANCHAS
@@ -137,9 +126,14 @@ export const cambiarEstadoReservaApi = async (reserva, nuevoEstado, token) => {
     const headers = { "Content-Type": "application/json" };
     if (token) headers.Authorization = `Bearer ${token}`;
 
-    // exige usuario sin usuario logueado no puedo cambiar el estado, por eso se lo paso como parámetro
+    // ✅ Si viene populate, usuario es un objeto. Mandamos SIEMPRE el ID para pasar isMongoId()
+    const usuarioId =
+      typeof reserva.usuario === "object" && reserva.usuario
+        ? reserva.usuario._id
+        : reserva.usuario;
+
     const body = {
-      usuario: reserva.usuario, 
+      usuario: usuarioId,
       cancha: reserva.cancha,
       fecha: reserva.fecha,
       hora: reserva.hora,
@@ -161,14 +155,13 @@ export const cambiarEstadoReservaApi = async (reserva, nuevoEstado, token) => {
   }
 };
 
-
 export const crearReservaApi = async (nuevaReserva, token) => {
   try {
     const respuesta = await fetch(`${API_URL}/canchas`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify(nuevaReserva),
     });
@@ -184,7 +177,6 @@ export const crearReservaApi = async (nuevaReserva, token) => {
 // =====================
 // ✅ USUARIOS (solo admin)
 // =====================
-
 export const listarUsuariosApi = async (token) => {
   try {
     const respuesta = await fetch(`${API_URL}/usuarios`, {
