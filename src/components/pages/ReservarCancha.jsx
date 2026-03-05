@@ -26,6 +26,7 @@ const obtenerIdDesdeToken = (token) => {
     console.error("No se pudo leer el token:", error);
     return null;
   }
+  
 };
 
 const ReservarCancha = () => {

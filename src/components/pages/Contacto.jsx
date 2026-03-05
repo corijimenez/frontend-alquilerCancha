@@ -22,6 +22,7 @@ const Contacto = () => {
 
   return (
     <div className="contacto-container">
+      
       {/* 1. BANNER HERO */}
       <section className="banner-hero">
         <img

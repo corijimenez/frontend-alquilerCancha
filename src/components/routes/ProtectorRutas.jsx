@@ -8,6 +8,7 @@ const ProtectorRutas = () => {
   }
 
   return <Outlet />;
+  
 };
 
 export default ProtectorRutas;

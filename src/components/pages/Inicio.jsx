@@ -13,6 +13,7 @@ const Inicio = () => {
               <Sponsors />
         </main>
     );
+    
 };
 
 export default Inicio;

@@ -23,6 +23,7 @@ const FormularioProducto = () => {
   const inputFileRef = useRef(null);
 
   const {
+    
     register,
     handleSubmit,
     reset,

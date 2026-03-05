@@ -333,6 +333,7 @@ body {
   background-position: center;
   border-radius: 15px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
 }
 
 /* Overlay oscuro sobre la tarjeta para legibilidad */
@@ -387,4 +388,24 @@ body {
   filter: brightness(0) invert(1) drop-shadow(0 0 8px rgba(255, 255, 255, 0.8));
 }
 
+
+.galeria-card {
+  overflow: hidden;
+  border-radius: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.galeria-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
+}
+
+.galeria-img {
+  height: 200px; 
+  object-fit: cover;
+}
+
+.galeria-card:hover .galeria-img {
+  transform: scale(1.05);
+}
 

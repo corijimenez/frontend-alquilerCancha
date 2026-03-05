@@ -328,6 +328,7 @@ const AdminReservas = () => {
       )}
     </main>
   );
+  
 };
 
 export default AdminReservas;

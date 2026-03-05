@@ -30,6 +30,7 @@ const Sponsors = () => {
       </Container>
     </div>
   );
+  
 };
 
 export default Sponsors;

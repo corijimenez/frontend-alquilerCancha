@@ -15,6 +15,7 @@ const Error404 = () => {
     </p>
 
     <div className="error404-actions">
+      
       <Button
         as={Link}
         to="/"

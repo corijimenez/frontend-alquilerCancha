@@ -210,6 +210,7 @@ const AdminProductos = () => {
       </div>
     </main>
   );
+  
 };
 
 export default AdminProductos;
