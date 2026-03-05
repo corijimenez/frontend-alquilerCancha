@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import CarrouselInicio from "./CarrouselInicio";
 import BienvenidaInicio from "./BienvenidaInicio";
 import CanchasSeccion from "./CanchasSeccion";
@@ -16,3 +17,5 @@ const Inicio = () => {
 };
 
 export default Inicio;
+=======
+>>>>>>> main

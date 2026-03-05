@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import "./Error404.css";
@@ -41,3 +42,5 @@ const Error404 = () => {
 };
 
 export default Error404;
+=======
+>>>>>>> main

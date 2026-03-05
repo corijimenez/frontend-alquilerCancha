@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Navigate, Outlet } from "react-router-dom";
 
 const ProtectorRutas = () => {
@@ -11,3 +12,5 @@ const ProtectorRutas = () => {
 };
 
 export default ProtectorRutas;
+=======
+>>>>>>> main

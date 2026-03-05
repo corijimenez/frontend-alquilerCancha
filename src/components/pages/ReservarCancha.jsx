@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
 import { useForm } from "react-hook-form";
 import { crearReservaApi, listarReservasApi } from "../../helpers/queries";
@@ -215,3 +216,5 @@ const ReservarCancha = () => {
 };
 
 export default ReservarCancha;
+=======
+>>>>>>> main

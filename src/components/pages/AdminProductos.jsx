@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { useEffect, useMemo, useState } from "react";
 import { Table, Button, Form, InputGroup, Badge } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -213,3 +214,5 @@ const AdminProductos = () => {
 };
 
 export default AdminProductos;
+=======
+>>>>>>> main
