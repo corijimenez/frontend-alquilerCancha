@@ -1,15 +1,27 @@
+import { useLocation, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import { BsEnvelopeAtFill } from "react-icons/bs";
 
 const VerificacionCuenta = () => {
-  const [email, setEmail] = useState("");
+  const location = useLocation();
+  const email = location.state?.email || "";
   const [mensaje, setMensaje] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  //protección de flujo
+  if (!location.state?.email) {
+  return <Navigate to="/registro" replace />;
+}
+
   const handleReenviar = async (e) => {
   e.preventDefault();
+
+  if (!email) {
+    setError("No se encontró el email para reenviar.");
+    return;
+  }
 
   setMensaje("");
   setError("");
@@ -69,16 +81,9 @@ const VerificacionCuenta = () => {
             </div>
 
             <Form onSubmit={handleReenviar}>
-              <Form.Group className="mb-3">
-                <Form.Control
-                  type="email"
-                  placeholder="Ingresá tu email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="py-2"
-                />
-              </Form.Group>
+              <p className="text-white small mb-3">
+                Correo registrado: <strong>{email}</strong>
+                </p>
 
               <div className="d-grid">
                 <Button
