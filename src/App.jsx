@@ -16,6 +16,7 @@ import QuienesSomos from "./components/pages/QuienesSomos";
 import ReservarCancha from "./components/pages/ReservarCancha";
 import AdminReservas from "./components/pages/AdminReservas";
 import ProtectorRutas from "./components/routes/ProtectorRutas";
+import AdminProtector from "./components/routes/AdminProtector";
 import AdminProductos from "./components/pages/AdminProductos";
 import Carrito from "./components/pages/Carrito";
 import Tienda from "./components/pages/Tienda";
@@ -69,6 +70,7 @@ function App() {
     <BrowserRouter>
       <Menu carrito={carrito} usuarioLogueado={usuarioLogueado} setUsuarioLogueado={setUsuarioLogueado} />
       <Routes>
+         {/* Públicas */}
         <Route path="/" element={<Inicio />} />
         <Route path="/registro" element={<Registro/>}/>
         <Route path="/verificar-cuenta" element={<VerificarCuenta/>} />
@@ -80,11 +82,13 @@ function App() {
         <Route path="/carrito" element={<Carrito carrito={carrito} setCarrito={setCarrito} />} />
         <Route path="/tienda" element={<Tienda agregarAlCarrito={agregarAlCarrito} />} />
         
-        
+         {/* Solo usuario logueado */}
+    <Route element={<ProtectorRutas />}>
+      <Route path="/reserva" element={<ReservarCancha />} />
+    </Route>
 
         {/* 🔒 Rutas protegidas */}
-        <Route element={<ProtectorRutas />}>
-         <Route path="/reserva" element={<ReservarCancha />} />
+        <Route element={<AdminProtector />}>
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
          <Route path="/administrador/editar/:id" element={<FormularioProducto />} />

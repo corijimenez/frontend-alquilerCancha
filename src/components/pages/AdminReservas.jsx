@@ -277,7 +277,7 @@ const AdminReservas = () => {
                         <i className="bi bi-arrow-repeat me-2"></i>
                         {reserva.estado === "pendiente"
                           ? "Confirmar"
-                          : "Marcar pendiente"}
+                          : "Pendiente"}
                       </Button>
 
                       <Button
