@@ -88,7 +88,7 @@ function App() {
     </Route>
 
         {/* 🔒 Rutas protegidas */}
-        <Route element={<ProtectorRutas />}>
+        <Route element={<AdminProtector />}>
           <Route path="/administrador" element={<Administrador />} />
           <Route path="/administrador/crear" element={<FormularioProducto />} />
          <Route path="/administrador/editar/:id" element={<FormularioProducto />} />

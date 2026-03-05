@@ -7,11 +7,6 @@ const ProtectorRutas = () => {
     return <Navigate to="/login" replace />;
   }
 
-  // ✅ bloquear panel admin si no es admin
-  if (usuarioLogueado.role !== "admin") {
-    return <Navigate to="/" replace />;
-  }
-
   return <Outlet />;
 };
 
