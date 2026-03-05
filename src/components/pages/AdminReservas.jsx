@@ -6,31 +6,69 @@ import {
   listarReservasApi,
   borrarReservaApi,
   cambiarEstadoReservaApi,
+  listarUsuariosApi,
 } from "../../helpers/queries";
 import "./AdminReservas.css";
 
 const AdminReservas = () => {
   const location = useLocation();
   const [reservas, setReservas] = useState([]);
+  const [usuariosPorId, setUsuariosPorId] = useState({});
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [busqueda, setBusqueda] = useState("");
 
-  // ✅ Función para formatear fechas evitando problemas de timezone
   const formatearFecha = (fechaString) => {
     if (!fechaString) return "-";
-    // Si la fecha viene como "YYYY-MM-DD", la mostramos tal cual o la manipulamos controladamente
-    return fechaString; 
+    return fechaString;
+  };
+
+  const resolverUsuarioReserva = (reserva) => {
+    if (typeof reserva?.usuario === "object" && reserva.usuario) {
+      const idUsuario = reserva.usuario?._id;
+      if (idUsuario && usuariosPorId[idUsuario]) {
+        return { ...usuariosPorId[idUsuario], ...reserva.usuario };
+      }
+      return reserva.usuario;
+    }
+
+    if (typeof reserva?.usuario === "string") {
+      return usuariosPorId[reserva.usuario] || null;
+    }
+
+    return null;
+  };
+
+  const obtenerUsuarios = async () => {
+    const usuarioLogueado = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
+    const respuesta = await listarUsuariosApi(usuarioLogueado.token);
+
+    if (!respuesta.ok || !Array.isArray(respuesta.data)) {
+      setUsuariosPorId({});
+      return;
+    }
+
+    const mapaUsuarios = respuesta.data.reduce((acc, usuario) => {
+      if (usuario?._id) {
+        acc[usuario._id] = usuario;
+      }
+      return acc;
+    }, {});
+
+    setUsuariosPorId(mapaUsuarios);
   };
 
   const obtenerReservas = async () => {
     setError("");
     setCargando(true);
 
-    const respuesta = await listarReservasApi();
+    const [respuestaReservas] = await Promise.all([
+      listarReservasApi(),
+      obtenerUsuarios(),
+    ]);
 
-    if (respuesta.ok) {
-      setReservas(respuesta.data);
+    if (respuestaReservas.ok) {
+      setReservas(Array.isArray(respuestaReservas.data) ? respuestaReservas.data : []);
     } else {
       setReservas([]);
       setError("No se pudieron cargar las reservas");
@@ -40,9 +78,9 @@ const AdminReservas = () => {
   };
 
   useEffect(() => {
-    // Priorizar datos que vengan por navegación, si no, consultar API
     if (location.state?.reservas) {
       setReservas(location.state.reservas);
+      obtenerUsuarios();
       setCargando(false);
     } else {
       obtenerReservas();
@@ -58,12 +96,10 @@ const AdminReservas = () => {
       const estado = (r.estado || "").toLowerCase();
       const hora = (r.hora || "").toLowerCase();
       const fecha = formatearFecha(r.fecha).toLowerCase();
-      
-      // Datos de usuario (si el objeto está populado)
-      const usuarioNombre = 
-        typeof r.usuario === "object" ? (r.usuario?.nombre || "").toLowerCase() : "";
-      const usuarioEmail = 
-        typeof r.usuario === "object" ? (r.usuario?.email || "").toLowerCase() : "";
+
+      const usuarioResuelto = resolverUsuarioReserva(r);
+      const usuarioNombre = (usuarioResuelto?.nombre || "").toLowerCase();
+      const usuarioEmail = (usuarioResuelto?.email || "").toLowerCase();
 
       return (
         cancha.includes(texto) ||
@@ -74,7 +110,7 @@ const AdminReservas = () => {
         usuarioEmail.includes(texto)
       );
     });
-  }, [busqueda, reservas]);
+  }, [busqueda, reservas, usuariosPorId]);
 
   const borrarReserva = async (reserva) => {
     const confirmacion = await Swal.fire({
@@ -111,15 +147,10 @@ const AdminReservas = () => {
   };
 
   const cambiarEstado = async (reserva) => {
-    const nuevoEstado =
-      reserva.estado === "pendiente" ? "confirmada" : "pendiente";
+    const nuevoEstado = reserva.estado === "pendiente" ? "confirmada" : "pendiente";
 
     const usuario = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
-    const respuesta = await cambiarEstadoReservaApi(
-      reserva,
-      nuevoEstado,
-      usuario.token
-    );
+    const respuesta = await cambiarEstadoReservaApi(reserva, nuevoEstado, usuario.token);
 
     if (respuesta.ok) {
       obtenerReservas();
@@ -235,64 +266,62 @@ const AdminReservas = () => {
             </thead>
 
             <tbody>
-              {reservasFiltradas.map((reserva, index) => (
-                <tr key={reserva._id}>
-                  <td className="col-num">{index + 1}</td>
-                  <td>{reserva.cancha}</td>
-                  <td>
-                    {typeof reserva.usuario === "object" && reserva.usuario ? (
-                      <div className="d-flex flex-column">
-                        <span className="fw-semibold">
-                          {reserva.usuario?.nombre || "Sin nombre"}
-                        </span>
-                        <small className="text-white-50">
-                          {reserva.usuario?.email || ""}
-                        </small>
+              {reservasFiltradas.map((reserva, index) => {
+                const usuarioResuelto = resolverUsuarioReserva(reserva);
+
+                return (
+                  <tr key={reserva._id}>
+                    <td className="col-num">{index + 1}</td>
+                    <td>{reserva.cancha}</td>
+                    <td>
+                      {usuarioResuelto ? (
+                        <div className="d-flex flex-column">
+                          <span className="fw-semibold">{usuarioResuelto?.nombre || "Sin nombre"}</span>
+                          <small className="text-white-50">{usuarioResuelto?.email || ""}</small>
+                        </div>
+                      ) : (
+                        <span className="text-white-50">Sin usuario</span>
+                      )}
+                    </td>
+                    <td>{formatearFecha(reserva.fecha)}</td>
+                    <td>{reserva.hora}</td>
+                    <td
+                      className={
+                        reserva.estado === "confirmada"
+                          ? "text-success fw-semibold"
+                          : "text-warning fw-semibold"
+                      }
+                    >
+                      {reserva.estado}
+                    </td>
+                    <td className="col-precio">${reserva.precio}</td>
+
+                    <td className="col-acciones">
+                      <div className="reservas-actions">
+                        <Button
+                          variant={reserva.estado === "pendiente" ? "success" : "warning"}
+                          size="sm"
+                          className="btn-accion"
+                          onClick={() => cambiarEstado(reserva)}
+                        >
+                          <i className="bi bi-arrow-repeat me-2"></i>
+                          {reserva.estado === "pendiente" ? "Confirmar" : "Pendiente"}
+                        </Button>
+
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          className="btn-accion"
+                          onClick={() => borrarReserva(reserva)}
+                        >
+                          <i className="bi bi-trash3 me-2"></i>
+                          Eliminar
+                        </Button>
                       </div>
-                    ) : (
-                      <span className="text-white-50">Sin usuario</span>
-                    )}
-                  </td>
-                  <td>{formatearFecha(reserva.fecha)}</td>
-                  <td>{reserva.hora}</td>
-                  <td
-                    className={
-                      reserva.estado === "confirmada"
-                        ? "text-success fw-semibold"
-                        : "text-warning fw-semibold"
-                    }
-                  >
-                    {reserva.estado}
-                  </td>
-                  <td className="col-precio">${reserva.precio}</td>
-
-                  <td className="col-acciones">
-                    <div className="reservas-actions">
-                      <Button
-                        variant={reserva.estado === "pendiente" ? "success" : "warning"}
-                        size="sm"
-                        className="btn-accion"
-                        onClick={() => cambiarEstado(reserva)}
-                      >
-                        <i className="bi bi-arrow-repeat me-2"></i>
-                        {reserva.estado === "pendiente"
-                          ? "Confirmar"
-                          : "Pendiente"}
-                      </Button>
-
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        className="btn-accion"
-                        onClick={() => borrarReserva(reserva)}
-                      >
-                        <i className="bi bi-trash3 me-2"></i>
-                        Eliminar
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Table>
         </div>
@@ -302,3 +331,4 @@ const AdminReservas = () => {
 };
 
 export default AdminReservas;
+
