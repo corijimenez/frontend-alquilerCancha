@@ -1,4 +1,4 @@
-const URL_PAGOS = import.meta.env.VITE_API_PAGOS;
+const URL_PAGOS = (import.meta.env.VITE_API_PAGOS || "").replace(/\/+$/, "");
 
 export const crearOrdenCarritoAPI = async (productosCarrito) => {
   try {

@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Container, Row, Col, Card, Form, Button, Alert } from "react-bootstrap";
 import { BsEnvelopeAtFill } from "react-icons/bs";
 
+const API_URL = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+
 const VerificacionCuenta = () => {
   const location = useLocation();
   const email = location.state?.email || "";
@@ -29,7 +31,7 @@ const VerificacionCuenta = () => {
 
   try {
     const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/usuarios/reenviar-verificacion`,
+      `${API_URL}/usuarios/reenviar-verificacion`,
       {
         method: "POST",
         headers: {
