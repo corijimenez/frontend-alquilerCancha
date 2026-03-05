@@ -2,7 +2,7 @@ import CarrouselInicio from "./CarrouselInicio";
 import BienvenidaInicio from "./BienvenidaInicio";
 import CanchasSeccion from "./CanchasSeccion";
 import ProductosInicio from "./ProductosInicio";
-import Sponsors from "./sponsors";
+import Sponsors from "./Sponsors";
 const Inicio = () => {
     return (
         <main className="container my-4">
