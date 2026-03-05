@@ -6,8 +6,7 @@ import "../../index.css";
 const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
   const navegacion = useNavigate();
   const logout = () => {
-     // 1. Borramos los datos del almacenamiento del navegador
-    sessionStorage.removeItem("usuarioKey");   
+    sessionStorage.removeItem("usuarioKey");
     setUsuarioLogueado({});
     navegacion("/");
   };
@@ -57,11 +56,13 @@ const Menu = ({ usuarioLogueado, setUsuarioLogueado, carrito = [] }) => {
               </i>
             </NavLink>
 
-            {usuarioLogueado?.nombre ? (
+            {usuarioLogueado?.token ? (
               <>
-                <NavLink className="nav-link px-3" to="/administrador">
-                  Panel Admin
-                </NavLink>
+                {usuarioLogueado?.role === "admin" && (
+                  <NavLink className="nav-link px-3" to="/administrador">
+                    Panel Admin
+                  </NavLink>
+                )}
 
                 <div className="d-flex align-items-center ms-lg-3 mt-3 mt-lg-0">
                   <Button
