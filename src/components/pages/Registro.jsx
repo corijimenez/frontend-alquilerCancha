@@ -96,7 +96,9 @@ function Registro() {
       setSuccess("Usuario registrado correctamente 🎉");
 
       setTimeout(() => {
-        navigate("/login");
+        navigate("/verificar-cuenta", {
+          state: { email: form.email }
+        });
       }, 1500);
 
       //mensaje de error de conexión
