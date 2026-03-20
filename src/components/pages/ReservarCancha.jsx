@@ -137,28 +137,68 @@ const ReservarCancha = () => {
                   </Col>
                   <Col md={6}>
                     <Form.Group className="mb-3">
-                      <Form.Label className="text-white">Hora</Form.Label>
-                      <Form.Control
-                        type="time"
-                        step="3600" // Restringe el selector a horas en punto (3600 segundos = 1 hora)
-                        {...register("hora", {
-                          required: "La hora es obligatoria",
-                          validate: {
-                            rangoHorario: (valor) => {
-                              const hora = parseInt(valor.split(":")[0]);
-                              const esValida = (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
-                              return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
-                            },
-                            soloEnPunto: (valor) => {
-                              const minutos = valor.split(":")[1];
-                              return minutos === "00" || "Solo se permiten reservas en horas en punto (ej: 10:00)";
-                            }
-                          }
-                        })}
-                        isInvalid={!!errors.hora}
-                      />
-                      <Form.Control.Feedback type="invalid">{errors.hora?.message}</Form.Control.Feedback>
-                    </Form.Group>
+  <Form.Label className="text-white">Hora</Form.Label>
+  <Form.Control
+    type="time"
+    step="3600"
+  min={
+  watch("fecha") === fechaHoy
+    ? `${(
+        new Date().getMinutes() > 0
+          ? new Date().getHours() + 1
+          : new Date().getHours()
+      )
+        .toString()
+        .padStart(2, "0")}:00`
+    : "00:00"
+}
+    {...register("hora", {
+      required: "La hora es obligatoria",
+      validate: {
+        rangoHorario: (valor) => {
+          const hora = parseInt(valor.split(":")[0]);
+          const esValida =
+            (hora >= 9 && hora <= 23) || (hora >= 0 && hora < 2);
+          return esValida || "Horario permitido: 09:00 AM a 02:00 AM";
+        },
+
+        soloEnPunto: (valor) => {
+          const minutos = valor.split(":")[1];
+          return (
+            minutos === "00" ||
+            "Solo se permiten horas en punto (ej: 10:00)"
+          );
+        },
+
+        noPasadoHoy: (valor) => {
+          const fechaSeleccionada = watch("fecha");
+          const ahora = new Date();
+
+          // Si no es hoy → no validar
+          if (fechaSeleccionada !== fechaHoy) return true;
+
+          const horaActual = ahora.getHours();
+          const minutosActual = ahora.getMinutes();
+
+          // Próxima hora válida
+          const siguienteHora =
+            minutosActual > 0 ? horaActual + 1 : horaActual;
+
+          const horaSeleccionada = parseInt(valor.split(":")[0]);
+
+          return (
+            horaSeleccionada >= siguienteHora ||
+            "No se pueden realizar reservas en horarios pasados"
+          );
+        },
+      },
+    })}
+    isInvalid={!!errors.hora}
+  />
+  <Form.Control.Feedback type="invalid">
+    {errors.hora?.message}
+  </Form.Control.Feedback>
+</Form.Group>
                   </Col>
                 </Row>
 
