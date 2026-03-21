@@ -149,7 +149,6 @@ frontend-alquilerCancha/
         |   |-- Galeria.jsx
         |   |-- Inicio.jsx
         |   |-- Login.jsx
-        |   |-- MisReservas.jsx
         |   |-- ProductosInicio.jsx
         |   |-- QuienesSomos.jsx
         |   |-- Registro.jsx

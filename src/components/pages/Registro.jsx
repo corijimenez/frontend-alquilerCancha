@@ -26,7 +26,9 @@ function Registro() {
       nuevosErrores.nombre = "El nombre es obligatorio";
     } else if (form.nombre.length < 2) {
       nuevosErrores.nombre = "Debe tener al menos 2 caracteres";
-    }
+    } else if (form.nombre.length > 60) {
+  nuevosErrores.nombre = "El nombre no puede superar los 60 caracteres";
+  }
 
     if (!form.email.trim()) {
       nuevosErrores.email = "El email es obligatorio";
@@ -85,14 +87,14 @@ function Registro() {
       const data = await response.json();
 
       if (!response.ok) {
-        // Si express-validator manda array de errores
-        if (data.errors) {
-          setServerError(data.errors[0].msg);
-        } else {
-          setServerError(data.message || "Error al registrar");
-        }
-        return;
-      }
+  // Si express-validator manda array de errores
+      if (data.errors) {
+      setServerError(data.errors[0].msg);
+    } else {
+     setServerError(data.message || "Error al registrar");
+    }
+    return;
+  }
 
       //mensaje exitoso y redireccion a login
       setSuccess("Usuario registrado correctamente 🎉");
