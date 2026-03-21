@@ -69,13 +69,12 @@ const ReservarCancha = () => {
     const session = JSON.parse(sessionStorage.getItem("usuarioKey")) || {};
 
     const nuevaReserva = {
-      usuario: session.uid || session.id || "69a25b010c2aec2a7b7761ee",
-      cancha: datos.cancha,
-      fecha: datos.fecha,
-      hora: datos.hora,
-      precio: parseFloat(datos.precio),
-      estado: "pendiente",
-    };
+  cancha: datos.cancha,
+  fecha: datos.fecha,
+  hora: datos.hora,
+  precio: parseFloat(datos.precio),
+  estado: "pendiente",
+};
 
     setCargando(true);
     const respuesta = await crearReservaApi(nuevaReserva, session.token);
